@@ -1,0 +1,12 @@
+@use "src/styles/sizing";
+
+.container {
+    cursor: pointer;
+    padding: sizing.spacing(1);
+    &:hover {
+        background-color: var(--hover-bg-color);
+    }
+    &[aria-current="page"] {
+        background-color: var(--normal-blue);
+    }
+}

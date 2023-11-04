@@ -1,0 +1,12 @@
+
+.container {
+  z-index: var(--dialog-z-index);
+  position: fixed;
+  min-width: 100px;
+  min-height: 100px;
+  background-color: white;
+  top: 50%;
+  bottom: 50%;
+  left: 50%;
+  right: 50%;
+}
