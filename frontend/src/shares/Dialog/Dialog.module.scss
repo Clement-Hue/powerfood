@@ -1,12 +1,9 @@
 @use "src/styles/sizing";
 
 .container {
+  box-sizing: border-box;
   z-index: var(--dialog-z-index);
   position: fixed;
-  min-width: 400px;
-  min-height: 200px;
-  max-height: 100vh;
-  max-width: 100vw;
   box-shadow: var(--shadow-1);
   padding: sizing.spacing(2);
   background-color: white;

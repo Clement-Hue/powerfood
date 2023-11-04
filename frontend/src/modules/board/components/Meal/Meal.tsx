@@ -1,20 +1,27 @@
 import React from 'react';
 import classes from "./Meal.module.scss"
-import {Button} from "@shares";
+import {Button, IconButton, Icons, Input} from "@shares";
 
-const Meal: React.FC<Props> = ({foods, name, onDelete}) => {
+const Meal: React.FC<Props> = ({foods, name, onDelete,
+                               onAddFood, disabledAddFoodButton}) => {
     return (
         <div className={classes.container}>
             <span className={classes["meal__name"]}>
                 {name}
-                <Button onClick={() => onDelete?.(name)}>Supprimer</Button>
+                <IconButton Icon={Icons.Delete} onClick={() => onDelete?.(name)}/>
             </span>
-            <div className={classes["food-container"]}>
-                {foods?.map((food, i) => (
-                    <div key={i}> {food} </div>
+            <div className={classes["foods-container"]}>
+                {foods?.map((food, i ) => (
+                    <div key={`${food}-${i}`} className={classes["food-container"]}>
+                        <div > {food} </div>
+                        <IconButton Icon={Icons.Delete}/>
+                    </div>
                 ))}
             </div>
-            <Button>Ajouter l'aliment</Button>
+            <div className={classes["add-food-container"]}>
+                <Input min={0} type="number" placeholder="quantité (g)"/>
+                <Button disabled={disabledAddFoodButton} onClick={() => onAddFood?.(name)}>Ajouter l'aliment</Button>
+            </div>
         </div>
     );
 };
@@ -23,6 +30,8 @@ type Props = {
     name: string
     foods?: string[]
     onDelete?: (name: string) => void
+    onAddFood?: (name: string) => void
+    disabledAddFoodButton?: boolean
 }
 
 export default Meal;

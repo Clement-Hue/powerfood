@@ -5,7 +5,7 @@ const Input: React.FC<Props> = ({label, ...props}) => {
     const id = useId();
     return (
         <div className={classes.container}>
-            <label htmlFor={id}>{label}</label>
+            {!!label && <label htmlFor={id}>{label}</label>}
             <input {...props} id={id}/>
         </div>
     )

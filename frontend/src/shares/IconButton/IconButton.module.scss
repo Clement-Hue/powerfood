@@ -1,0 +1,14 @@
+.container {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 100%;
+  padding: 4px;
+  &:hover {
+    background-color: var(--hover-bg-color);
+  }
+}

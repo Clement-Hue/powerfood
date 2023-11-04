@@ -12,7 +12,7 @@ const Layout = () => {
     const [selectedFood, setSelectedFood] = useState<SearchResultFood>();
     const [searchValue, setSearchValue] = useState("");
     const [days, setDays] = useState<DayType>({
-        ["Jour par défaut"]: []
+        ["Jour par défaut"]: {}
     })
     let debounce = useRef<number>();
 
@@ -42,14 +42,22 @@ const Layout = () => {
 
     const handleAddMeal = (dayName: string, mealName: string) => {
         setDays((o) => ({
-            ...o, [dayName]: [...o[dayName], {mealName}]
+            ...o, [dayName]: {...o[dayName], [mealName]: [] }
         }))
     }
 
     const handleDeleteMeal = (dayName: string, mealName: string) => {
         setDays((o) => (
-            {...o, [dayName]: o[dayName].filter((m) => m.mealName !== mealName)}
+            {...o, [dayName]: Object.fromEntries(Object.entries(o[dayName]).filter(([name, _]) => name !== mealName))}
         ))
+    }
+
+    const handleAddFood = (dayName: string, mealName: string) => {
+        setDays((o) => {
+            const meals = o[dayName];
+            const foods = meals[mealName]
+            return {...o, [dayName]: {...meals, [mealName]: [...foods, selectedFood?.description!]}}
+        })
     }
 
     return (
@@ -63,10 +71,12 @@ const Layout = () => {
                 {Object.entries(days).map(([dayName, meals]) => (
                     <Day onAddMeal={(mealName) => handleAddMeal(dayName, mealName)}
                          key={dayName} name={dayName}>
-                        {meals.map((meal) => (
+                        {Object.entries(meals).map(([mealName, foods]) => (
                             <Meal
-                                onDelete={() => handleDeleteMeal(dayName, meal.mealName)}
-                                key={meal.mealName} name={meal.mealName} foods={meal.foods}/>
+                                onDelete={() => handleDeleteMeal(dayName, mealName)}
+                                onAddFood={() => handleAddFood(dayName, mealName)}
+                                disabledAddFoodButton={!selectedFood}
+                                key={mealName} name={mealName} foods={foods}/>
                         ))}
                     </Day>
                 ))}
@@ -76,7 +86,11 @@ const Layout = () => {
 };
 
 type DayType = {
-    [key: string]: {mealName: string, foods?: string[]}[]
+    [key: string]: MealType
+}
+
+type MealType = {
+    [key: string]: string[]
 }
 
 export default Layout;

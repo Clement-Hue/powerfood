@@ -7,6 +7,8 @@
 }
 
 .dialog__inputs-container {
+    max-height: 300px;
+    overflow: auto;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
