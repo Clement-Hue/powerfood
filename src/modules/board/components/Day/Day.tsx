@@ -1,6 +1,8 @@
 import React from 'react';
 import classes from "./Day.module.scss"
 import {Summary} from "./components";
+import DRI from "src/DRI.json"
+import {Button} from "@shares";
 
 const Day: React.FC<Props> = ({name, children}) => {
     return (
@@ -8,10 +10,11 @@ const Day: React.FC<Props> = ({name, children}) => {
             <div className={classes["day__name"]}>
                 {name}
             </div>
+            <Button>Ajouter un repas</Button>
             <div className={classes["meals-container"]}>
                 {children}
             </div>
-            <Summary/>
+            <Summary nutrients={DRI}/>
         </div>
     );
 };

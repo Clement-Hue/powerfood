@@ -10,7 +10,7 @@ const Meal: React.FC<Props> = ({foods, name}) => {
             </span>
             <div className={classes["food-container"]}>
                 {foods?.map((food) => (
-                    <div> {food} </div>
+                    <div key={food}> {food} </div>
                 ))}
             </div>
             <Button>Ajouter l'aliment</Button>

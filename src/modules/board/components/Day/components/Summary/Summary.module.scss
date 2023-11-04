@@ -3,14 +3,34 @@
 .container {
   display: flex;
   flex-direction: row;
-  gap: sizing.spacing(1);
+  flex-wrap: wrap;
+  gap: sizing.spacing(4);
   min-height: 20px;
-  width: 100%;
   border-top: var(--border);
+  justify-content: center;
+  padding: sizing.spacing(2);
 }
 
 .nutrient-container {
   display: flex;
+  width: 200px;
   flex-direction: column;
   gap: sizing.spacing(1);
+}
+
+.nutrient__name {
+  align-self: center;
+  text-decoration: underline;
+}
+
+.value--positive {
+  color: green;
+}
+
+.value--negative {
+  color: red;
+}
+
+.value--limit {
+  color: yellow;
 }
