@@ -11,8 +11,7 @@
   cursor: pointer;
   border: var(--border);
   &[data-selected="true"] {
-    border-color: var(--dark-blue);
-    border-width: 2px;
+    outline: 2px solid var(--dark-blue);
   }
   &:hover {
     background-color: var(--hover-bg-color);

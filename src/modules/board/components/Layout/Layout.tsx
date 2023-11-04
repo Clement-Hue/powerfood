@@ -9,6 +9,7 @@ import {SearchResultFood} from "@types/api.type.ts";
 
 const Layout = () => {
     const [foods, setFoods] = useState<SearchResultFood[]>();
+    const [selectedFood, setSelectedFood] = useState<SearchResultFood>();
     let debounce = useRef<number>();
     const meals = [
         {day: "Jour par défaut", meals: [
@@ -30,7 +31,7 @@ const Layout = () => {
         <div className={classes.container}>
             <div>
                 <Input onChange={handleSearch} label="Rechercher un aliment"/>
-                <FoodList foods={foods} />
+                <FoodList selected={selectedFood} onSelect={setSelectedFood} foods={foods} />
             </div>
             <div className={classes["days-container"]}>
                 {meals.map(({day, meals}) => (
