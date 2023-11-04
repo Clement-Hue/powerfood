@@ -1,0 +1,20 @@
+@use "src/styles/sizing";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.item-container {
+  padding: sizing.spacing(2);
+  cursor: pointer;
+  border: var(--border);
+  &[data-selected="true"] {
+    border-color: var(--dark-blue);
+    border-width: 2px;
+  }
+  &:hover {
+    background-color: var(--hover-bg-color);
+  }
+}

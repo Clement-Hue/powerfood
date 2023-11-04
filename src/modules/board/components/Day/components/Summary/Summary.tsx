@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from "clsx"
 import classes from "./Summary.module.scss"
 
 const Summary: React.FC<Props> = ({nutrients}) => {
@@ -14,9 +15,10 @@ const Summary: React.FC<Props> = ({nutrients}) => {
     return (
         <div className={classes.container}>
             {nutrients?.map(({name,value, DRI}) => (
-                <div key={name} className={classes["nutrient-container"]}>
+                <div key={name} className={clsx(classes["nutrient-container"],
+                    classes[`value--${valueClass(DRI, value)}`])}>
                     <span className={classes["nutrient__name"]}>{name}</span>
-                    <span className={classes[`value--${valueClass(DRI, value)}`]}>
+                    <span >
                         Total: {!value ? 0 : `${value.amount} ${value.unit}`}</span>
                     <span>DRI: {DRI.amount} {DRI.unit}</span>
                 </div>
