@@ -1,0 +1,11 @@
+@function spacing($args...) {
+  $multiplier: 8px;
+  $result: ();
+
+  @for $i from 1 through length($args) {
+    $arg: nth($args, $i);
+    $result: append($result, $arg * $multiplier);
+  }
+
+  @return $result;
+}

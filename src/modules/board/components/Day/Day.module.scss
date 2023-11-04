@@ -1,0 +1,20 @@
+@use "src/sizing";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(2);
+  align-items: center;
+  border: var(--border);
+  padding: sizing.spacing(1);
+}
+
+.day__name {
+  font-weight: var(--font-weight-bold);
+}
+
+.meals-container {
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(3);
+}

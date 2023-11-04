@@ -1,0 +1,14 @@
+@use "src/sizing";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: sizing.spacing(2);
+  align-items: center;
+}
+
+.food-container {
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(1);
+}

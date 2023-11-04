@@ -1,0 +1,14 @@
+@use "src/sizing";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: sizing.spacing(2);
+}
+
+.days-container {
+  display: flex;
+  flex-direction: row;
+  gap: sizing.spacing(2);
+}
