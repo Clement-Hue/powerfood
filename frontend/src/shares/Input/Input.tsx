@@ -4,10 +4,10 @@ import classes from "./Input.module.scss"
 const Input: React.FC<Props> = ({label, ...props}) => {
     const id = useId();
     return (
-        <>
+        <div className={classes.container}>
             <label htmlFor={id}>{label}</label>
             <input {...props} id={id}/>
-        </>
+        </div>
     )
 };
 

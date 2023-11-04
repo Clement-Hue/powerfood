@@ -11,7 +11,9 @@ const Day: React.FC<Props> = ({name, children, onAddMeal}) => {
             <div className={classes["day__name"]}>
                 {name}
             </div>
-            <form onSubmit={(e) => {
+            <form
+                className={classes["day__add-meal"]}
+                onSubmit={(e) => {
                 e.preventDefault();
                 onAddMeal?.(mealName);
             }}>

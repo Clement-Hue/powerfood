@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   max-width: 100%;
+  width: 500px;
 }
 
 .page-container {
@@ -25,7 +26,7 @@
   cursor: pointer;
   border: var(--border);
   &[data-selected="true"] {
-    outline: 2px solid var(--dark-blue);
+    outline: 2px solid var(--dark-primary);
   }
   &:hover {
     background-color: var(--hover-bg-color);

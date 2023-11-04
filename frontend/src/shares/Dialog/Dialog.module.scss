@@ -1,12 +1,16 @@
+@use "src/styles/sizing";
 
 .container {
   z-index: var(--dialog-z-index);
   position: fixed;
-  min-width: 100px;
-  min-height: 100px;
+  min-width: 400px;
+  min-height: 200px;
+  max-height: 100vh;
+  max-width: 100vw;
+  box-shadow: var(--shadow-1);
+  padding: sizing.spacing(2);
   background-color: white;
   top: 50%;
-  bottom: 50%;
   left: 50%;
-  right: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }

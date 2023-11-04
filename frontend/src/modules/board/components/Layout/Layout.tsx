@@ -38,7 +38,6 @@ const Layout = () => {
     const searchApiCall = async (pageNumber = 1) => {
         const res = await apiService.searchFood(searchValue, {pageNumber});
         setSearchResult(res);
-        console.log(res);
     }
 
     const handleAddMeal = (dayName: string, mealName: string) => {

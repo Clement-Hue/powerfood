@@ -2,11 +2,11 @@
 
 .container {
     cursor: pointer;
-    padding: sizing.spacing(1);
+    padding: sizing.spacing(1, 3);
     &:hover {
         background-color: var(--hover-bg-color);
     }
     &[aria-current="page"] {
-        background-color: var(--normal-blue);
+        background-color: var(--normal-primary);
     }
 }
