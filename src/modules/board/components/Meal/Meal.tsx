@@ -2,12 +2,12 @@ import React from 'react';
 import classes from "./Meal.module.scss"
 import {Button} from "@shares";
 
-const Meal: React.FC<Props> = ({foods, name}) => {
+const Meal: React.FC<Props> = ({foods, name, onDelete}) => {
     return (
         <div className={classes.container}>
             <span className={classes["meal__name"]}>
                 {name}
-                <Button>Supprimer</Button>
+                <Button onClick={() => onDelete?.(name)}>Supprimer</Button>
             </span>
             <div className={classes["food-container"]}>
                 {foods?.map((food, i) => (
@@ -21,7 +21,8 @@ const Meal: React.FC<Props> = ({foods, name}) => {
 
 type Props = {
     name: string
-    foods?: React.ReactNode[]
+    foods?: string[]
+    onDelete?: (name: string) => void
 }
 
 export default Meal;

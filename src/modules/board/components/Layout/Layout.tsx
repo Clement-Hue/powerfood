@@ -6,6 +6,7 @@ import {apiService} from "@services";
 import FoodList from "../FoodList";
 import {SearchResult, SearchResultFood} from "@types/api.type.ts";
 import Meal from "../Meal";
+import day from "../Day";
 
 const Layout = () => {
     const [searchResult, setSearchResult] = useState<SearchResult>();
@@ -38,14 +39,20 @@ const Layout = () => {
     const searchApiCall = async (pageNumber = 1) => {
         const res = await apiService.searchFood(searchValue, {pageNumber});
         setSearchResult(res);
-        console.log(res)
     }
 
-    const addMeal = (dayName: string, mealName: string) => {
+    const handleAddMeal = (dayName: string, mealName: string) => {
         setDays((o) => ({
-            ...o, [dayName]: [...o[dayName], <Meal key={mealName} name={mealName}/>]
+            ...o, [dayName]: [...o[dayName], {mealName}]
         }))
     }
+
+    const handleDeleteMeal = (dayName: string, mealName: string) => {
+        setDays((o) => (
+            {...o, [dayName]: o[dayName].filter((m) => m.mealName !== mealName)}
+        ))
+    }
+
 
     return (
         <div className={classes.container}>
@@ -56,9 +63,13 @@ const Layout = () => {
             </div>
             <div className={classes["days-container"]}>
                 {Object.entries(days).map(([dayName, meals]) => (
-                    <Day onAddMeal={(mealName) => addMeal(dayName, mealName)}
+                    <Day onAddMeal={(mealName) => handleAddMeal(dayName, mealName)}
                          key={dayName} name={dayName}>
-                        {meals}
+                        {meals.map((meal) => (
+                            <Meal
+                                onDelete={() => handleDeleteMeal(dayName, meal.mealName)}
+                                key={meal.mealName} name={meal.mealName} foods={meal.foods}/>
+                        ))}
                     </Day>
                 ))}
             </div>
@@ -67,7 +78,7 @@ const Layout = () => {
 };
 
 type DayType = {
-    [key: string]: React.ReactNode[]
+    [key: string]: {mealName: string, foods?: string[]}[]
 }
 
 export default Layout;
