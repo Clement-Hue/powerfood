@@ -9,6 +9,9 @@
 
 .meal__name {
   font-weight: var(--font-weight-bold);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .food-container {

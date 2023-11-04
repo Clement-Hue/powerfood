@@ -2,22 +2,19 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Input} from "@shares"
 import classes from "./Layout.module.scss"
 import Day from "../Day";
-import Meal from "../Meal";
 import {apiService} from "@services";
 import FoodList from "../FoodList";
 import {SearchResult, SearchResultFood} from "@types/api.type.ts";
+import Meal from "../Meal";
 
 const Layout = () => {
     const [searchResult, setSearchResult] = useState<SearchResult>();
     const [selectedFood, setSelectedFood] = useState<SearchResultFood>();
     const [searchValue, setSearchValue] = useState("");
+    const [days, setDays] = useState<DayType>({
+        ["Jour par défaut"]: []
+    })
     let debounce = useRef<number>();
-    const meals = [
-        {day: "Jour par défaut", meals: [
-            <Meal key="déjeuner" name="déjeuner" foods={["poulet 100g", "riz 200g"]} />,
-            <Meal key="diner" name="diner" foods={["jambon 100g", "pate 200g"]} />,
-            ]},
-    ]
 
     useEffect(() => {
         (async function () {
@@ -44,6 +41,12 @@ const Layout = () => {
         console.log(res)
     }
 
+    const addMeal = (dayName: string, mealName: string) => {
+        setDays((o) => ({
+            ...o, [dayName]: [...o[dayName], <Meal key={mealName} name={mealName}/>]
+        }))
+    }
+
     return (
         <div className={classes.container}>
             <div>
@@ -52,8 +55,9 @@ const Layout = () => {
                           selected={selectedFood} onSelect={setSelectedFood} foods={searchResult?.foods} />
             </div>
             <div className={classes["days-container"]}>
-                {meals.map(({day, meals}) => (
-                    <Day key={day} name={day}>
+                {Object.entries(days).map(([dayName, meals]) => (
+                    <Day onAddMeal={(mealName) => addMeal(dayName, mealName)}
+                         key={dayName} name={dayName}>
                         {meals}
                     </Day>
                 ))}
@@ -61,5 +65,9 @@ const Layout = () => {
         </div>
     );
 };
+
+type DayType = {
+    [key: string]: React.ReactNode[]
+}
 
 export default Layout;

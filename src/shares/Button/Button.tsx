@@ -7,6 +7,6 @@ const Button: React.FC<Props> = (props) => {
     );
 };
 
-type Props = React.HTMLAttributes<HTMLButtonElement>
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export default Button;
