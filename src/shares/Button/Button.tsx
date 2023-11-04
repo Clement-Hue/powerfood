@@ -1,8 +1,9 @@
 import React from 'react';
+import classes from "./Button.module.scss"
 
 const Button: React.FC<Props> = (props) => {
     return (
-        <button {...props}/>
+        <button {...props} className={classes.container}/>
     );
 };
 

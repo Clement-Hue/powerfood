@@ -1,15 +1,16 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Input} from "@shares"
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import Meal from "../Meal";
 import {apiService} from "@services";
 import FoodList from "../FoodList";
-import {SearchResultFood} from "@types/api.type.ts";
+import {SearchResult, SearchResultFood} from "@types/api.type.ts";
 
 const Layout = () => {
-    const [foods, setFoods] = useState<SearchResultFood[]>();
+    const [searchResult, setSearchResult] = useState<SearchResult>();
     const [selectedFood, setSelectedFood] = useState<SearchResultFood>();
+    const [searchValue, setSearchValue] = useState("");
     let debounce = useRef<number>();
     const meals = [
         {day: "Jour par défaut", meals: [
@@ -18,20 +19,36 @@ const Layout = () => {
             ]},
     ]
 
-    const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (debounce.current) {
-            clearTimeout(debounce.current!)
-        }
-        debounce.current = setTimeout(async () => {
-            const res = await apiService.searchFood(e.target.value)
-            setFoods(res.foods);
-        }, 500)
+    useEffect(() => {
+        (async function () {
+            if (debounce.current) {
+                clearTimeout(debounce.current!);
+            }
+            if (!searchValue) {
+                setSearchResult(undefined)
+                return;
+            }
+            debounce.current = setTimeout(async () => {
+                await searchApiCall();
+            }, 500)
+        })()
+    }, [searchValue])
+
+    useEffect(() => {
+       setSelectedFood(undefined);
+    }, [searchResult]);
+
+    const searchApiCall = async (pageNumber = 1) => {
+        const res = await apiService.searchFood(searchValue, {pageNumber});
+        setSearchResult(res);
     }
+
     return (
         <div className={classes.container}>
             <div>
-                <Input onChange={handleSearch} label="Rechercher un aliment"/>
-                <FoodList selected={selectedFood} onSelect={setSelectedFood} foods={foods} />
+                <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
+                <FoodList onPageChange={(p) => searchApiCall(p)} totalPage={searchResult?.totalPages} currentPage={searchResult?.currentPage}
+                          selected={selectedFood} onSelect={setSelectedFood} foods={searchResult?.foods} />
             </div>
             <div className={classes["days-container"]}>
                 {meals.map(({day, meals}) => (

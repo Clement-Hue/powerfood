@@ -11,7 +11,7 @@ const Input: React.FC<Props> = ({label, ...props}) => {
     )
 };
 
-type Props = Omit<React.HTMLAttributes<HTMLInputElement>, "id"> & {
+type Props = Omit<React.InputHTMLAttributes<HTMLInputElement>, "id"> & {
     label?: React.ReactNode
 }
 export default Input;

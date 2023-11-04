@@ -6,6 +6,17 @@
   max-width: 100%;
 }
 
+.page-container {
+  display: flex;
+  flex-direction: row;
+  gap: sizing.spacing(1);
+}
+
+.page__total {
+  margin-left: auto;
+}
+
+
 .item-container {
   padding: sizing.spacing(2);
   cursor: pointer;

@@ -1,0 +1,7 @@
+
+.container {
+  cursor: pointer;
+  &:disabled {
+    cursor: default;
+  }
+}
