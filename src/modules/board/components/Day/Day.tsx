@@ -1,5 +1,6 @@
 import React from 'react';
 import classes from "./Day.module.scss"
+import {Summary} from "./components";
 
 const Day: React.FC<Props> = ({name, children}) => {
     return (
@@ -10,6 +11,7 @@ const Day: React.FC<Props> = ({name, children}) => {
             <div className={classes["meals-container"]}>
                 {children}
             </div>
+            <Summary/>
         </div>
     );
 };

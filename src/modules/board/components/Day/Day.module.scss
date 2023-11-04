@@ -3,18 +3,22 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: sizing.spacing(2);
   align-items: center;
+  min-width: 500px;
+  min-height: 50px;
+  gap: sizing.spacing(2);
   border: var(--border);
   padding: sizing.spacing(1);
 }
 
 .day__name {
   font-weight: var(--font-weight-bold);
+  text-decoration: underline;
 }
 
 .meals-container {
+  align-self: start;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: sizing.spacing(3);
 }

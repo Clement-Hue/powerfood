@@ -1,3 +1,10 @@
+$breakpoints: (
+    "xs": 576px,
+    "sm": 768px,
+    "md": 992px,
+    "lg": 1200px
+);
+
 @function spacing($args...) {
   $multiplier: 8px;
   $result: ();
@@ -8,4 +15,13 @@
   }
 
   @return $result;
+}
+
+
+@mixin mq($bp) {
+  $width: map-get($breakpoints, $bp);
+
+  @media (max-width: $width) {
+    @content;
+  }
 }

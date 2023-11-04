@@ -6,7 +6,10 @@ import Meal from "../Meal";
 
 const Layout = () => {
     const meals = [
-        {day: "lundi", meals: [<Meal name="déjeuner" foods={["poulet 100g", "riz 200g"]} />]},
+        {day: "lundi", meals: [
+            <Meal name="déjeuner" foods={["poulet 100g", "riz 200g"]} />,
+            <Meal name="diner" foods={["jambon 100g", "pate 200g"]} />,
+            ]},
         {day: "mardi", meals: []},
         {day: "mercredi", meals: []},
         {day: "jeudi", meals: []},
