@@ -1,5 +1,6 @@
 [
   {
+    "id": 1104,
     "name": "Vitamin A (Retinol)",
     "DRI": {
       "amount": 900,
@@ -7,6 +8,7 @@
     }
   },
   {
+    "id": 1162,
     "name": "Vitamin C (Ascorbic Acid)",
     "DRI": {
       "amount": 90,
@@ -14,6 +16,7 @@
     }
   },
   {
+    "id": 1114,
     "name": "Vitamin D",
     "DRI": {
       "amount": "600 - 800",
@@ -21,6 +24,7 @@
     }
   },
   {
+    "id": 1109,
     "name": "Vitamin E (Tocopherol)",
     "DRI": {
       "amount": 15,
@@ -28,6 +32,7 @@
     }
   },
   {
+    "id": 1185,
     "name": "Vitamin K",
     "DRI": {
       "amount": 120,
@@ -35,6 +40,7 @@
     }
   },
   {
+    "id": 1165,
     "name": "Thiamin (Vitamin B1)",
     "DRI": {
       "amount": 1.2,
@@ -42,6 +48,7 @@
     }
   },
   {
+    "id": 1166,
     "name": "Riboflavin (Vitamin B2)",
     "DRI": {
       "amount": 1.3,
@@ -49,6 +56,7 @@
     }
   },
   {
+    "id": 1167,
     "name": "Niacin (Vitamin B3)",
     "DRI": {
       "amount": 16,
@@ -56,6 +64,7 @@
     }
   },
   {
+    "id": 1175,
     "name": "Vitamin B6 (Pyridoxine)",
     "DRI": {
       "amount": 1.3,
@@ -63,6 +72,7 @@
     }
   },
   {
+    "id": 1177,
     "name": "Folate (Vitamin B9)",
     "DRI": {
       "amount": 400,
@@ -70,6 +80,7 @@
     }
   },
   {
+    "id": 1178,
     "name": "Vitamin B12 (Cobalamin)",
     "DRI": {
       "amount": 2.4,
@@ -77,6 +88,7 @@
     }
   },
   {
+    "id": 1087,
     "name": "Calcium",
     "DRI": {
       "amount": 1000,
@@ -84,6 +96,7 @@
     }
   },
   {
+    "id": 1089,
     "name": "Iron",
     "DRI": {
       "amount": 8,
@@ -91,6 +104,7 @@
     }
   },
   {
+    "id": 1090,
     "name": "Magnesium",
     "DRI": {
       "amount": 400,
@@ -98,6 +112,7 @@
     }
   },
   {
+    "id": 1091,
     "name": "Phosphorus",
     "DRI": {
       "amount": 700,
@@ -105,6 +120,7 @@
     }
   },
   {
+    "id": 1092,
     "name": "Potassium",
     "DRI": {
       "amount": 2300,
@@ -112,6 +128,7 @@
     }
   },
   {
+    "id": 1093,
     "name": "Sodium",
     "DRI": {
       "amount": 1500,
@@ -119,6 +136,7 @@
     }
   },
   {
+    "id": 1095,
     "name": "Zinc",
     "DRI": {
       "amount": 11,
@@ -126,6 +144,7 @@
     }
   },
   {
+    "id": 1096,
     "name": "Iodine",
     "DRI": {
       "amount": 150,
@@ -133,6 +152,7 @@
     }
   },
   {
+    "id": 1103,
     "name": "Selenium",
     "DRI": {
       "amount": 55,
@@ -140,6 +160,7 @@
     }
   },
   {
+    "id": 1198,
     "name": "Copper",
     "DRI": {
       "amount": 900,

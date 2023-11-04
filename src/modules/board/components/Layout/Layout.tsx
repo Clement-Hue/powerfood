@@ -2,11 +2,10 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Input} from "@shares"
 import classes from "./Layout.module.scss"
 import Day from "../Day";
+import Meal from "../Meal";
 import {apiService} from "@services";
 import FoodList from "../FoodList";
 import {SearchResult, SearchResultFood} from "@types/api.type.ts";
-import Meal from "../Meal";
-import day from "../Day";
 
 const Layout = () => {
     const [searchResult, setSearchResult] = useState<SearchResult>();
@@ -39,6 +38,7 @@ const Layout = () => {
     const searchApiCall = async (pageNumber = 1) => {
         const res = await apiService.searchFood(searchValue, {pageNumber});
         setSearchResult(res);
+        console.log(res);
     }
 
     const handleAddMeal = (dayName: string, mealName: string) => {
@@ -52,7 +52,6 @@ const Layout = () => {
             {...o, [dayName]: o[dayName].filter((m) => m.mealName !== mealName)}
         ))
     }
-
 
     return (
         <div className={classes.container}>
