@@ -1,0 +1,28 @@
+@use "src/styles/sizing";
+
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: absolute;
+  min-width: 400px;
+  max-height: 200px;
+  overflow: auto;
+  background-color: rgb(191, 213, 218);
+  z-index: var(--tooltip-z-index);
+  top: 0;
+  left:0;
+  transform: translateX(-100%);
+  gap: sizing.spacing(2);
+  border: var(--border);
+  box-shadow: var(--shadow-1);
+}
+
+.nutrient-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.nutrient__name {
+  font-weight: var(--font-weight-bold);
+}

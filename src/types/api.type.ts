@@ -18,6 +18,7 @@ export interface SearchResultFood {
     publicationDate?: string; // Date the item was published to FDC.
     scientificName?: string; // The scientific name of the food.
     brandOwner?: string; // Brand owner for the food. Only applies to Branded Foods.
+    brandName?: string
     gtinUpc?: string; // GTIN or UPC code identifying the food. Only applies to Branded Foods.
     ingredients?: string; // The list of ingredients (as it appears on the product label). Only applies to Branded Foods.
     ndbNumber?: string; // Unique number assigned for foundation foods. Only applies to Foundation and SRLegacy Foods.
@@ -27,10 +28,18 @@ export interface SearchResultFood {
 }
 
 export interface AbridgedFoodNutrient {
-    number: number; // Unique number identifying the nutrient.
-    name: string; // Name of the nutrient.
-    amount: number; // Amount of the nutrient.
-    unitName: string; // Unit of measurement for the nutrient (e.g., mg).
-    derivationCode: string; // Derivation code for the nutrient.
-    derivationDescription: string; // Description of how the nutrient value was derived.
+    nutrientId: number;
+    nutrientName: string;
+    nutrientNumber: string;
+    unitName: string;
+    derivationCode: string;
+    derivationDescription: string;
+    derivationId: number;
+    value: number;
+    foodNutrientSourceId: number;
+    foodNutrientSourceCode: string;
+    foodNutrientSourceDescription: string;
+    rank: number;
+    indentLevel: number;
+    foodNutrientId: number;
 }

@@ -18,6 +18,9 @@
 
 
 .item-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   padding: sizing.spacing(2);
   cursor: pointer;
   border: var(--border);
