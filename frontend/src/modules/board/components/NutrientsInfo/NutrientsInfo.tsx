@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbridgedFoodNutrient} from "@types/api.type.ts";
+import {AbridgedFoodNutrient} from "@typing/api.type.ts";
 import classes from "./NutrientsInfo.module.scss"
 
 const NutrientsInfo: React.FC<Props> = ({nutrients}) => {

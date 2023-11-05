@@ -7,7 +7,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -15,7 +14,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -24,7 +22,8 @@
     "paths": {
       "@shares": ["src/shares"],
       "@services": ["src/services"],
-      "@types/*": ["src/types/*"],
+      "@testing": ["src/testing"],
+      "@typing/*": ["src/typing/*"]
     }
   },
   "include": ["src"],

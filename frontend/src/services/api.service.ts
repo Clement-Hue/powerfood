@@ -1,5 +1,5 @@
 import request from "./request.ts";
-import {SearchResult} from "../types/api.type.ts";
+import {SearchResult} from "../typing/api.type.ts";
 
 function searchFood(food: string, {pageNumber = 1} = {}): Promise<SearchResult> {
     return request("v1/foods/search", {

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SearchResultFood} from "@types/api.type.ts";
+import {SearchResultFood} from "@typing/api.type.ts";
 import classes from "./FoodList.module.scss"
 import {Button} from "@shares";
 import NutrientsInfo from "../NutrientsInfo/NutrientsInfo.tsx";

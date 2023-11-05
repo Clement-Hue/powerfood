@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {Input} from "@shares"
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import Meal from "../Meal";
 import {apiService} from "@services";
 import FoodList from "../FoodList";
-import {SearchResult, SearchResultFood} from "@types/api.type.ts";
+import type {SearchResult, SearchResultFood} from "@typing/api.type.ts";
 
 const Layout = () => {
     const [searchResult, setSearchResult] = useState<SearchResult>();
