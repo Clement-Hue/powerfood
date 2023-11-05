@@ -35,9 +35,9 @@ const Meal: React.FC<Props> = ({foods, name, onDelete,
 type Props = {
     name: string
     foods?: string[]
-    onDelete?: (name: string) => void
-    onDeleteFood?: (food: string) => void
-    onAddFood?: (name: string) => void
+    onDelete?: (mealName: string) => void
+    onDeleteFood?: (foodName: string) => void
+    onAddFood?: (mealName: string) => void
     disabledAddFood?: boolean
 }
 

@@ -5,11 +5,12 @@ import Day from "../Day";
 import Meal from "../Meal";
 import {apiService} from "@services";
 import FoodList from "../FoodList";
-import type {SearchResult, SearchResultFood} from "@typing/api.type.ts";
+import type {SearchResult} from "@typing/api.type.ts";
+import type {Food} from "@typing/app.type.ts";
 
 const Layout = () => {
     const [searchResult, setSearchResult] = useState<SearchResult>();
-    const [selectedFood, setSelectedFood] = useState<SearchResultFood>();
+    const [selectedFood, setSelectedFood] = useState<Food>();
     const [searchValue, setSearchValue] = useState("");
     const [days, setDays] = useState<DayType>({
         ["Jour par défaut"]: {}
@@ -73,7 +74,7 @@ const Layout = () => {
             <div className={classes["search-container"]}>
                 <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
                 <FoodList onPageChange={(p) => searchApiCall(p)} totalPage={searchResult?.totalPages} currentPage={searchResult?.currentPage}
-                          selected={selectedFood} onSelect={setSelectedFood} foods={searchResult?.foods} />
+                          selected={selectedFood} onSelect={setSelectedFood} />
             </div>
             <div className={classes["days-container"]}>
                 {Object.entries(days).map(([dayName, meals]) => (

@@ -31,7 +31,7 @@ const Day: React.FC<Props> = ({name, children, onAddMeal}) => {
 type Props = {
     name: string
     children?: React.ReactNode
-    onAddMeal?: (name: string) => void
+    onAddMeal?: (mealName: string) => void
 }
 
 export default Day;
