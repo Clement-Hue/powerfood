@@ -60,6 +60,14 @@ const Layout = () => {
         })
     }
 
+    const handleDeleteFood = (dayName: string, mealName: string, foodName: string) => {
+        setDays((o) => {
+            const meals = o[dayName];
+            const foods = meals[mealName]
+            return {...o, [dayName]: {...meals, [mealName]: foods.filter(((f) => f !== foodName )) }}
+        })
+    }
+
     return (
         <div className={classes.container}>
             <div className={classes["search-container"]}>
@@ -74,8 +82,9 @@ const Layout = () => {
                         {Object.entries(meals).map(([mealName, foods]) => (
                             <Meal
                                 onDelete={() => handleDeleteMeal(dayName, mealName)}
+                                onDeleteFood={(f) => handleDeleteFood(dayName, mealName, f)}
                                 onAddFood={() => handleAddFood(dayName, mealName)}
-                                disabledAddFoodButton={!selectedFood}
+                                disabledAddFood={!selectedFood}
                                 key={mealName} name={mealName} foods={foods}/>
                         ))}
                     </Day>
