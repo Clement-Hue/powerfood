@@ -62,7 +62,7 @@ const Layout = () => {
 
     return (
         <div className={classes.container}>
-            <div>
+            <div className={classes["search-container"]}>
                 <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
                 <FoodList onPageChange={(p) => searchApiCall(p)} totalPage={searchResult?.totalPages} currentPage={searchResult?.currentPage}
                           selected={selectedFood} onSelect={setSelectedFood} foods={searchResult?.foods} />

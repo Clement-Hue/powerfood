@@ -8,11 +8,12 @@
   min-width: 400px;
   max-height: 200px;
   overflow: auto;
-  background-color: rgb(191, 213, 218);
+  padding: sizing.spacing(1);
+  background-color: var(--light-primary);
   z-index: var(--tooltip-z-index);
   top: 0;
-  left:0;
-  transform: translateX(-100%);
+  right:0;
+  transform: translateX(100%);
   gap: sizing.spacing(2);
   border: var(--border);
   box-shadow: var(--shadow-1);

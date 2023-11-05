@@ -8,20 +8,25 @@ const Meal: React.FC<Props> = ({foods, name, onDelete,
         <div className={classes.container}>
             <span className={classes["meal__name"]}>
                 {name}
-                <IconButton Icon={Icons.Delete} onClick={() => onDelete?.(name)}/>
+                <IconButton aria-label="Supprimer" Icon={Icons.Delete} onClick={() => onDelete?.(name)}/>
             </span>
             <div className={classes["foods-container"]}>
                 {foods?.map((food, i ) => (
                     <div key={`${food}-${i}`} className={classes["food-container"]}>
                         <div > {food} </div>
-                        <IconButton Icon={Icons.Delete}/>
+                        <IconButton aria-label="Supprimer" Icon={Icons.Delete}/>
                     </div>
                 ))}
             </div>
-            <div className={classes["add-food-container"]}>
-                <Input min={0} type="number" placeholder="quantité (g)"/>
-                <Button disabled={disabledAddFoodButton} onClick={() => onAddFood?.(name)}>Ajouter l'aliment</Button>
-            </div>
+            <form className={classes["add-food-container"]}
+                  onSubmit={(e) => {
+                      e.preventDefault();
+                      onAddFood?.(name)
+                  }}
+            >
+                <Input required defaultValue={100} min={0} type="number" placeholder="quantité (g)"/>
+                <Button type="submit" disabled={disabledAddFoodButton}>Ajouter l'aliment</Button>
+            </form>
         </div>
     );
 };
