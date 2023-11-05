@@ -25,7 +25,7 @@ const Layout = () => {
                 setSearchResult(undefined)
                 return;
             }
-            debounce.current = setTimeout(async () => {
+            debounce.current = window.setTimeout(async () => {
                 await searchApiCall();
             }, 500)
         })()
