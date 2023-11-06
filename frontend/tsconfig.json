@@ -23,6 +23,9 @@
       "@shares": ["src/shares"],
       "@services": ["src/services"],
       "@testing": ["src/testing"],
+      "@hooks": ["src/hooks"],
+      "@providers": ["src/providers"],
+      "@providers/*": ["src/providers/*"],
       "@typing/*": ["src/typing/*"]
     }
   },

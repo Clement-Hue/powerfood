@@ -1,45 +1,18 @@
-import {useEffect, useRef, useState} from 'react';
+import {useState} from 'react';
 import {Input} from "@shares"
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import Meal from "../Meal";
-import {apiService} from "@services";
 import FoodList from "../FoodList";
-import type {SearchResult} from "@typing/api.type.ts";
 import type {Food} from "@typing/app.type.ts";
 
 const Layout = () => {
-    const [searchResult, setSearchResult] = useState<SearchResult>();
     const [selectedFood, setSelectedFood] = useState<Food>();
     const [searchValue, setSearchValue] = useState("");
     const [days, setDays] = useState<DayType>({
         ["Jour par défaut"]: {}
     })
-    let debounce = useRef<number>();
 
-    useEffect(() => {
-        (async function () {
-            if (debounce.current) {
-                clearTimeout(debounce.current!);
-            }
-            if (!searchValue) {
-                setSearchResult(undefined)
-                return;
-            }
-            debounce.current = window.setTimeout(async () => {
-                await searchApiCall();
-            }, 500)
-        })()
-    }, [searchValue])
-
-    useEffect(() => {
-       setSelectedFood(undefined);
-    }, [searchResult]);
-
-    const searchApiCall = async (pageNumber = 1) => {
-        const res = await apiService.searchFood(searchValue, {pageNumber});
-        setSearchResult(res);
-    }
 
     const handleAddMeal = (dayName: string, mealName: string) => {
         setDays((o) => ({
@@ -54,10 +27,13 @@ const Layout = () => {
     }
 
     const handleAddFood = (dayName: string, mealName: string) => {
+        if (!selectedFood) {
+            return
+        }
         setDays((o) => {
             const meals = o[dayName];
             const foods = meals[mealName]
-            return {...o, [dayName]: {...meals, [mealName]: [...foods, selectedFood?.description!]}}
+            return {...o, [dayName]: {...meals, [mealName]: [...foods, selectedFood.name]}}
         })
     }
 
@@ -73,8 +49,7 @@ const Layout = () => {
         <div className={classes.container}>
             <div className={classes["search-container"]}>
                 <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
-                <FoodList onPageChange={(p) => searchApiCall(p)} totalPage={searchResult?.totalPages} currentPage={searchResult?.currentPage}
-                          selected={selectedFood} onSelect={setSelectedFood} />
+                <FoodList selected={selectedFood} onSelect={setSelectedFood} />
             </div>
             <div className={classes["days-container"]}>
                 {Object.entries(days).map(([dayName, meals]) => (
