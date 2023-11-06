@@ -1,6 +1,7 @@
 import React from 'react';
 import clsx from "clsx"
 import classes from "./Summary.module.scss"
+import {Nutrient} from "@typing/app.type.ts";
 
 const Summary: React.FC<Props> = ({nutrients}) => {
     const valueClass = (DRI: Value, value: Value = {amount: 0, unit: "mcg"}) => {
@@ -33,7 +34,7 @@ type Value = {
 }
 
 type Props = {
-    nutrients?: {name: string, DRI: Value, value?: Value}[]
+    nutrients?: (Nutrient & {value?: Value})[]
 }
 
 export default Summary;

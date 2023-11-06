@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
 import classes from "./Day.module.scss"
 import {Summary} from "./components";
-import DRI from "src/DRI.json"
 import {Button, Input} from "@shares";
+import {useFetch, useServices} from "@hooks";
 
 const Day: React.FC<Props> = ({name, children, onAddMeal}) => {
     const [mealName, setMealName] = useState("");
+    const {apiService} = useServices();
+    const dri = useFetch(() => apiService.getNutrients())
     return (
         <div className={classes.container}>
             <div className={classes["day__name"]}>
@@ -23,7 +25,7 @@ const Day: React.FC<Props> = ({name, children, onAddMeal}) => {
             <div className={classes["meals-container"]}>
                 {children}
             </div>
-            <Summary nutrients={DRI}/>
+            <Summary nutrients={dri}/>
         </div>
     );
 };

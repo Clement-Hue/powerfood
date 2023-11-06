@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from "./NutrientsInfo.module.scss"
-import {Nutrient} from "@typing/app.type.ts";
+import {FoodNutrient} from "@typing/app.type.ts";
 
 const NutrientsInfo: React.FC<Props> = ({nutrients}) => {
     return !nutrients?.length ? null : (
@@ -16,7 +16,7 @@ const NutrientsInfo: React.FC<Props> = ({nutrients}) => {
 };
 
 type Props = {
-    nutrients?: Nutrient[]
+    nutrients?: FoodNutrient[]
 }
 
 export default NutrientsInfo;
