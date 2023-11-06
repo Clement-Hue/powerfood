@@ -31,3 +31,7 @@ export type Nutrient = {
 }
 
 export type Unit = "g" | "mcg" | "mg"
+export type Value = {
+    amount: number
+    unit: string
+}

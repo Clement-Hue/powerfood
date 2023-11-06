@@ -3,11 +3,19 @@ import classes from "./Day.module.scss"
 import {Summary} from "./components";
 import {Button, Input} from "@shares";
 import {useFetch, useServices} from "@hooks";
+import {Value} from "@typing/app.type.ts";
 
-const Day: React.FC<Props> = ({name, children, onAddMeal}) => {
+const Day: React.FC<Props> = ({name, children, onAddMeal, totalNutrient = []}) => {
     const [mealName, setMealName] = useState("");
     const {apiService} = useServices();
     const dri = useFetch(() => apiService.getNutrients())
+    const nutrients = dri?.map((nutrient) => {
+       const value = totalNutrient[nutrient.id]
+        if (!value) {
+            return nutrient
+        }
+        return {...nutrient, value}
+    })
     return (
         <div className={classes.container}>
             <div className={classes["day__name"]}>
@@ -25,7 +33,7 @@ const Day: React.FC<Props> = ({name, children, onAddMeal}) => {
             <div className={classes["meals-container"]}>
                 {children}
             </div>
-            <Summary nutrients={dri}/>
+            <Summary nutrients={nutrients}/>
         </div>
     );
 };
@@ -34,6 +42,9 @@ type Props = {
     name: string
     children?: React.ReactNode
     onAddMeal?: (mealName: string) => void
+    totalNutrient?: {
+        [nutrientId: number]: Value
+    }
 }
 
 export default Day;

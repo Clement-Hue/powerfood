@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from "clsx"
 import classes from "./Summary.module.scss"
-import {Nutrient} from "@typing/app.type.ts";
+import {Nutrient, Value} from "@typing/app.type.ts";
 
 const Summary: React.FC<Props> = ({nutrients}) => {
     const valueClass = (DRI: Value, value: Value = {amount: 0, unit: "mcg"}) => {
@@ -27,11 +27,6 @@ const Summary: React.FC<Props> = ({nutrients}) => {
         </div>
     );
 };
-
-type Value = {
-    amount: number
-    unit: string
-}
 
 type Props = {
     nutrients?: (Nutrient & {value?: Value})[]

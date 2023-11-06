@@ -2,7 +2,7 @@ import {useState} from 'react';
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import Meal from "../Meal";
-import type {Food, MealFood, Unit} from "@typing/app.type.ts";
+import type {Food, MealFood, Unit, Value} from "@typing/app.type.ts";
 import FoodSearch from "../FoodSearch";
 
 const Layout = () => {
@@ -45,13 +45,32 @@ const Layout = () => {
         })
     }
 
+    const getTotalNutrients = (meals: MealType) => {
+        return Object.values(meals).reduce<{
+            [nutrientId: number]: Value
+        }>((prev, foods) => {
+           foods.forEach((food) => {
+               const amount = food.amount
+               food.nutrients.forEach((nutrient) => {
+                   if (!prev[nutrient.id]) {
+                       prev[nutrient.id] = {amount: 0, unit: "mg"}
+                   }
+                   prev[nutrient.id].amount = prev[nutrient.id].amount + (nutrient.value / 100) * amount // divide by 100 to get value for 1g
+               })
+           })
+            return prev;
+        }, {})
+    }
+
     return (
         <div className={classes.container}>
             <FoodSearch selectedFood={selectedFood} onSelect={setSelectedFood}/>
             <div className={classes["days-container"]}>
                 {Object.entries(days).map(([dayName, meals]) => (
                     <Day onAddMeal={(mealName) => handleAddMeal(dayName, mealName)}
-                         key={dayName} name={dayName}>
+                         key={dayName} name={dayName}
+                         totalNutrient={getTotalNutrients(meals)}
+                    >
                         {Object.entries(meals).map(([mealName, foods]) => (
                             <Meal
                                 onDelete={() => handleDeleteMeal(dayName, mealName)}
