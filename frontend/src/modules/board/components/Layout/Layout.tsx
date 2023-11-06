@@ -2,7 +2,7 @@ import {useState} from 'react';
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import Meal from "../Meal";
-import type {Food} from "@typing/app.type.ts";
+import type {Food, MealFood, Unit} from "@typing/app.type.ts";
 import FoodSearch from "../FoodSearch";
 
 const Layout = () => {
@@ -23,22 +23,25 @@ const Layout = () => {
         ))
     }
 
-    const handleAddFood = (dayName: string, mealName: string) => {
+    const handleAddFood = (dayName: string, mealName: string, amount: number, unit: Unit) => {
         if (!selectedFood) {
             return
         }
         setDays((o) => {
             const meals = o[dayName];
             const foods = meals[mealName]
-            return {...o, [dayName]: {...meals, [mealName]: [...foods, selectedFood.name]}}
+            if (foods.some((f) => f.id === selectedFood.id)) {
+                return o;
+            }
+            return {...o, [dayName]: {...meals, [mealName]: [...foods, {...selectedFood, amount, unit }]}}
         })
     }
 
-    const handleDeleteFood = (dayName: string, mealName: string, foodName: string) => {
+    const handleDeleteFood = (dayName: string, mealName: string, foodId: number) => {
         setDays((o) => {
             const meals = o[dayName];
             const foods = meals[mealName]
-            return {...o, [dayName]: {...meals, [mealName]: foods.filter(((f) => f !== foodName )) }}
+            return {...o, [dayName]: {...meals, [mealName]: foods.filter(((f) => f.id !== foodId )) }}
         })
     }
 
@@ -52,8 +55,8 @@ const Layout = () => {
                         {Object.entries(meals).map(([mealName, foods]) => (
                             <Meal
                                 onDelete={() => handleDeleteMeal(dayName, mealName)}
-                                onDeleteFood={(f) => handleDeleteFood(dayName, mealName, f)}
-                                onAddFood={() => handleAddFood(dayName, mealName)}
+                                onDeleteFood={(foodId) => handleDeleteFood(dayName, mealName, foodId)}
+                                onAddFood={(quantity, unit) => handleAddFood(dayName, mealName, quantity, unit)}
                                 disabledAddFood={!selectedFood}
                                 key={mealName} name={mealName} foods={foods}/>
                         ))}
@@ -69,7 +72,7 @@ type DayType = {
 }
 
 type MealType = {
-    [key: string]: string[]
+    [key: string]: MealFood[]
 }
 
 export default Layout;

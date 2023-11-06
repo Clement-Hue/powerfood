@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
+import {MealFood, Unit} from "@typing/app.type.ts";
 
 const Meal: React.FC<Props> = ({foods, name, onDelete,
                                onAddFood, disabledAddFood,
                                onDeleteFood}) => {
+    const [quantity, setQuantity] = useState(100);
     return (
         <div className={classes.container}>
             <span className={classes["meal__name"]}>
@@ -14,18 +16,19 @@ const Meal: React.FC<Props> = ({foods, name, onDelete,
             <div className={classes["foods-container"]}>
                 {foods?.map((food, i ) => (
                     <div key={`${food}-${i}`} className={classes["food-container"]}>
-                        <div > {food} </div>
-                        <IconButton onClick={() => onDeleteFood?.(food)} aria-label="Supprimer" Icon={Icons.Delete}/>
+                        <div > {food.name} </div>
+                        <div > {food.amount} {food.unit} </div>
+                        <IconButton onClick={() => onDeleteFood?.(food.id)} aria-label="Supprimer" Icon={Icons.Delete}/>
                     </div>
                 ))}
             </div>
             <form className={classes["add-food-container"]}
                   onSubmit={(e) => {
                       e.preventDefault();
-                      onAddFood?.(name)
+                      onAddFood?.(quantity, "g")
                   }}
             >
-                <Input disabled={disabledAddFood} required defaultValue={100} min={0} type="number" placeholder="quantité (g)"/>
+                <Input disabled={disabledAddFood} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number" placeholder="quantité (g)"/>
                 <Button type="submit" disabled={disabledAddFood}>Ajouter l'aliment</Button>
             </form>
         </div>
@@ -34,10 +37,10 @@ const Meal: React.FC<Props> = ({foods, name, onDelete,
 
 type Props = {
     name: string
-    foods?: string[]
+    foods?: MealFood[]
     onDelete?: (mealName: string) => void
-    onDeleteFood?: (foodName: string) => void
-    onAddFood?: (mealName: string) => void
+    onDeleteFood?: (foodId: number) => void
+    onAddFood?: (amount: number, unit: Unit) => void
     disabledAddFood?: boolean
 }
 

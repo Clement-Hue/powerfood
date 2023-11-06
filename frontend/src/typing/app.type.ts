@@ -1,5 +1,5 @@
 
-export interface Food {
+export type Food = {
     id: number; // Unique ID of the food.
     name: string; // The type of the food data.
     description?: string; // The description of the food.
@@ -9,7 +9,12 @@ export interface Food {
     calories: number
     nutrients: FoodNutrient[];
 }
-export interface FoodNutrient {
+
+export type MealFood = Food & {
+   amount: number
+   unit: Unit
+}
+export type FoodNutrient = {
     id: number;
     name: string;
     unit: string;
@@ -21,6 +26,8 @@ export type Nutrient = {
     name: string
     DRI: {
         amount: number,
-        unit: "g" | "mcg" | "mg"
+        unit: Unit
     }
 }
+
+export type Unit = "g" | "mcg" | "mg"
