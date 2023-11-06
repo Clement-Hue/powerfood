@@ -13,8 +13,8 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
     return (
         <div className={classes.container}>
             <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
-            <FoodList selected={selectedFood} onSelect={onSelect} />
             <Button onClick={() => setOpen(true)}>Ajouter aliment</Button>
+            <FoodList selected={selectedFood} onSelect={onSelect} />
             <Dialog open={open}>
                 <div className={classes["dialog-container"]}>
                     <span className={classes["dialog__title"]}>Ajouter un aliment</span>

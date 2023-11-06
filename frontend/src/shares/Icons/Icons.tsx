@@ -1,5 +1,6 @@
-import {AiOutlineDelete} from "react-icons/ai"
+import {AiOutlineDelete, AiOutlineEdit} from "react-icons/ai"
 
 export default {
-    Delete: AiOutlineDelete
+    Delete: AiOutlineDelete,
+    Edit: AiOutlineEdit
 }

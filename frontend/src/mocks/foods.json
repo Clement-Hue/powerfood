@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "name": "Banane",
+    "proteins": 1.28,
+    "lipids": 0.39,
+    "carbs": 29.6,
+    "calories": 122,
+    "nutrients": [
+      {
+        "id": 1162,
+        "name": "Vitamine C",
+        "unit": "mg",
+        "value": 8.7
+      },
+      {
+        "id": 1092,
+        "name": "Potassium",
+        "unit": "mg",
+        "value": 358
+      }
+    ]
+  }
+]

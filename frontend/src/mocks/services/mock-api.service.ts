@@ -1,8 +1,14 @@
-import DRI from "src/DRI.json"
+import DRI from "@mocks/DRI.json"
+import foods from "@mocks/foods.json"
+import {Nutrient, Food} from "@typing/app.type.ts";
 
 async function getNutrients() {
-    return DRI
+    return DRI as Nutrient[]
+}
+async function getFoods(): Promise<Food[]> {
+    return foods;
 }
 export default {
-    getNutrients
+    getNutrients,
+    getFoods
 }

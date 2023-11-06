@@ -2,18 +2,15 @@
 
 .container {
   display: flex;
+  position: absolute;
   flex-direction: row;
   flex-wrap: wrap;
-  position: absolute;
-  min-width: 400px;
+  max-width: 400px;
   max-height: 200px;
   overflow: auto;
   padding: sizing.spacing(1);
   background-color: var(--light-primary);
   z-index: var(--tooltip-z-index);
-  top: 0;
-  right:0;
-  transform: translateX(100%);
   gap: sizing.spacing(2);
   border: var(--border);
   box-shadow: var(--shadow-1);
