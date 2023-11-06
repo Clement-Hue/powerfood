@@ -1,12 +1,8 @@
-import request from "./request.ts";
-import {SearchResult} from "../typing/api.type.ts";
+import DRI from "src/DRI.json"
 
-function searchFood(food: string, {pageNumber = 1} = {}): Promise<SearchResult> {
-    return request("v1/foods/search", {
-        query: `&query=${food}&pageSize=10&pageNumber=${pageNumber}`
-    })
+async function getNutrients() {
+   return DRI
 }
-
 export default {
-    searchFood
+   getNutrients
 }

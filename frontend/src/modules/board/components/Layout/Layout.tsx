@@ -1,18 +1,15 @@
 import {useState} from 'react';
-import {Input} from "@shares"
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import Meal from "../Meal";
-import FoodList from "../FoodList";
 import type {Food} from "@typing/app.type.ts";
+import FoodSearch from "../FoodSearch";
 
 const Layout = () => {
     const [selectedFood, setSelectedFood] = useState<Food>();
-    const [searchValue, setSearchValue] = useState("");
     const [days, setDays] = useState<DayType>({
         ["Jour par défaut"]: {}
     })
-
 
     const handleAddMeal = (dayName: string, mealName: string) => {
         setDays((o) => ({
@@ -47,10 +44,7 @@ const Layout = () => {
 
     return (
         <div className={classes.container}>
-            <div className={classes["search-container"]}>
-                <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
-                <FoodList selected={selectedFood} onSelect={setSelectedFood} />
-            </div>
+            <FoodSearch selectedFood={selectedFood} onSelect={setSelectedFood}/>
             <div className={classes["days-container"]}>
                 {Object.entries(days).map(([dayName, meals]) => (
                     <Day onAddMeal={(mealName) => handleAddMeal(dayName, mealName)}

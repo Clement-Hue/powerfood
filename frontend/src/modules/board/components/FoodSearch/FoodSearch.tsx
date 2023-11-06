@@ -1,12 +1,19 @@
 import React, {useState} from 'react';
+import classes from "./FoodSearch.module.scss"
 import {Button, Dialog, Input, Select} from "@shares";
-import classes from "./Layout.module.scss"
-import DRI from "src/DRI.json"
+import FoodList from "../FoodList";
+import {Food} from "@typing/app.type.ts";
+import {useServices, useFetch} from "@hooks";
 
-const Layout = () => {
+const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
+    const [searchValue, setSearchValue] = useState("")
     const [open, setOpen] = useState(false)
+    const {apiService} = useServices();
+    const nutrients = useFetch(() => apiService.getNutrients())
     return (
-        <div>
+        <div className={classes.container}>
+            <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
+            <FoodList selected={selectedFood} onSelect={onSelect} />
             <Button onClick={() => setOpen(true)}>Ajouter aliment</Button>
             <Dialog open={open}>
                 <div className={classes["dialog-container"]}>
@@ -14,8 +21,8 @@ const Layout = () => {
                     <div>
                         <Input label="name" />
                     </div>
-                    <div className={classes["dialog__inputs-container"]}>
-                        {DRI.map((nutrient) => (
+                    <div className={classes["dialog__nutrients-container"]}>
+                        {nutrients?.map((nutrient) => (
                             <>
                                 <Input min={0} type="number" label={nutrient.name}/>
                                 <Select label="Unité" options={[
@@ -26,7 +33,7 @@ const Layout = () => {
                             </>
                         ))}
                     </div>
-                    <div className={classes["dialog__button-container"]}>
+                    <div className={classes["dialog__buttons-container"]}>
                         <Button onClick={() => setOpen(false)}>Fermer</Button>
                         <Button>Ajouter</Button>
                     </div>
@@ -36,4 +43,8 @@ const Layout = () => {
     );
 };
 
-export default Layout;
+type Props = {
+   selectedFood?: Food
+    onSelect?: (food: Food) => void
+}
+export default FoodSearch;
