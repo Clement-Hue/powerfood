@@ -23,9 +23,6 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     })
 
     const handleAddMeal = () => {
-        if (meals[newMealInput]) {
-            return;
-        }
         setMeals((prev) => {
             return {...prev, [newMealInput]: {}}
         })
@@ -53,7 +50,7 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
                 handleAddMeal()
             }}>
                 <Input placeholder="Repas" aria-label="Repas"  value={newMealInput} onChange={(e) => setNewMealInput(e.target.value)}/>
-                <Button disabled={!newMealInput} type="submit">Ajouter un repas</Button>
+                <Button disabled={!newMealInput || !!meals[newMealInput]} type="submit">Ajouter un repas</Button>
             </form>
             <div className={classes["meals-container"]}>
                 {Object.keys(meals).map((mealName) => (

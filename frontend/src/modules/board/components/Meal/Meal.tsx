@@ -10,8 +10,8 @@ const Meal: React.FC<Props> = ({name, onDelete,
     const mealNameId = useId();
 
     const handleAddFood = (amount: number, unit: Unit) => {
-        if (!quantity || !selectedFood || foods.some((food) => food.id === selectedFood?.id)) {
-            return
+        if (!selectedFood) {
+            return;
         }
         setFoods((prev) => {
            return [...prev, {...selectedFood, amount, unit}]
@@ -61,7 +61,10 @@ const Meal: React.FC<Props> = ({name, onDelete,
             >
                 <Input disabled={!selectedFood} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
                        placeholder="quantité (g)"/>
-                <Button type="submit" disabled={!selectedFood}>Ajouter l'aliment</Button>
+                <Button type="submit"
+                        disabled={!quantity || !selectedFood || foods.some((food) => food.id === selectedFood?.id)}>
+                    Ajouter l'aliment
+                </Button>
             </form>
         </div>
     );

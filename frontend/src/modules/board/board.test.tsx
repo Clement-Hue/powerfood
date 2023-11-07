@@ -78,7 +78,6 @@ describe("Board module", () => {
         render( <TestComponent/>)
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
-        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"})); // should add one time
         await waitFor(() => {
             expect(screen.getByRole("region", {name: "déjeuner"})).toBeInTheDocument();
         })
@@ -88,11 +87,30 @@ describe("Board module", () => {
         })
     })
 
-    it("should disable add meal button if name is empty", async () => {
+    it("should disable add meal if the meal already exist or input in empty", async () => {
         render( <TestComponent/>)
-        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: ""}})
         await waitFor(() => {
             expect(screen.getByRole("button", {name: "Ajouter un repas"})).toBeDisabled();
+        })
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        await waitFor(() => {
+            expect(screen.getByRole("button", {name: "Ajouter un repas"})).toBeDisabled();
+        })
+    })
+
+    it("should disable add food to meal button if no food selected or food already in the meal", async () => {
+        render( <TestComponent/>)
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        await waitFor(() => {
+            expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled();
+        })
+        fireEvent.click(screen.getByText(/banane/i))
+        fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}) )
+        await waitFor(() => {
+            expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled();
         })
     })
 
@@ -131,17 +149,13 @@ describe("Board module", () => {
 
     it("should add selected food to meal and remove it", async () => {
         render( <TestComponent/>)
-        const addMeal = () => {
-            fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
-            fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
-        }
         const food = await screen.findByText(/banane/i)
         fireEvent.click(food);
-        addMeal();
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "80"}})
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));// should add only one time
-        addMeal() // should not change the food's meal
         const meal = screen.getByRole("region", {name: "déjeuner"});
         await waitFor(() => {
             expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
@@ -183,17 +197,15 @@ describe("Board module", () => {
         })
     })
 
-    it("should not add food if quantity is 0g", async () => {
+    it("should disable add food to meal button if quantity is 0g", async () => {
         render( <TestComponent/>)
         const food = await screen.findByText(/banane/i)
         fireEvent.click(food);
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "0"}})
-        fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
-        const meal = screen.getByRole("region", {name: "déjeuner"});
         await waitFor(() => {
-            expect(within(meal).queryByText(/banane/i)).not.toBeInTheDocument()
+            expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled();
         })
     })
 

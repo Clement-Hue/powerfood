@@ -24,8 +24,8 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
                     <div className={classes["dialog__nutrients-container"]}>
                         {nutrients?.map((nutrient) => (
                             <div key={nutrient.id}>
-                                <Input min={0} type="number" label={nutrient.name}/>
-                                <Select label="Unité" options={[
+                                <Input defaultValue={0} min={0} type="number" label={nutrient.name}/>
+                                <Select placeholder="Unité" options={[
                                     {label: "mcg", value: "mcg"},
                                     {label: "mg", value: "mg"},
                                     {label: "g", value: "g"},
