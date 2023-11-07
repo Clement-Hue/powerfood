@@ -3,19 +3,45 @@ import classes from "./Day.module.scss"
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useFetch, useServices} from "@hooks";
-import {Value} from "@typing/app.type.ts";
+import {Food, TotalNutrients, Value} from "@typing/app.type.ts";
+import Meal from "../Meal";
 
-const Day: React.FC<Props> = ({name, children, onAddMeal, totalNutrient = []}) => {
-    const [mealName, setMealName] = useState("");
+const Day: React.FC<Props> = ({name, selectedFood}) => {
+    const [newMealInput, setNewMealInput] = useState("");
+    const [meals, setMeals] = useState<string[]>([])
+    const [totalNutrients, setTotalNutrients] = useState<{[mealName: string]: TotalNutrients}>({});
     const {apiService} = useServices();
     const dri = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
-       const value = totalNutrient[nutrient.id]
+       const value = Object.values(totalNutrients).reduce<Value | null>((prev, n) => {
+           if (!prev) {
+               return n[nutrient.id]
+           }
+           prev.amount += n[nutrient.id].amount
+          return prev;
+       }, null)
         if (!value) {
             return nutrient
         }
         return {...nutrient, value}
     })
+
+    const handleAddMeal = () => {
+        if (meals.includes(newMealInput)) {
+            return;
+        }
+        setMeals((prev) => {
+            return [...prev, newMealInput]
+        })
+    }
+
+    const handleDeleteMeal = (mealName: string) => {
+        setMeals((prev) => {
+            return prev.filter((meal) => meal !== mealName)
+        })
+    }
+
+
     return (
         <div className={classes.container}>
             <div className={classes["day__name"]}>
@@ -25,26 +51,31 @@ const Day: React.FC<Props> = ({name, children, onAddMeal, totalNutrient = []}) =
                 className={classes["day__add-meal"]}
                 onSubmit={(e) => {
                 e.preventDefault();
-                onAddMeal?.(mealName);
+                handleAddMeal()
             }}>
-                <Input placeholder="Repas" aria-label="Repas"  value={mealName} onChange={(e) => setMealName(e.target.value)}/>
+                <Input placeholder="Repas" aria-label="Repas"  value={newMealInput} onChange={(e) => setNewMealInput(e.target.value)}/>
                 <Button type="submit">Ajouter un repas</Button>
             </form>
             <div className={classes["meals-container"]}>
-                {children}
+                {meals.map((mealName) => (
+                    <Meal
+                        onDelete={() => handleDeleteMeal(mealName)}
+                        selectedFood={selectedFood}
+                        onTotalNutrientsChange={(total) => setTotalNutrients((prev) => (
+                            {...prev, [mealName]: total}
+                        ))}
+                        key={mealName} name={mealName}/>
+                ))}
             </div>
             <Summary nutrients={nutrients}/>
         </div>
     );
 };
 
+
 type Props = {
     name: string
-    children?: React.ReactNode
-    onAddMeal?: (mealName: string) => void
-    totalNutrient?: {
-        [nutrientId: number]: Value
-    }
+    selectedFood?: Food
 }
 
 export default Day;

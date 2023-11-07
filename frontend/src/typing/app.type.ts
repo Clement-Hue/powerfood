@@ -35,3 +35,6 @@ export type Value = {
     amount: number
     unit: string
 }
+export type TotalNutrients = {
+    [nutrientId: number]: Value
+}
