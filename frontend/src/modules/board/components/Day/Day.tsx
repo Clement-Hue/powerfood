@@ -8,12 +8,11 @@ import Meal from "../Meal";
 
 const Day: React.FC<Props> = ({name, selectedFood}) => {
     const [newMealInput, setNewMealInput] = useState("");
-    const [meals, setMeals] = useState<string[]>([])
-    const [totalNutrients, setTotalNutrients] = useState<{[mealName: string]: TotalNutrients}>({});
+    const [meals, setMeals] = useState<{[mealName: string]: TotalNutrients}>({});
     const {apiService} = useServices();
     const dri = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
-        const value = Object.values(totalNutrients).filter((mealNutrients) => !!mealNutrients[nutrient.id]).reduce<Value | null>((prev, mealNutrients) => {
+        const value = Object.values(meals).filter((mealNutrients) => !!mealNutrients[nutrient.id]).reduce<Value | null>((prev, mealNutrients) => {
             if (!prev) {
                 return {...mealNutrients[nutrient.id]}
             }
@@ -24,18 +23,20 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     })
 
     const handleAddMeal = () => {
-        if (meals.includes(newMealInput)) {
+        if (meals[newMealInput]) {
             return;
         }
         setMeals((prev) => {
-            return [...prev, newMealInput]
+            return {...prev, [newMealInput]: {}}
         })
-        setNewMealInput("")
+        setNewMealInput("") // reset input
     }
 
     const handleDeleteMeal = (mealName: string) => {
         setMeals((prev) => {
-            return prev.filter((meal) => meal !== mealName)
+            return Object.fromEntries(Object.entries(prev).filter(([key, _]) => (
+                key !== mealName
+            )))
         })
     }
 
@@ -55,11 +56,11 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
                 <Button disabled={!newMealInput} type="submit">Ajouter un repas</Button>
             </form>
             <div className={classes["meals-container"]}>
-                {meals.map((mealName) => (
+                {Object.keys(meals).map((mealName) => (
                     <Meal
                         onDelete={() => handleDeleteMeal(mealName)}
                         selectedFood={selectedFood}
-                        onTotalNutrientsChange={(total) => setTotalNutrients((prev) => (
+                        onTotalNutrientsChange={(total) => setMeals((prev) => (
                             {...prev, [mealName]: total}
                         ))}
                         key={mealName} name={mealName}/>

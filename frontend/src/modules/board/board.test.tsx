@@ -154,7 +154,7 @@ describe("Board module", () => {
         })
     })
 
-    it("should create several meals and compute total nutrients", async () => {
+    it("should create several meals and compute total nutrients and reset if meal is removed", async () => {
         render( <TestComponent/>)
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
@@ -168,6 +168,10 @@ describe("Board module", () => {
         fireEvent.click(addFoodButtons[0]);
         await waitFor(() => {
             expect(screen.getByText(/20 mg/i)).toBeInTheDocument() // Vitamine C
+        })
+        fireEvent.click(screen.getByRole("button", {name: /supprimer déjeuner/i}))
+        await waitFor(() => {
+            expect(screen.getByText(/9 mg/i)).toBeInTheDocument()
         })
     })
 
