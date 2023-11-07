@@ -32,7 +32,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 if (!prev[nutrient.id]) {
                     prev[nutrient.id] = {amount: 0, unit: "mg"}
                 }
-                prev[nutrient.id].amount = prev[nutrient.id].amount + (nutrient.value / 100) * amount // divide by 100 to get value for 1g
+                prev[nutrient.id].amount += (nutrient.value / 100) * amount // divide by 100 to get value for 1g
             })
             return prev;
         }, {})

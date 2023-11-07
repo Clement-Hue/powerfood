@@ -14,8 +14,11 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     const dri = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
        const value = Object.values(totalNutrients).reduce<Value | null>((prev, n) => {
+           if (!n[nutrient.id]) {
+               return prev;
+           }
            if (!prev) {
-               return n[nutrient.id]
+               return {...n[nutrient.id]}
            }
            prev.amount += n[nutrient.id].amount
           return prev;

@@ -126,6 +126,22 @@ describe("Board module", () => {
         })
     })
 
+    it("should create several meals and compute total nutrients", async () => {
+        render( <TestComponent/>)
+        const food = await screen.findByText(/banane/i)
+        fireEvent.click(food);
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "diner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        const addFoodButtons = await screen.findAllByRole("button", {name: /ajouter l'aliment/i})
+        fireEvent.click(addFoodButtons[0]);
+        fireEvent.click(addFoodButtons[1]);
+        await waitFor(() => {
+            expect(screen.getByText(/18 mg/i)).toBeInTheDocument() // Vitamine C
+        })
+    })
+
     it("should open add food dialog", async () => {
         render( <TestComponent/>)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
