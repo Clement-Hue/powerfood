@@ -16,7 +16,14 @@ const TestComponent = () => {
                             "lipids": 0.39,
                             "carbs": 1,
                             "calories": 150,
-                            nutrients: []
+                            nutrients: [
+                                {
+                                    "id": 1162,
+                                    "name": "Vitamine C",
+                                    "unit": "mg",
+                                    "value": 2
+                                }
+                            ]
                         },
                         {
                             "id": 1,
@@ -128,17 +135,18 @@ describe("Board module", () => {
 
     it("should create several meals and compute total nutrients", async () => {
         render( <TestComponent/>)
-        const food = await screen.findByText(/banane/i)
-        fireEvent.click(food);
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "diner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.click( await screen.findByText(/banane/i) );
         const addFoodButtons = await screen.findAllByRole("button", {name: /ajouter l'aliment/i})
         fireEvent.click(addFoodButtons[0]);
         fireEvent.click(addFoodButtons[1]);
+        fireEvent.click( await screen.findByText(/poulet/i) );
+        fireEvent.click(addFoodButtons[0]);
         await waitFor(() => {
-            expect(screen.getByText(/18 mg/i)).toBeInTheDocument() // Vitamine C
+            expect(screen.getByText(/20 mg/i)).toBeInTheDocument() // Vitamine C
         })
     })
 
@@ -147,6 +155,20 @@ describe("Board module", () => {
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
         await waitFor(() => {
             expect(screen.getByRole("dialog")).toBeInTheDocument();
+        })
+    })
+
+    it("should not add food if quantity is 0g", async () => {
+        render( <TestComponent/>)
+        const food = await screen.findByText(/banane/i)
+        fireEvent.click(food);
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "0"}})
+        fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
+        const meal = screen.getByRole("region", {name: "déjeuner"});
+        await waitFor(() => {
+            expect(within(meal).queryByText(/banane/i)).not.toBeInTheDocument()
         })
     })
 

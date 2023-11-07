@@ -10,7 +10,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
     const mealNameId = useId();
 
     const handleAddFood = (amount: number, unit: Unit) => {
-        if (!selectedFood || foods.some((food) => food.id === selectedFood?.id)) {
+        if (!quantity || !selectedFood || foods.some((food) => food.id === selectedFood?.id)) {
             return
         }
         setFoods((prev) => {

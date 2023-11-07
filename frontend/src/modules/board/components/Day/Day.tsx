@@ -13,20 +13,14 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     const {apiService} = useServices();
     const dri = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
-       const value = Object.values(totalNutrients).reduce<Value | null>((prev, n) => {
-           if (!n[nutrient.id]) {
-               return prev;
-           }
-           if (!prev) {
-               return {...n[nutrient.id]}
-           }
-           prev.amount += n[nutrient.id].amount
-          return prev;
-       }, null)
-        if (!value) {
-            return nutrient
-        }
-        return {...nutrient, value}
+        const value = Object.values(totalNutrients).filter((mealNutrients) => !!mealNutrients[nutrient.id]).reduce<Value | null>((prev, mealNutrients) => {
+            if (!prev) {
+                return {...mealNutrients[nutrient.id]}
+            }
+            prev.amount += mealNutrients[nutrient.id].amount
+           return prev;
+        }, null)
+        return value ? {...nutrient, value} : nutrient;
     })
 
     const handleAddMeal = () => {
