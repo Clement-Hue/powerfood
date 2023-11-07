@@ -209,4 +209,16 @@ describe("Board module", () => {
         })
     })
 
+    it("should select and unselect food in the food's list", async () => {
+        render( <TestComponent/>)
+        fireEvent.click(await screen.findByText(/banane/i));
+        await waitFor(() => {
+            expect(screen.getByTestId(/food-banane/i)).toHaveAttribute("aria-selected", "true")
+        })
+        fireEvent.click(screen.getByText(/banane/i));
+        await waitFor(() => {
+            expect(screen.getByTestId(/food-banane/i)).toHaveAttribute("aria-selected", "false")
+        })
+    })
+
 })

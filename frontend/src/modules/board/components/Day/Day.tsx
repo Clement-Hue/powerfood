@@ -71,7 +71,7 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
 
 type Props = {
     name: string
-    selectedFood?: Food
+    selectedFood?: Food | null
 }
 
 export default Day;

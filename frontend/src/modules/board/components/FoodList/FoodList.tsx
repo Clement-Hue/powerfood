@@ -17,6 +17,7 @@ const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
                          onMouseEnter={(e) => setShowNutrients({
                              food, pos: {x: e.clientX, y: e.clientY}
                          })}
+                         data-testid={`food-${food.name}`}
                          onMouseLeave={() => setShowNutrients(undefined)}
                          className={classes["food-container"]}>
                         <span id={`food-${food.id}`}>{food.name}</span>
@@ -34,7 +35,7 @@ const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
 };
 
 type Props = {
-    selected?: Food
+    selected?: Food | null
     onSelect?: (food: Food) => void
 }
 

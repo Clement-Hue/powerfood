@@ -5,13 +5,20 @@ import type {Food} from "@typing/app.type.ts";
 import FoodSearch from "../FoodSearch";
 
 const Layout = () => {
-    const [selectedFood, setSelectedFood] = useState<Food>();
+    const [selectedFood, setSelectedFood] = useState<Food | null>(null);
     const [days ] = useState<string[]>( ["Jour par défaut"] )
 
+    const handleSelectFood = (food: Food) => {
+        if (selectedFood?.id === food.id) {
+            setSelectedFood(null)
+        } else {
+            setSelectedFood(food);
+        }
+    }
 
     return (
         <div className={classes.container}>
-            <FoodSearch selectedFood={selectedFood} onSelect={setSelectedFood}/>
+            <FoodSearch selectedFood={selectedFood} onSelect={handleSelectFood}/>
             <div className={classes["days-container"]}>
                 {days.map((dayName ) => (
                     <Day

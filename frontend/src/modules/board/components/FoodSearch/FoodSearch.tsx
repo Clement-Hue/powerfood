@@ -44,7 +44,7 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
 };
 
 type Props = {
-   selectedFood?: Food
+   selectedFood?: Food | null
     onSelect?: (food: Food) => void
 }
 export default FoodSearch;

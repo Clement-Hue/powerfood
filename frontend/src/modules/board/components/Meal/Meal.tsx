@@ -73,7 +73,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
 type Props = {
     name: string
     onDelete?: (mealName: string) => void
-    selectedFood?: Food
+    selectedFood?: Food | null
     onTotalNutrientsChange?: (total: TotalNutrients) => void
 }
 
