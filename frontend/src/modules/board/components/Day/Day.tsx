@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
-import classes from "./Day.module.scss"
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useFetch, useServices} from "@hooks";
 import {Food, TotalNutrients, Value} from "@typing/app.type.ts";
 import Meal from "../Meal";
+import classes from "./Day.module.scss"
 
 const Day: React.FC<Props> = ({name, selectedFood}) => {
     const [newMealInput, setNewMealInput] = useState("");

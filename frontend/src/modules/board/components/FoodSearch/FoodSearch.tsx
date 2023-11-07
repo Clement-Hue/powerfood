@@ -12,7 +12,7 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
     const nutrients = useFetch(() => apiService.getNutrients())
     return (
         <div className={classes.container}>
-            <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
+            <Input placeholder="Rechercher dans la liste" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
             <FoodList selected={selectedFood} onSelect={onSelect} />
             <Dialog open={open}>

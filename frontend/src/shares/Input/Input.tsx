@@ -6,7 +6,7 @@ const Input: React.FC<Props> = ({label, ...props}) => {
     return (
         <div className={classes.container}>
             {!!label && <label htmlFor={id}>{label}</label>}
-            <input {...props} id={id}/>
+            <input {...props} className={classes.input} id={id}/>
         </div>
     )
 };

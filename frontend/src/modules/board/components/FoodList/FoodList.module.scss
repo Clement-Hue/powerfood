@@ -3,6 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  gap: sizing.spacing(1);
   width: 100%;
   height: 100%;
   overflow-y: auto;
@@ -21,14 +22,15 @@
 
 .food-container {
   flex-grow: 1;
-  position: relative;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
   padding: sizing.spacing(2);
   cursor: pointer;
   border: var(--border);
   &[aria-selected="true"] {
-    outline: 2px solid var(--dark-primary);
+    border: 3px solid var(--dark-primary);
   }
   &:hover {
     background-color: var(--hover-bg-color);

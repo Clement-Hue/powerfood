@@ -1,7 +1,12 @@
 
 .container {
+  padding: 8px;
   cursor: pointer;
   &:disabled {
     cursor: default;
   }
+}
+
+.variant-primary {
+
 }
