@@ -17,7 +17,7 @@ export type MealFood = Food & {
 export type FoodNutrient = {
     id: number;
     name: string;
-    unit: string;
+    unit: Unit;
     value: number;
 }
 
@@ -33,7 +33,7 @@ export type Nutrient = {
 export type Unit = "g" | "mcg" | "mg"
 export type Value = {
     amount: number
-    unit: string
+    unit: Unit
 }
 export type TotalNutrients = {
     [nutrientId: number]: Value

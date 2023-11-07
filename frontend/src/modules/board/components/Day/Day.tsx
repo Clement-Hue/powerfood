@@ -3,6 +3,7 @@ import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useFetch, useServices} from "@hooks";
 import {Food, TotalNutrients, Value} from "@typing/app.type.ts";
+import convert from "convert-units"
 import Meal from "../Meal";
 import classes from "./Day.module.scss"
 
@@ -13,10 +14,13 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     const dri = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
         const value = Object.values(meals).filter((mealNutrients) => !!mealNutrients[nutrient.id]).reduce<Value | null>((prev, mealNutrients) => {
+            const nutrientValue = mealNutrients[nutrient.id];
+            const unit = nutrient.DRI.unit
+            const nutrientAmount = convert(nutrientValue.amount).from(nutrientValue.unit).to(unit);
             if (!prev) {
-                return {...mealNutrients[nutrient.id]}
+                return {amount: nutrientAmount, unit}
             }
-            prev.amount += mealNutrients[nutrient.id].amount
+            prev.amount += nutrientAmount;
            return prev;
         }, null)
         return value ? {...nutrient, value} : nutrient;

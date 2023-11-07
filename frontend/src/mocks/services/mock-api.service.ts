@@ -6,7 +6,7 @@ async function getNutrients() {
     return DRI as Nutrient[]
 }
 async function getFoods(): Promise<Food[]> {
-    return foods;
+    return foods as Food[];
 }
 export default {
     getNutrients,

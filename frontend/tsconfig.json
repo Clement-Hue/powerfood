@@ -19,6 +19,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "paths": {
       "@shares": ["src/shares"],
       "@modules": ["src/modules"],

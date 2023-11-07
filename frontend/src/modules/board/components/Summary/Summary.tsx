@@ -19,7 +19,7 @@ const Summary: React.FC<Props> = ({nutrients}) => {
                 <div key={name} className={clsx(classes["nutrient-container"],
                     classes[`value--${valueClass(DRI, value)}`])}>
                     <span className={classes["nutrient__name"]}>{name}</span>
-                    <span> Total: {!value ? 0 : `${Math.ceil(value.amount)} ${value.unit}`}</span>
+                    <span> Total: {!value ? 0 : `${parseFloat(value.amount.toFixed(3)).toString()} ${value.unit}`}</span>
                     <span>DRI: {DRI.amount} {DRI.unit}</span>
                 </div>
             ))}
