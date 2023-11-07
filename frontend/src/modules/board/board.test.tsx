@@ -96,6 +96,15 @@ describe("Board module", () => {
         })
     })
 
+    it("should empty meal name input once the meal is added", async () => {
+        render( <TestComponent/>)
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        await waitFor(() => {
+            expect(screen.getByRole("textbox", {name: "Repas"})).toHaveValue("")
+        })
+    })
+
     it("should show list of food", async () => {
         render( <TestComponent/>)
         await waitFor(() => {
@@ -122,14 +131,17 @@ describe("Board module", () => {
 
     it("should add selected food to meal and remove it", async () => {
         render( <TestComponent/>)
+        const addMeal = () => {
+            fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+            fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        }
         const food = await screen.findByText(/banane/i)
         fireEvent.click(food);
-        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
-        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        addMeal();
         fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "80"}})
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));// should add only one time
-        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"})); // should not change the food's meal
+        addMeal() // should not change the food's meal
         const meal = screen.getByRole("region", {name: "déjeuner"});
         await waitFor(() => {
             expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()

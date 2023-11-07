@@ -30,6 +30,7 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
         setMeals((prev) => {
             return [...prev, newMealInput]
         })
+        setNewMealInput("")
     }
 
     const handleDeleteMeal = (mealName: string) => {
