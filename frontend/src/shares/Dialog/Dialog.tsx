@@ -4,7 +4,7 @@ import {createPortal} from "react-dom";
 
 const Dialog: React.FC<Props> = ({children, open}) => {
     return !open ? null :  createPortal(
-        <div className={classes.container} role="dialog">
+        <div className={classes.container} aria-modal="true" role="dialog">
             {children}
         </div>
     , document.body);

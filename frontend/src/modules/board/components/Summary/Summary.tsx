@@ -1,5 +1,5 @@
 import React from 'react';
-import clsx from "clsx"
+import {clsx} from "clsx"
 import classes from "./Summary.module.scss"
 import {Nutrient, Value} from "@typing/app.type.ts";
 
@@ -14,17 +14,16 @@ const Summary: React.FC<Props> = ({nutrients}) => {
         return "negative"
     }
     return (
-        <div className={classes.container}>
+        <ul aria-label="Résultat" className={classes.container}>
             {nutrients?.map(({name,value, DRI}) => (
                 <div key={name} className={clsx(classes["nutrient-container"],
                     classes[`value--${valueClass(DRI, value)}`])}>
                     <span className={classes["nutrient__name"]}>{name}</span>
-                    <span >
-                        Total: {!value ? 0 : `${value.amount} ${value.unit}`}</span>
+                    <span> Total: {!value ? 0 : `${Math.ceil(value.amount)} ${value.unit}`}</span>
                     <span>DRI: {DRI.amount} {DRI.unit}</span>
                 </div>
             ))}
-        </div>
+        </ul>
     );
 };
 

@@ -8,7 +8,7 @@ const Select: React.FC<Props> = ({options, label, ...props}) => {
             <label htmlFor={id}>{label}</label>
             <select {...props} id={id}>
                 {options?.map(({value, label}) => (
-                    <option value={value}>{label}</option>
+                    <option key={label} value={value}>{label}</option>
                 ))}
             </select>
         </div>

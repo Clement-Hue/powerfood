@@ -13,7 +13,7 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
     return (
         <div className={classes.container}>
             <Input value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
-            <Button onClick={() => setOpen(true)}>Ajouter aliment</Button>
+            <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
             <FoodList selected={selectedFood} onSelect={onSelect} />
             <Dialog open={open}>
                 <div className={classes["dialog-container"]}>
@@ -23,14 +23,14 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
                     </div>
                     <div className={classes["dialog__nutrients-container"]}>
                         {nutrients?.map((nutrient) => (
-                            <>
+                            <div key={nutrient.id}>
                                 <Input min={0} type="number" label={nutrient.name}/>
                                 <Select label="Unité" options={[
                                     {label: "mcg", value: "mcg"},
                                     {label: "mg", value: "mg"},
                                     {label: "g", value: "g"},
                                 ]}/>
-                            </>
+                            </div>
                         ))}
                     </div>
                     <div className={classes["dialog__buttons-container"]}>

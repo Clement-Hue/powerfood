@@ -6,30 +6,30 @@ import {useFetch, useServices} from "@hooks";
 import {IconButton, Icons} from "@shares";
 
 const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
-    const [showNutrients, setShowNutrients] = useState<{id: number, pos: {x:number, y:number}}>();
+    const [showNutrients, setShowNutrients] = useState<{food: Food, pos: {x:number, y:number}}>();
     const {apiService} = useServices();
     const foods = useFetch(() => apiService.getFoods())
     return !foods?.length ? null : (
-        <div className={classes.container}>
-            {foods?.map((food) => (
-                <div className={classes["item-container"]}>
-                    <div onClick={() => onSelect?.(food)} data-selected={selected?.id === food.id} key={food.id}
+        <ul aria-label="Liste des aliments" className={classes.container}>
+            {foods?.map((food ) => (
+                <li aria-labelledby={`food-${food.id}`} key={food.id} className={classes["item-container"]}>
+                    <div onClick={() => onSelect?.(food)} aria-selected={selected?.id === food.id}
                          onMouseEnter={(e) => setShowNutrients({
-                             id: food.id, pos: {x: e.clientX, y: e.clientY}
+                             food, pos: {x: e.clientX, y: e.clientY}
                          })}
                          onMouseLeave={() => setShowNutrients(undefined)}
                          className={classes["food-container"]}>
-                        <span>{food.name}</span>
+                        <span id={`food-${food.id}`}>{food.name}</span>
                         <span>{food.description}</span>
-                        {showNutrients?.id === food.id &&  <NutrientsInfo position={showNutrients.pos} nutrients={food.nutrients} />}
                     </div>
                     <div className={classes["actions-container"]}>
                         <IconButton aria-label="Editer" Icon={Icons.Edit}/>
                         <IconButton aria-label="Supprimer" Icon={Icons.Delete}/>
                     </div>
-                </div>
+                </li>
             ))}
-        </div>
+            {showNutrients &&  <NutrientsInfo position={showNutrients.pos} food={showNutrients.food} />}
+        </ul>
     );
 };
 

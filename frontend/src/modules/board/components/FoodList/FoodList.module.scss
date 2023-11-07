@@ -27,7 +27,7 @@
   padding: sizing.spacing(2);
   cursor: pointer;
   border: var(--border);
-  &[data-selected="true"] {
+  &[aria-selected="true"] {
     outline: 2px solid var(--dark-primary);
   }
   &:hover {

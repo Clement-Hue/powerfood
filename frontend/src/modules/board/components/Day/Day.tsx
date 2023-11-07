@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import classes from "./Day.module.scss"
-import {Summary} from "./components";
+import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useFetch, useServices} from "@hooks";
 import {Value} from "@typing/app.type.ts";
@@ -27,7 +27,7 @@ const Day: React.FC<Props> = ({name, children, onAddMeal, totalNutrient = []}) =
                 e.preventDefault();
                 onAddMeal?.(mealName);
             }}>
-                <Input value={mealName} onChange={(e) => setMealName(e.target.value)}/>
+                <Input placeholder="Repas" aria-label="Repas"  value={mealName} onChange={(e) => setMealName(e.target.value)}/>
                 <Button type="submit">Ajouter un repas</Button>
             </form>
             <div className={classes["meals-container"]}>
