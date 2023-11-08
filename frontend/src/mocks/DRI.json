@@ -19,8 +19,8 @@
     "id": 1114,
     "name": "Vitamin D",
     "DRI": {
-      "amount": "600 - 800",
-      "unit": "IU"
+      "amount": 15,
+      "unit": "mcg"
     }
   },
   {

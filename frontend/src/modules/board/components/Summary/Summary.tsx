@@ -8,7 +8,7 @@ const Summary: React.FC<Props> = ({nutrients}) => {
         if (value.amount >= DRI.amount) {
             return "positive";
         }
-        if (value.amount >= DRI.amount * 0.9) {
+        if (value.amount >= DRI.amount * 0.8) {
             return "limit"
         }
         return "negative"

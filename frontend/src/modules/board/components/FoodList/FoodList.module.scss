@@ -26,7 +26,6 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: sizing.spacing(2);
   cursor: pointer;
   border: var(--border);
   &[aria-selected="true"] {

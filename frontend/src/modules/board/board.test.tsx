@@ -65,7 +65,7 @@ const TestComponent = () => {
         </ServicesProvider>
     )
 }
-describe("Board module", () => {
+describe("Analyse", () => {
     it("should show nutrients summary", async () => {
         render( <TestComponent/>)
         await waitFor(() => {
@@ -87,7 +87,7 @@ describe("Board module", () => {
         })
     })
 
-    it("should disable add meal if the meal already exist or input in empty", async () => {
+    it("should disable add meal button if the meal already exist or input in empty", async () => {
         render( <TestComponent/>)
         await waitFor(() => {
             expect(screen.getByRole("button", {name: "Ajouter un repas"})).toBeDisabled();
@@ -100,7 +100,7 @@ describe("Board module", () => {
         })
     })
 
-    it("should disable add food to meal button if no food selected or food already in the meal", async () => {
+    it("should disable add food to meal button if no food selected or replace the food in the meal with new quantity", async () => {
         render( <TestComponent/>)
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
@@ -109,6 +109,21 @@ describe("Board module", () => {
         })
         fireEvent.click(screen.getByText(/banane/i))
         fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}) )
+        fireEvent.change(screen.getByPlaceholderText(/quantité/i), {target: {value: "80"}})
+        fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}) )
+        await waitFor(() => {
+            expect(screen.getByText(/banane 80g/i)).toBeInTheDocument()
+            expect(screen.queryByText(/banane 100g/i)).not.toBeInTheDocument()
+        })
+    })
+
+    it("should disable add food to meal button if quantity is 0g", async () => {
+        render( <TestComponent/>)
+        const food = await screen.findByText(/banane/i)
+        fireEvent.click(food);
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "0"}})
         await waitFor(() => {
             expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled();
         })
@@ -123,29 +138,7 @@ describe("Board module", () => {
         })
     })
 
-    it("should show list of food", async () => {
-        render( <TestComponent/>)
-        await waitFor(() => {
-            const foods = within(screen.getByRole("list", {name: /liste des aliments/i})).getAllByRole("listitem");
-            expect(foods).toHaveLength(2);
-            expect(foods[0]).toHaveAccessibleName(/poulet/i)
-            expect(foods[1]).toHaveAccessibleName(/banane/i)
-        })
-    })
 
-    it("should show nutrient info on food hover", async () => {
-        render( <TestComponent/>)
-        const foods = await screen.findByRole("list", {name: /liste des aliments/i});
-        const food = within(foods).getByText(/banane/i);
-        fireEvent.mouseEnter(food)
-        await waitFor(() => {
-            expect(screen.getByRole("tooltip", {name: /information sur banane/i })).toBeInTheDocument()
-        })
-        fireEvent.mouseLeave(food)
-        await waitFor(() => {
-            expect(screen.queryByRole("tooltip", {name: /information sur banane/i})).not.toBeInTheDocument()
-        })
-    })
 
     it("should add selected food to meal and remove it", async () => {
         render( <TestComponent/>)
@@ -189,23 +182,18 @@ describe("Board module", () => {
         })
     })
 
-    it("should open add food dialog", async () => {
-        render( <TestComponent/>)
-        fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
-        await waitFor(() => {
-            expect(screen.getByRole("dialog")).toBeInTheDocument();
-        })
-    })
 
-    it("should disable add food to meal button if quantity is 0g", async () => {
+
+})
+
+describe("Search food", () => {
+    it("should show list of food", async () => {
         render( <TestComponent/>)
-        const food = await screen.findByText(/banane/i)
-        fireEvent.click(food);
-        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
-        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
-        fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "0"}})
         await waitFor(() => {
-            expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled();
+            const foods = within(screen.getByRole("list", {name: /liste des aliments/i})).getAllByRole("listitem");
+            expect(foods).toHaveLength(2);
+            expect(foods[0]).toHaveAccessibleName(/poulet/i)
+            expect(foods[1]).toHaveAccessibleName(/banane/i)
         })
     })
 
@@ -221,4 +209,25 @@ describe("Board module", () => {
         })
     })
 
+    it("should open add food dialog", async () => {
+        render( <TestComponent/>)
+        fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
+        await waitFor(() => {
+            expect(screen.getByRole("dialog")).toBeInTheDocument();
+        })
+    })
+
+    it("should show nutrient info on food hover", async () => {
+        render( <TestComponent/>)
+        const foods = await screen.findByRole("list", {name: /liste des aliments/i});
+        const food = within(foods).getByText(/banane/i);
+        fireEvent.mouseEnter(food)
+        await waitFor(() => {
+            expect(screen.getByRole("tooltip", {name: /information sur banane/i })).toBeInTheDocument()
+        })
+        fireEvent.mouseLeave(food)
+        await waitFor(() => {
+            expect(screen.queryByRole("tooltip", {name: /information sur banane/i})).not.toBeInTheDocument()
+        })
+    })
 })

@@ -15,7 +15,11 @@ const Meal: React.FC<Props> = ({name, onDelete,
             return;
         }
         setFoods((prev) => {
-           return [...prev, {...selectedFood, amount, unit}]
+            const index = foods.findIndex((food) => food.id === selectedFood?.id)
+            if (index !== -1) {
+                return  [...prev.slice(0, index), {...selectedFood, amount, unit}, ...prev.slice(index + 1)];
+            }
+            return [...prev, {...selectedFood, amount, unit}]
         })
     }
 
@@ -63,7 +67,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 <Input disabled={!selectedFood} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
                        placeholder="quantité (g)"/>
                 <Button type="submit"
-                        disabled={!quantity || !selectedFood || foods.some((food) => food.id === selectedFood?.id)}>
+                        disabled={!quantity || !selectedFood}>
                     Ajouter l'aliment
                 </Button>
             </form>
