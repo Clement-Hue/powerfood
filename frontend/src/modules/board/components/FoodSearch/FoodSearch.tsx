@@ -9,7 +9,7 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
     const [searchValue, setSearchValue] = useState("")
     const [open, setOpen] = useState(false)
     const {apiService} = useServices();
-    const nutrients = useFetch(() => apiService.getNutrients())
+    const [nutrients] = useFetch(() => apiService.getNutrients())
     return (
         <div className={classes.container}>
             <Input placeholder="Rechercher dans la liste" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>

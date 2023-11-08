@@ -2,15 +2,16 @@ import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
 import {Nutrient} from "@typing/app.type.ts";
+import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 
-const TestComponent = () => {
+const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
     return (
         <ServicesProvider overrides={{
             apiService: {
                 async getFoods() {
                     return [
                         {
-                            "id": 2,
+                            "id": 1,
                             "name": "Poulet",
                             "proteins": 20,
                             "lipids": 0.39,
@@ -26,7 +27,7 @@ const TestComponent = () => {
                             ]
                         },
                         {
-                            "id": 1,
+                            "id": 2,
                             "name": "Banane",
                             "proteins": 1.28,
                             "lipids": 0.39,
@@ -58,7 +59,8 @@ const TestComponent = () => {
                             unit: "g"
                         }
                     }]
-                }
+                },
+                ...api
             }
         }}>
             <Board/>
@@ -75,14 +77,18 @@ describe("Analyse", () => {
     })
 
     it("should add and remove meal", async () => {
-        render( <TestComponent/>)
+        const addMeal = jest.fn()
+        const deleteMeal = jest.fn()
+        render( <TestComponent api={{addMeal, deleteMeal}}/>)
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         await waitFor(() => {
+            expect(addMeal).toHaveBeenCalledWith("Jour par défaut")
             expect(screen.getByRole("region", {name: "déjeuner"})).toBeInTheDocument();
         })
         fireEvent.click(screen.getByRole("button", {name: /supprimer déjeuner/i}));
         await waitFor(() => {
+            expect(deleteMeal).toHaveBeenCalledWith("Jour par défaut", "déjeuner")
             expect(screen.queryByRole("region", {name: "déjeuner"})).not.toBeInTheDocument();
         })
     })
@@ -181,9 +187,6 @@ describe("Analyse", () => {
             expect(screen.getByText(/0.009 g/i)).toBeInTheDocument()
         })
     })
-
-
-
 })
 
 describe("Search food", () => {
@@ -228,6 +231,17 @@ describe("Search food", () => {
         fireEvent.mouseLeave(food)
         await waitFor(() => {
             expect(screen.queryByRole("tooltip", {name: /information sur banane/i})).not.toBeInTheDocument()
+        })
+    })
+
+    it("should delete food from list", async () => {
+        const deleteFood = jest.fn()
+        render( <TestComponent api={{deleteFood}} />)
+        const food = await screen.findByRole("listitem" ,{name: /banane/i});
+        fireEvent.click(within(food).getByRole("button", {name: /supprimer/i}))
+        await waitFor(() => {
+            expect(deleteFood).toHaveBeenCalledWith(2)
+            expect(screen.queryByRole("listitem", {name: /banane/i})).not.toBeInTheDocument();
         })
     })
 })

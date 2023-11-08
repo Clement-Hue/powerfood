@@ -8,7 +8,14 @@ import {IconButton, Icons} from "@shares";
 const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
     const [showNutrients, setShowNutrients] = useState<{food: Food, pos: {x:number, y:number}}>();
     const {apiService} = useServices();
-    const foods = useFetch(() => apiService.getFoods())
+    const [foods, setFoods] = useFetch(() => apiService.getFoods())
+    const handleDeleteFood = async (foodId: number) => {
+       await apiService.deleteFood(foodId);
+       setFoods((prev) =>  (
+           prev?.filter((f) => f.id !== foodId)
+       ))
+    }
+
     return !foods?.length ? null : (
         <ul aria-label="Liste des aliments" className={classes.container}>
             {foods?.map((food ) => (
@@ -25,7 +32,7 @@ const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
                     </div>
                     <div className={classes["actions-container"]}>
                         <IconButton aria-label="Editer" Icon={Icons.Edit}/>
-                        <IconButton aria-label="Supprimer" Icon={Icons.Delete}/>
+                        <IconButton onClick={() => handleDeleteFood(food.id)} aria-label="Supprimer" Icon={Icons.Delete}/>
                     </div>
                 </li>
             ))}

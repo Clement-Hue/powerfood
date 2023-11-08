@@ -8,7 +8,25 @@ async function getNutrients() {
 async function getFoods(): Promise<Food[]> {
     return foods as Food[];
 }
+
+async function deleteFood(_: number) {
+    return
+}
+
+
+// @ts-ignore
+async function addMeal(dayName: string) {
+    return
+}
+
+// @ts-ignore
+async function deleteMeal(dayName: string, mealName: string) {
+    return
+}
 export default {
     getNutrients,
-    getFoods
+    getFoods,
+    deleteFood,
+    addMeal,
+    deleteMeal
 }

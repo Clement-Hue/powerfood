@@ -11,7 +11,7 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     const [newMealInput, setNewMealInput] = useState("");
     const [meals, setMeals] = useState<{[mealName: string]: TotalNutrients}>({});
     const {apiService} = useServices();
-    const dri = useFetch(() => apiService.getNutrients())
+    const [dri] = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
         const value = Object.values(meals).filter((mealNutrients) => !!mealNutrients[nutrient.id]).reduce<Value | null>((prev, mealNutrients) => {
             const nutrientValue = mealNutrients[nutrient.id];
@@ -26,14 +26,16 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
         return value ? {...nutrient, value} : nutrient;
     })
 
-    const handleAddMeal = () => {
+    const handleAddMeal = async () => {
+        await apiService.addMeal(name);
         setMeals((prev) => {
             return {...prev, [newMealInput]: {}}
         })
         setNewMealInput("") // reset input
     }
 
-    const handleDeleteMeal = (mealName: string) => {
+    const handleDeleteMeal = async (mealName: string) => {
+        await apiService.deleteMeal(name, mealName);
         setMeals((prev) => {
             return Object.fromEntries(Object.entries(prev).filter(([key, _]) => (
                 key !== mealName
