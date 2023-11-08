@@ -26,7 +26,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
         })
     }
 
-    const handleDeleteFood = async (foodId: number) => {
+    const handleDeleteFood = async (foodId: string) => {
         await apiService.deleteFoodFromMeal(mealId, foodId);
         setFoods((prev) => {
             return prev.filter((food) => food.id !== foodId)

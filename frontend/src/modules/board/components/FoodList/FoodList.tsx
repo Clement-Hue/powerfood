@@ -9,7 +9,7 @@ const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
     const [showNutrients, setShowNutrients] = useState<{food: Food, pos: {x:number, y:number}}>();
     const {apiService} = useServices();
     const [foods, setFoods] = useFetch(() => apiService.getFoods())
-    const handleDeleteFood = async (foodId: number) => {
+    const handleDeleteFood = async (foodId: string) => {
        await apiService.deleteFood(foodId);
        setFoods((prev) =>  (
            prev?.filter((f) => f.id !== foodId)

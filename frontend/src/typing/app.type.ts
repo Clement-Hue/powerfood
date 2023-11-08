@@ -1,8 +1,8 @@
 
 export type Food = {
-    id: number; // Unique ID of the food.
-    name: string; // The type of the food data.
-    description?: string; // The description of the food.
+    id: string
+    name: string
+    description?: string
     proteins: number
     lipids: number
     carbs: number
@@ -38,3 +38,5 @@ export type Value = {
 export type TotalNutrients = {
     [nutrientId: number]: Value
 }
+
+export type AddFood = Omit<Food, "id">

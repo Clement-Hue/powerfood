@@ -12,7 +12,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 async getFoods() {
                     return [
                         {
-                            "id": 1,
+                            "id": "1",
                             "name": "Poulet",
                             "proteins": 20,
                             "lipids": 0.39,
@@ -28,7 +28,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                             ]
                         },
                         {
-                            "id": 2,
+                            "id": "2",
                             "name": "Banane",
                             "proteins": 1.28,
                             "lipids": 0.39,
@@ -166,14 +166,14 @@ describe("Analyse", () => {
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
         const meal = screen.getByRole("region", {name: "déjeuner"});
         await waitFor(() => {
-            expect(addFoodToMeal).toHaveBeenCalledWith(mealId, 2, {amount: 80, unit: "g"})
+            expect(addFoodToMeal).toHaveBeenCalledWith(mealId, "2", {amount: 80, unit: "g"})
             expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
             expect(screen.getByText(/0.007 g/i)).toBeInTheDocument()
         })
         expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
         fireEvent.click(within(meal).getByRole("button", {name: /supprimer banane/i}))
         await waitFor(() => {
-            expect(deleteFoodFromMeal).toHaveBeenCalledWith(mealId, 2);
+            expect(deleteFoodFromMeal).toHaveBeenCalledWith(mealId, "2");
             expect(within(meal).queryByText(/banane 80g/i)).not.toBeInTheDocument()
         })
     })
@@ -251,7 +251,7 @@ describe("Search food", () => {
         const food = await screen.findByRole("listitem" ,{name: /banane/i});
         fireEvent.click(within(food).getByRole("button", {name: /supprimer/i}))
         await waitFor(() => {
-            expect(deleteFood).toHaveBeenCalledWith(2)
+            expect(deleteFood).toHaveBeenCalledWith("2")
             expect(screen.queryByRole("listitem", {name: /banane/i})).not.toBeInTheDocument();
         })
     })
