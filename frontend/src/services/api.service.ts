@@ -1,27 +1,30 @@
 import DRI from "@mocks/DRI.json"
 import foods from "@mocks/foods.json"
-import {Food, Nutrient, Unit} from "@typing/app.type.ts";
+import {Nutrient, Food, Unit} from "@typing/app.type.ts";
+import {v4 as uuid} from "uuid"
 
-async function getNutrients() : Promise<Nutrient[]>{
+async function getNutrients() {
    return DRI as Nutrient[]
 }
-
 async function getFoods(): Promise<Food[]> {
    return foods as Food[];
 }
+
 async function deleteFood(_: number) {
    return
 }
 
+
 // @ts-ignore
-async function addMeal(dayName: string) {
-   return
+async function addMeal(dayName: string, mealName: string) {
+   return uuid();
 }
 
 // @ts-ignore
 async function deleteMeal(mealId: string) {
    return
 }
+
 
 // @ts-ignore
 async function addFoodToMeal(mealId: string, foodId: number, {amount = 0, unit = "g"}: {amount: number, unit: Unit} = {} ) {
@@ -32,7 +35,6 @@ async function addFoodToMeal(mealId: string, foodId: number, {amount = 0, unit =
 async function deleteFoodFromMeal(mealId: string, foodId: number) {
    return
 }
-
 
 export default {
    getNutrients,

@@ -3,6 +3,7 @@ import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
 import {Nutrient} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
+import {v4 as uuid} from "uuid"
 
 const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
     return (
@@ -60,7 +61,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                         }
                     }]
                 },
-                addMeal: async () => {},
+                addMeal: async () => uuid(),
                 deleteMeal: async () => {},
                 addFoodToMeal: async () => {},
                 deleteFoodFromMeal: async () => {},
@@ -81,18 +82,19 @@ describe("Analyse", () => {
     })
 
     it("should add and remove meal", async () => {
-        const addMeal = jest.fn()
+        const mealId = "10";
+        const addMeal = jest.fn(() => mealId)
         const deleteMeal = jest.fn()
         render( <TestComponent api={{addMeal, deleteMeal}}/>)
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         await waitFor(() => {
-            expect(addMeal).toHaveBeenCalledWith("Jour par défaut")
+            expect(addMeal).toHaveBeenCalledWith("Jour par défaut", "déjeuner");
             expect(screen.getByRole("region", {name: "déjeuner"})).toBeInTheDocument();
         })
         fireEvent.click(screen.getByRole("button", {name: /supprimer déjeuner/i}));
         await waitFor(() => {
-            expect(deleteMeal).toHaveBeenCalledWith("Jour par défaut-déjeuner");
+            expect(deleteMeal).toHaveBeenCalledWith(mealId);
             expect(screen.queryByRole("region", {name: "déjeuner"})).not.toBeInTheDocument();
         })
     })
@@ -151,9 +153,11 @@ describe("Analyse", () => {
 
 
     it("should add selected food to meal and remove it", async () => {
+        const mealId = "5";
+        const addMeal = jest.fn(() => mealId);
         const addFoodToMeal = jest.fn();
         const deleteFoodFromMeal = jest.fn()
-        render( <TestComponent api={{addFoodToMeal, deleteFoodFromMeal}}/>)
+        render( <TestComponent api={{addFoodToMeal, deleteFoodFromMeal, addMeal}}/>)
         const food = await screen.findByText(/banane/i)
         fireEvent.click(food);
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
@@ -162,14 +166,14 @@ describe("Analyse", () => {
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
         const meal = screen.getByRole("region", {name: "déjeuner"});
         await waitFor(() => {
-            expect(addFoodToMeal).toHaveBeenCalledWith("Jour par défaut-déjeuner", 2, {amount: 80, unit: "g"})
+            expect(addFoodToMeal).toHaveBeenCalledWith(mealId, 2, {amount: 80, unit: "g"})
             expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
             expect(screen.getByText(/0.007 g/i)).toBeInTheDocument()
         })
         expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
         fireEvent.click(within(meal).getByRole("button", {name: /supprimer banane/i}))
         await waitFor(() => {
-            expect(deleteFoodFromMeal).toHaveBeenCalledWith("Jour par défaut-déjeuner", 2);
+            expect(deleteFoodFromMeal).toHaveBeenCalledWith(mealId, 2);
             expect(within(meal).queryByText(/banane 80g/i)).not.toBeInTheDocument()
         })
     })

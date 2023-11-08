@@ -7,14 +7,14 @@ import convert from "convert-units"
 import Meal from "../Meal";
 import classes from "./Day.module.scss"
 
-const Day: React.FC<Props> = ({name, selectedFood}) => {
+const Day: React.FC<Props> = ({name: dayName, selectedFood}) => {
     const [newMealInput, setNewMealInput] = useState("");
-    const [meals, setMeals] = useState<{[mealName: string]: TotalNutrients}>({});
+    const [meals, setMeals] = useState<{[mealId: string]: {name: string, totalNutrients: TotalNutrients}}>({});
     const {apiService} = useServices();
     const [dri] = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
-        const value = Object.values(meals).filter((mealNutrients) => !!mealNutrients[nutrient.id]).reduce<Value | null>((prev, mealNutrients) => {
-            const nutrientValue = mealNutrients[nutrient.id];
+        const value = Object.values(meals).filter((mealData) => !!mealData.totalNutrients[nutrient.id]).reduce<Value | null>((prev, mealData) => {
+            const nutrientValue = mealData.totalNutrients[nutrient.id];
             const unit = nutrient.DRI.unit
             const nutrientAmount = convert(nutrientValue.amount).from(nutrientValue.unit).to(unit);
             if (!prev) {
@@ -27,18 +27,18 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     })
 
     const handleAddMeal = async () => {
-        await apiService.addMeal(name);
+        const id = await apiService.addMeal(dayName, newMealInput);
         setMeals((prev) => {
-            return {...prev, [newMealInput]: {}}
+            return {...prev, [id]: {name: newMealInput, totalNutrients: []}}
         })
         setNewMealInput("") // reset input
     }
 
-    const handleDeleteMeal = async (mealName: string) => {
-        await apiService.deleteMeal(`${name}-${mealName}`);
+    const handleDeleteMeal = async (mealId: string) => {
+        await apiService.deleteMeal(mealId)
         setMeals((prev) => {
             return Object.fromEntries(Object.entries(prev).filter(([key, _]) => (
-                key !== mealName
+                key !== mealId
             )))
         })
     }
@@ -47,7 +47,7 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     return (
         <div className={classes.container}>
             <div className={classes["day__name"]}>
-                {name}
+                {dayName}
             </div>
             <form
                 className={classes["day__add-meal"]}
@@ -56,18 +56,19 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
                 await handleAddMeal()
             }}>
                 <Input placeholder="Repas" aria-label="Repas"  value={newMealInput} onChange={(e) => setNewMealInput(e.target.value)}/>
-                <Button disabled={!newMealInput || !!meals[newMealInput]} type="submit">Ajouter un repas</Button>
+                <Button disabled={!newMealInput || Object.values(meals).some((m) => m.name === newMealInput)} type="submit">Ajouter un repas</Button>
             </form>
             <div className={classes["meals-container"]}>
-                {Object.keys(meals).map((mealName) => (
+                {Object.entries(meals).map(( [mealId, {name: mealName}]) => (
                     <Meal
-                        id={`${name}-${mealName}`}
-                        onDelete={() => handleDeleteMeal(mealName)}
+                        id={mealId}
+                        name={mealName}
+                        onDelete={() => handleDeleteMeal(mealId)}
                         selectedFood={selectedFood}
-                        onTotalNutrientsChange={(total) => setMeals((prev) => (
-                            {...prev, [mealName]: total}
+                        onTotalNutrientsChange={(totalNutrients) => setMeals((prev) => (
+                            {...prev, [mealId]: {name: mealName, totalNutrients}}
                         ))}
-                        key={mealName} name={mealName}/>
+                        key={mealId} />
                 ))}
             </div>
             <Summary nutrients={nutrients}/>

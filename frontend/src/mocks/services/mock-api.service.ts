@@ -1,6 +1,7 @@
 import DRI from "@mocks/DRI.json"
 import foods from "@mocks/foods.json"
 import {Nutrient, Food, Unit} from "@typing/app.type.ts";
+import {v4 as uuid} from "uuid"
 
 async function getNutrients() {
     return DRI as Nutrient[]
@@ -15,8 +16,8 @@ async function deleteFood(_: number) {
 
 
 // @ts-ignore
-async function addMeal(dayName: string) {
-    return
+async function addMeal(dayName: string, mealName: string) {
+    return uuid();
 }
 
 // @ts-ignore

@@ -6,7 +6,7 @@ import {Food, MealFood, TotalNutrients, Unit} from "@typing/app.type.ts";
 import {useServices} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete,
-                                selectedFood, onTotalNutrientsChange, id }) => {
+                                selectedFood, onTotalNutrientsChange, id : mealId}) => {
     const [quantity, setQuantity] = useState(100);
     const [foods, setFoods] = useState<MealFood[]>([])
     const {apiService} = useServices();
@@ -16,7 +16,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
         if (!selectedFood) {
             return;
         }
-        await apiService.addFoodToMeal(id, selectedFood.id, {amount, unit})
+        await apiService.addFoodToMeal(mealId, selectedFood.id, {amount, unit})
         setFoods((prev) => {
             const index = prev.findIndex((food) => food.id === selectedFood?.id)
             if (index !== -1) {
@@ -27,7 +27,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
     }
 
     const handleDeleteFood = async (foodId: number) => {
-        await apiService.deleteFoodFromMeal(id, foodId);
+        await apiService.deleteFoodFromMeal(mealId, foodId);
         setFoods((prev) => {
             return prev.filter((food) => food.id !== foodId)
         })
