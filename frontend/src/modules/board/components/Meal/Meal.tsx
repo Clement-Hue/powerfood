@@ -3,19 +3,22 @@ import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
 import convert from "convert-units"
 import {Food, MealFood, TotalNutrients, Unit} from "@typing/app.type.ts";
+import {useServices} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete,
-                                selectedFood, onTotalNutrientsChange }) => {
+                                selectedFood, onTotalNutrientsChange, id }) => {
     const [quantity, setQuantity] = useState(100);
     const [foods, setFoods] = useState<MealFood[]>([])
+    const {apiService} = useServices();
     const mealNameId = useId();
 
-    const handleAddFood = (amount: number, unit: Unit) => {
+    const handleAddFood = async (amount: number, unit: Unit) => {
         if (!selectedFood) {
             return;
         }
+        await apiService.addFoodToMeal(id, selectedFood.id, {amount, unit})
         setFoods((prev) => {
-            const index = foods.findIndex((food) => food.id === selectedFood?.id)
+            const index = prev.findIndex((food) => food.id === selectedFood?.id)
             if (index !== -1) {
                 return  [...prev.slice(0, index), {...selectedFood, amount, unit}, ...prev.slice(index + 1)];
             }
@@ -23,7 +26,8 @@ const Meal: React.FC<Props> = ({name, onDelete,
         })
     }
 
-    const handleDeleteFood = (foodId: number) => {
+    const handleDeleteFood = async (foodId: number) => {
+        await apiService.deleteFoodFromMeal(id, foodId);
         setFoods((prev) => {
             return prev.filter((food) => food.id !== foodId)
         })
@@ -59,9 +63,9 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 ))}
             </div>
             <form className={classes["add-food-container"]}
-                  onSubmit={(e) => {
+                  onSubmit={async (e) => {
                       e.preventDefault();
-                      handleAddFood(quantity, "g")
+                      await handleAddFood(quantity, "g")
                   }}
             >
                 <Input disabled={!selectedFood} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
@@ -76,6 +80,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
 };
 
 type Props = {
+    id: string
     name: string
     onDelete?: (mealName: string) => void
     selectedFood?: Food | null

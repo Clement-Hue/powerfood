@@ -35,7 +35,7 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
     }
 
     const handleDeleteMeal = async (mealName: string) => {
-        await apiService.deleteMeal(name, mealName);
+        await apiService.deleteMeal(`${name}-${mealName}`);
         setMeals((prev) => {
             return Object.fromEntries(Object.entries(prev).filter(([key, _]) => (
                 key !== mealName
@@ -51,9 +51,9 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
             </div>
             <form
                 className={classes["day__add-meal"]}
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                 e.preventDefault();
-                handleAddMeal()
+                await handleAddMeal()
             }}>
                 <Input placeholder="Repas" aria-label="Repas"  value={newMealInput} onChange={(e) => setNewMealInput(e.target.value)}/>
                 <Button disabled={!newMealInput || !!meals[newMealInput]} type="submit">Ajouter un repas</Button>
@@ -61,6 +61,7 @@ const Day: React.FC<Props> = ({name, selectedFood}) => {
             <div className={classes["meals-container"]}>
                 {Object.keys(meals).map((mealName) => (
                     <Meal
+                        id={`${name}-${mealName}`}
                         onDelete={() => handleDeleteMeal(mealName)}
                         selectedFood={selectedFood}
                         onTotalNutrientsChange={(total) => setMeals((prev) => (

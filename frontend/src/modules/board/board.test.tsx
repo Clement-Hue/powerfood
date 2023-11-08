@@ -60,6 +60,10 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                         }
                     }]
                 },
+                addMeal: async () => {},
+                deleteMeal: async () => {},
+                addFoodToMeal: async () => {},
+                deleteFoodFromMeal: async () => {},
                 ...api
             }
         }}>
@@ -88,7 +92,7 @@ describe("Analyse", () => {
         })
         fireEvent.click(screen.getByRole("button", {name: /supprimer déjeuner/i}));
         await waitFor(() => {
-            expect(deleteMeal).toHaveBeenCalledWith("Jour par défaut", "déjeuner")
+            expect(deleteMeal).toHaveBeenCalledWith("Jour par défaut-déjeuner");
             expect(screen.queryByRole("region", {name: "déjeuner"})).not.toBeInTheDocument();
         })
     })
@@ -147,22 +151,25 @@ describe("Analyse", () => {
 
 
     it("should add selected food to meal and remove it", async () => {
-        render( <TestComponent/>)
+        const addFoodToMeal = jest.fn();
+        const deleteFoodFromMeal = jest.fn()
+        render( <TestComponent api={{addFoodToMeal, deleteFoodFromMeal}}/>)
         const food = await screen.findByText(/banane/i)
         fireEvent.click(food);
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "80"}})
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
-        fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));// should add only one time
         const meal = screen.getByRole("region", {name: "déjeuner"});
         await waitFor(() => {
+            expect(addFoodToMeal).toHaveBeenCalledWith("Jour par défaut-déjeuner", 2, {amount: 80, unit: "g"})
             expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
             expect(screen.getByText(/0.007 g/i)).toBeInTheDocument()
         })
         expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
         fireEvent.click(within(meal).getByRole("button", {name: /supprimer banane/i}))
         await waitFor(() => {
+            expect(deleteFoodFromMeal).toHaveBeenCalledWith("Jour par défaut-déjeuner", 2);
             expect(within(meal).queryByText(/banane 80g/i)).not.toBeInTheDocument()
         })
     })
