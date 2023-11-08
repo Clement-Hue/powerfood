@@ -255,4 +255,19 @@ describe("Search food", () => {
             expect(screen.queryByRole("listitem", {name: /banane/i})).not.toBeInTheDocument();
         })
     })
+
+    it("should add new food", async () => {
+        render( <TestComponent />)
+        fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
+        fireEvent.change(await screen.findByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
+        fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
+        fireEvent.change(screen.getByLabelText(/glucide/i), {target: {value: "30"}})
+        fireEvent.change(screen.getByLabelText(/lipide/i), {target: {value: "20"}})
+        fireEvent.change(screen.getByLabelText(/calorie/i), {target: {value: "210"}})
+        fireEvent.change(screen.getByLabelText(/vitamine c/i), {target: {value: "10"}})
+        fireEvent.click(screen.getByRole("button", {name: /valider/i}))
+        await waitFor(() => {
+            expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+        })
+    })
 })

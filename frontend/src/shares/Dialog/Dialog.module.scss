@@ -4,6 +4,8 @@
   box-sizing: border-box;
   z-index: var(--dialog-z-index);
   position: fixed;
+  overflow: auto;
+  max-height: calc(100vh - 10%);
   box-shadow: var(--shadow-1);
   padding: sizing.spacing(2);
   background-color: white;

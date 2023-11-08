@@ -2,18 +2,32 @@
 
 .container {
   display: flex;
-  position: absolute;
   flex-direction: row;
-  flex-wrap: wrap;
+  position: absolute;
   max-width: 400px;
   max-height: 200px;
   overflow: auto;
-  padding: sizing.spacing(1);
+  padding: sizing.spacing(2);
   background-color: var(--light-primary);
   z-index: var(--tooltip-z-index);
   gap: sizing.spacing(2);
   border: var(--border);
   box-shadow: var(--shadow-1);
+}
+
+.macro-container {
+  border-right: var(--border);
+  padding-right: sizing.spacing(2);
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(1);
+}
+
+.micro-container {
+  display: flex;
+  flex-direction: row;
+  gap: sizing.spacing(2);
+  flex-wrap: wrap;
 }
 
 .nutrient-container {

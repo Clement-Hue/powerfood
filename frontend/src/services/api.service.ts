@@ -26,6 +26,9 @@ async function deleteMeal(mealId: string) {
 }
 
 
+/**
+ * Add food to meal or update it if already present
+ */
 // @ts-ignore
 async function addFoodToMeal(mealId: string, foodId: number, {amount = 0, unit = "g"}: {amount: number, unit: Unit} = {} ) {
    return

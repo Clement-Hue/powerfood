@@ -13,29 +13,3 @@
   box-shadow: var(--shadow-1);
   height: 100%;
 }
-
-.dialog-container {
-  width: 600px;
-  display: flex;
-  flex-direction: column;
-  gap: sizing.spacing(2);
-}
-
-.dialog__nutrients-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: sizing.spacing(2);
-  overflow: auto;
-  max-height: 400px;
-}
-
-.dialog__buttons-container {
-  align-self: end;
-}
-
-.dialog__title {
-  align-self: center;
-  font-weight: var(--font-weight-bold);
-}
