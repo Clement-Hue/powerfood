@@ -2,12 +2,12 @@ import React, {useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useFetch, useServices} from "@hooks";
-import {Food, TotalNutrients, Value} from "@typing/app.type.ts";
+import {TotalNutrients, Value} from "@typing/app.type.ts";
 import convert from "convert-units"
 import Meal from "../Meal";
 import classes from "./Day.module.scss"
 
-const Day: React.FC<Props> = ({name: dayName, selectedFood}) => {
+const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
     const [meals, setMeals] = useState<{[mealId: string]: {name: string, totalNutrients: TotalNutrients}}>({});
     const {apiService} = useServices();
@@ -64,7 +64,6 @@ const Day: React.FC<Props> = ({name: dayName, selectedFood}) => {
                         id={mealId}
                         name={mealName}
                         onDelete={() => handleDeleteMeal(mealId)}
-                        selectedFood={selectedFood}
                         onTotalNutrientsChange={(totalNutrients) => setMeals((prev) => (
                             {...prev, [mealId]: {name: mealName, totalNutrients}}
                         ))}
@@ -79,7 +78,6 @@ const Day: React.FC<Props> = ({name: dayName, selectedFood}) => {
 
 type Props = {
     name: string
-    selectedFood?: Food | null
 }
 
 export default Day;

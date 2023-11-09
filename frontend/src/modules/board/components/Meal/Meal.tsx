@@ -6,10 +6,10 @@ import {Food, TotalNutrients, Unit} from "@typing/app.type.ts";
 import {useFoods, useServices} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete,
-                                selectedFood, onTotalNutrientsChange, id : mealId}) => {
+                                 onTotalNutrientsChange, id : mealId}) => {
     const [quantity, setQuantity] = useState(100);
     const [mealFoods, setMealFoods] = useState<MealFood[]>([])
-    const {foods} = useFoods();
+    const {foods, selectedFood} = useFoods();
     const {apiService} = useServices();
     const mealNameId = useId();
     const mealFoodsDetails = useMemo(() => (
@@ -96,7 +96,6 @@ type Props = {
     id: string
     name: string
     onDelete?: (mealName: string) => void
-    selectedFood?: Food | null
     onTotalNutrientsChange?: (total: TotalNutrients) => void
 }
 

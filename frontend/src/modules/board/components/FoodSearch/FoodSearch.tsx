@@ -6,17 +6,25 @@ import {Food} from "@typing/app.type.ts";
 import FoodDialog from "../FoodDialog";
 import {useFoods, useServices} from "@hooks";
 
-const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
+const FoodSearch: React.FC<Props> = ( ) => {
     const [searchValue, setSearchValue] = useState("")
     const [open, setOpen] = useState(false)
     const {apiService} = useServices();
-    const {foods, setFoods} = useFoods()
+    const {foods, setFoods, setSelectedFood, selectedFood} = useFoods()
+
+    const handleSelectFood = (food: Food | null) => {
+        if (selectedFood?.id === food?.id) {
+            setSelectedFood(null)
+        } else {
+            setSelectedFood(food);
+        }
+    }
     const handleDeleteFood = async (foodId: string) => {
         await apiService.deleteFood(foodId);
         setFoods((prev) =>  (
             prev?.filter((f) => f.id !== foodId)
         ))
-        onSelect?.(null)
+        handleSelectFood(null)
     }
 
     const handleCloseFoodDialog = (food?: Food) => {
@@ -32,14 +40,11 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
         <div className={classes.container}>
             <Input placeholder="Rechercher dans la liste" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
-            <FoodList foods={foods?.filter((f) => f.name.match(new RegExp(searchValue, "i")))} onDeleteFood={handleDeleteFood} selected={selectedFood} onSelect={onSelect} />
+            <FoodList foods={foods?.filter((f) => f.name.match(new RegExp(searchValue, "i")))} onDeleteFood={handleDeleteFood} selected={selectedFood} onSelect={handleSelectFood} />
             {open && <FoodDialog open onClose={handleCloseFoodDialog}/>}
         </div>
     );
 };
 
-type Props = {
-   selectedFood?: Food | null
-   onSelect?: (food: Food | null) => void
-}
+type Props = {}
 export default FoodSearch;
