@@ -14,11 +14,11 @@ const Meal: React.FC<Props> = ({name, onDelete,
     const mealNameId = useId();
     const mealFoodsDetails = useMemo(() => (
        foods?.reduce<(Food & MealFood)[]>((prev, food) => {
-        const mealFood = mealFoods.find((mf) => mf.id === food.id)
-        if (mealFood) {
-           return [...prev, {...food, ...mealFood}]
-        }
-        return prev
+            const mealFood = mealFoods.find((mf) => mf.id === food.id)
+            if (mealFood) {
+               return [...prev, {...food, ...mealFood}]
+            }
+            return prev
     }, []) ?? [] 
     ), [foods, mealFoods])
 
@@ -26,13 +26,13 @@ const Meal: React.FC<Props> = ({name, onDelete,
         if (!selectedFood) {
             return;
         }
-        await apiService.addFoodToMeal(mealId, selectedFood.id, {amount, unit})
+        await apiService.addFoodToMeal(mealId, selectedFood, {amount, unit})
         setMealFoods((prev) => {
-            const index = prev.findIndex((food) => food.id === selectedFood?.id)
+            const index = prev.findIndex((food) => food.id === selectedFood)
             if (index !== -1) {
-                return  [...prev.slice(0, index), {id: selectedFood.id, amount, unit}, ...prev.slice(index + 1)];
+                return  [...prev.slice(0, index), {id: selectedFood, amount, unit}, ...prev.slice(index + 1)];
             }
-            return [...prev, {id: selectedFood.id, amount, unit}]
+            return [...prev, {id: selectedFood, amount, unit}]
         })
     }
 
@@ -83,7 +83,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 <Button type="submit"
                         disabled={!quantity || !selectedFood}>
                     {
-                        mealFoods.some((food) => food.id === selectedFood?.id) ?
+                        mealFoods.some((food) => food.id === selectedFood) ?
                             "Mettre à jour":  "Ajouter l'aliment"
                     }
                 </Button>
