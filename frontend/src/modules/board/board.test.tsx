@@ -198,6 +198,25 @@ describe("Analyse", () => {
             expect(screen.getByText(/0.009 g/i)).toBeInTheDocument()
         })
     })
+
+    it("should add food and update it", async () => {
+        render( <TestComponent />)
+        const food = await screen.findByText(/banane/i)
+        fireEvent.click(food);
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.change(await screen.findByPlaceholderText(/quantité/i), {target: {value: "80"}})
+        fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
+        const meal = screen.getByRole("region", {name: "déjeuner"});
+        await waitFor(() => {
+            expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
+        })
+        fireEvent.change(screen.getByPlaceholderText(/quantité/i), {target: {value: "50"}})
+        fireEvent.click(screen.getByRole("button", {name: /mettre à jour/i}));
+        await waitFor(() => {
+            expect(within(meal).getByText(/banane 50g/i)).toBeInTheDocument()
+        })
+    })
 })
 
 describe("Search food", () => {

@@ -72,7 +72,10 @@ const Meal: React.FC<Props> = ({name, onDelete,
                        placeholder="quantité (g)"/>
                 <Button type="submit"
                         disabled={!quantity || !selectedFood}>
-                    Ajouter l'aliment
+                    {
+                        foods.some((food) => food.id === selectedFood?.id) ?
+                            "Mettre à jour":  "Ajouter l'aliment"
+                    }
                 </Button>
             </form>
         </div>
