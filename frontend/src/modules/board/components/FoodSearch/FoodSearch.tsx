@@ -31,7 +31,7 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
         <div className={classes.container}>
             <Input placeholder="Rechercher dans la liste" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
-            <FoodList foods={foods} onDeleteFood={handleDeleteFood} selected={selectedFood}  onSelect={onSelect} />
+            <FoodList foods={foods?.filter((f) => f.name.match(new RegExp(searchValue, "i")))} onDeleteFood={handleDeleteFood} selected={selectedFood} onSelect={onSelect} />
             {open && <FoodDialog open onClose={handleCloseFoodDialog}/>}
         </div>
     );

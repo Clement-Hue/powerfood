@@ -310,4 +310,18 @@ describe("Search food", () => {
             expect(screen.getByText(/boeuf/i)).toBeInTheDocument()
         })
     })
+
+    it("should filter the list", async () => {
+        render( <TestComponent  />)
+        await waitFor(() => {
+            expect(screen.getByText(/poulet/i)).toBeInTheDocument()
+            expect(screen.getByText(/banane/i)).toBeInTheDocument()
+        })
+        fireEvent.change(screen.getByLabelText(/rechercher un aliment/i),
+            {target: {value: "ou"}})
+        await waitFor(() => {
+            expect(screen.getByText(/poulet/i)).toBeInTheDocument()
+            expect(screen.queryByText(/banane/i)).not.toBeInTheDocument()
+        })
+    })
 })
