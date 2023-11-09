@@ -2,19 +2,10 @@ import React, {useState} from 'react';
 import classes from "./FoodList.module.scss"
 import NutrientsInfo from "../NutrientsInfo/NutrientsInfo.tsx";
 import {Food} from "@typing/app.type.ts";
-import {useFetch, useServices} from "@hooks";
 import {IconButton, Icons} from "@shares";
 
-const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
+const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect} ) => {
     const [showNutrients, setShowNutrients] = useState<{food: Food, pos: {x:number, y:number}}>();
-    const {apiService} = useServices();
-    const [foods, setFoods] = useFetch(() => apiService.getFoods())
-    const handleDeleteFood = async (foodId: string) => {
-       await apiService.deleteFood(foodId);
-       setFoods((prev) =>  (
-           prev?.filter((f) => f.id !== foodId)
-       ))
-    }
 
     return !foods?.length ? null : (
         <ul aria-label="Liste des aliments" className={classes.container}>
@@ -32,7 +23,7 @@ const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
                     </div>
                     <div className={classes["actions-container"]}>
                         <IconButton aria-label="Editer" Icon={Icons.Edit}/>
-                        <IconButton onClick={() => handleDeleteFood(food.id)} aria-label="Supprimer" Icon={Icons.Delete}/>
+                        <IconButton onClick={() => onDeleteFood?.(food.id)} aria-label="Supprimer" Icon={Icons.Delete}/>
                     </div>
                 </li>
             ))}
@@ -44,6 +35,8 @@ const FoodList: React.FC<Props> = ({selected, onSelect} ) => {
 type Props = {
     selected?: Food | null
     onSelect?: (food: Food) => void
+    onDeleteFood?: (foodId: string) => void
+    foods?: Food[]
 }
 
 export default FoodList;

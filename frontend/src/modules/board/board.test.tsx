@@ -276,7 +276,7 @@ describe("Search food", () => {
     })
 
     it("should add new food", async () => {
-        const addFood = jest.fn()
+        const addFood = jest.fn(() => uuid())
         render( <TestComponent api={{addFood}} />)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
         await waitFor(() => {
@@ -286,13 +286,12 @@ describe("Search food", () => {
         fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
         fireEvent.change(screen.getByLabelText(/glucide/i), {target: {value: "30"}})
         fireEvent.change(screen.getByLabelText(/lipide/i), {target: {value: "20"}})
-        fireEvent.change(screen.getByLabelText(/calorie/i), {target: {value: "210"}})
         fireEvent.change(screen.getByLabelText(/vitamine c/i), {target: {value: "10"}})
         fireEvent.click(screen.getByRole("button", {name: /valider/i}))
         await waitFor(() => {
             expect(addFood).toHaveBeenCalledWith({
                name: "Boeuf",
-               calories: 210,
+               calories: 500,
                proteins: 50,
                carbs: 30,
                lipids: 20,
@@ -306,6 +305,9 @@ describe("Search food", () => {
                 ]
             } as AddFood)
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+        })
+        await waitFor(() => {
+            expect(screen.getByText(/boeuf/i)).toBeInTheDocument()
         })
     })
 })

@@ -2,11 +2,11 @@ import React from 'react';
 import {Button, Dialog, Input, Select} from "@shares";
 import classes from "./FoodDialog.module.scss"
 import {useFetch, useForm, useServices} from "@hooks";
-import {Unit} from "@typing/app.type.ts";
+import {Food, Unit} from "@typing/app.type.ts";
 
 const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment"} ) => {
     const {apiService} = useServices();
-    const { setValues, register, handleSubmit } = useForm<FormValues>({
+    const { setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
         name: "",
         description: "",
         proteins: "0",
@@ -34,15 +34,23 @@ const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment
                 unit: data[`unit-${nutrient.id}`]
             }
         })
-        await apiService.addFood({
+        const food = {
             name: data["name"],
             proteins: Number(data["proteins"]),
             lipids: Number(data["lipids"]),
             carbs: Number(data["carbs"]),
             calories: Number(data["calories"]),
             nutrients: nutrientsData ?? []
-        });
-        onClose?.();
+        }
+        const id = await apiService.addFood(food);
+        onClose?.({...food, id});
+    }
+
+    const handleMacroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleChange(e)
+        setValues((prev) => ({
+            ...prev, calories: String(Number(prev.proteins) * 4 + Number(prev.carbs) * 4 + Number(prev.lipids) * 9)
+        }))
     }
 
     return (
@@ -51,7 +59,7 @@ const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment
             }
                     actions={
                         <>
-                            <Button onClick={onClose}>Fermer</Button>
+                            <Button onClick={() => onClose?.()}>Fermer</Button>
                             <Button form="add-food-form" type="submit"> Valider</Button>
                         </>
                     }
@@ -60,10 +68,10 @@ const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment
                     <Input {...register("name")} required label="Nom de l'aliment" />
                     <Input {...register("description")} label="Descripton" />
                     <div className={classes["macros-container"]}>
-                        <Input {...register("proteins")} required label="Protéines (g)" min={0}  type="number"/>
-                        <Input {...register("carbs")} required label="Glucides (g)" min={0}  type="number"/>
-                        <Input {...register("lipids")} required label="Lipides (g)" min={0}  type="number"/>
-                        <Input {...register("calories")} required label="Calories" min={0}  type="number"/>
+                        <Input {...register("proteins")} onChange={handleMacroChange} required label="Protéines (g)" min={0}  type="number"/>
+                        <Input {...register("carbs")} onChange={handleMacroChange} required label="Glucides (g)" min={0}  type="number"/>
+                        <Input {...register("lipids")} onChange={handleMacroChange} required label="Lipides (g)" min={0}  type="number"/>
+                        <Input {...register("calories")} readOnly label="Calories" min={0}  type="number"/>
                     </div>
                     <div className={classes["nutrients-container"]}>
                         {nutrients?.map((nutrient) => (
@@ -96,7 +104,7 @@ type FormValues = {
 type Props = {
    open?: boolean
     title?: string
-   onClose?: () => void
+   onClose?: (food?: Food) => void
 }
 
 export default FoodDialog;

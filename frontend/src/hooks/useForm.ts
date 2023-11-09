@@ -20,5 +20,5 @@ export default function <T extends object>(initValues: T) {
        }
     }
 
-    return {values, register, setValues, handleSubmit}
+    return {values, register, setValues, handleSubmit, handleChange}
 }
