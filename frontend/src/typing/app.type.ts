@@ -10,10 +10,6 @@ export type Food = {
     nutrients: FoodNutrient[];
 }
 
-export type MealFood = Food & {
-   amount: number
-   unit: Unit
-}
 export type FoodNutrient = {
     id: number;
     name: string;

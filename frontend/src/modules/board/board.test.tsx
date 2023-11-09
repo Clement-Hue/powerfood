@@ -230,6 +230,22 @@ describe("Analyse", () => {
             expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled()
         })
     })
+
+    it("should delete food from meal if food is deleted", async () => {
+        render( <TestComponent />)
+        const food = await screen.findByText(/banane/i)
+        fireEvent.click(food);
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}))
+        await waitFor(() => {
+            expect(screen.getByText(/banane 100g/i)).toBeInTheDocument()
+        })
+        fireEvent.click(within(screen.getByRole("listitem", {name:/banane/i})).getByRole("button", {name: /supprimer/i}))
+        await waitFor(() => {
+            expect(screen.queryByText(/banane 100g/i)).not.toBeInTheDocument()
+        })
+    })
 })
 
 describe("Search food", () => {

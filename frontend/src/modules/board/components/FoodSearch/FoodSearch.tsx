@@ -4,13 +4,13 @@ import {Button, Input} from "@shares";
 import FoodList from "../FoodList";
 import {Food} from "@typing/app.type.ts";
 import FoodDialog from "../FoodDialog";
-import {useFetch, useServices} from "@hooks";
+import {useFoods, useServices} from "@hooks";
 
 const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
     const [searchValue, setSearchValue] = useState("")
     const [open, setOpen] = useState(false)
     const {apiService} = useServices();
-    const [foods, setFoods] = useFetch(() => apiService.getFoods())
+    const {foods, setFoods} = useFoods()
     const handleDeleteFood = async (foodId: string) => {
         await apiService.deleteFood(foodId);
         setFoods((prev) =>  (

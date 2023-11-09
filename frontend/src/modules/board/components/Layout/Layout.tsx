@@ -3,6 +3,7 @@ import classes from "./Layout.module.scss"
 import Day from "../Day";
 import type {Food} from "@typing/app.type.ts";
 import FoodSearch from "../FoodSearch";
+import {FoodsProvider} from "@providers";
 
 const Layout = () => {
     const [selectedFood, setSelectedFood] = useState<Food | null>(null);
@@ -17,18 +18,20 @@ const Layout = () => {
     }
 
     return (
-        <div className={classes.container}>
-            <FoodSearch selectedFood={selectedFood} onSelect={handleSelectFood}/>
-            <div className={classes["days-container"]}>
-                {days.map((dayName ) => (
-                    <Day
-                        key={dayName}
-                        name={dayName}
-                        selectedFood={selectedFood}
-                    />
-                ))}
+        <FoodsProvider>
+            <div className={classes.container}>
+                <FoodSearch selectedFood={selectedFood} onSelect={handleSelectFood}/>
+                <div className={classes["days-container"]}>
+                    {days.map((dayName ) => (
+                        <Day
+                            key={dayName}
+                            name={dayName}
+                            selectedFood={selectedFood}
+                        />
+                    ))}
+                </div>
             </div>
-        </div>
+        </FoodsProvider>
     );
 };
 
