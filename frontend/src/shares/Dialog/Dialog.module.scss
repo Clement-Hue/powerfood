@@ -1,15 +1,28 @@
 @use "src/styles/sizing";
 
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(2);
+  max-height: 90vh;
   box-sizing: border-box;
   z-index: var(--dialog-z-index);
   position: fixed;
-  overflow: auto;
-  max-height: calc(100vh - 10%);
   box-shadow: var(--shadow-1);
   padding: sizing.spacing(2);
   background-color: white;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
+}
+
+.actions-container {
+  align-self: end;
+  display: flex;
+  gap: sizing.spacing(1);
+}
+
+.content-container {
+  scrollbar-gutter: stable;
+  overflow-y: auto;
 }

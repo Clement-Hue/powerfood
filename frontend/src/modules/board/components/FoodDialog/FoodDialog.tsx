@@ -46,9 +46,17 @@ const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment
     }
 
     return (
-            <Dialog open={open}>
-                <form onSubmit={handleSubmit(handleValidate)} className={classes["container"]}>
-                    <span className={classes["title"]}>{title}</span>
+            <Dialog open={open} header={
+                <span className={classes["title"]}>{title}</span>
+            }
+                    actions={
+                        <>
+                            <Button onClick={onClose}>Fermer</Button>
+                            <Button form="add-food-form" type="submit"> Valider</Button>
+                        </>
+                    }
+            >
+                <form id="add-food-form" onSubmit={handleSubmit(handleValidate)} className={classes["container"]}>
                     <Input {...register("name")} required label="Nom de l'aliment" />
                     <Input {...register("description")} label="Descripton" />
                     <div className={classes["macros-container"]}>
@@ -68,10 +76,6 @@ const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment
                                 ]}/>
                             </div>
                         ))}
-                    </div>
-                    <div className={classes["buttons-container"]}>
-                        <Button onClick={onClose}>Fermer</Button>
-                        <Button type="submit"> Valider</Button>
                     </div>
                 </form>
             </Dialog>

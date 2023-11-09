@@ -8,6 +8,7 @@
 }
 
 .nutrients-container {
+  box-sizing: border-box;
   border-top: var(--border);
   padding-top: sizing.spacing(2);
   display: flex;
@@ -15,7 +16,7 @@
   flex-wrap: wrap;
   gap: sizing.spacing(2);
   overflow: auto;
-  max-height: 280px;
+  max-height: 300px;
 }
 
 .macros-container {
@@ -25,13 +26,7 @@
   gap: sizing.spacing(2);
 }
 
-.buttons-container {
-  align-self: end;
-  display: flex;
-  gap: sizing.spacing(1);
-}
 
 .title {
-  align-self: center;
   font-weight: var(--font-weight-bold);
 }
