@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import classes from "./FoodSearch.module.scss"
 import {Button, Input} from "@shares";
 import FoodList from "../FoodList";
-import {Food} from "@typing/app.type.ts";
+import {UnidentifiedFood} from "@typing/app.type.ts";
 import FoodDialog from "../FoodDialog";
 import {useFoods, useServices} from "@hooks";
 
@@ -27,13 +27,12 @@ const FoodSearch: React.FC<Props> = ( ) => {
         handleSelectFood(null)
     }
 
-    const handleCloseFoodDialog = (food?: Food) => {
-        if (food) {
-            setFoods((prev) => ([
-                ...(prev ?? []), food
-            ]))
-        }
-        setOpen(false);
+    const handleValidateFoodDialog = async (food: UnidentifiedFood) => {
+        const id = await apiService.addFood(food);
+        setFoods((prev) => ([
+            ...(prev ?? []), {...food, id}
+        ]))
+        setOpen(false)
     }
 
     return (
@@ -43,7 +42,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
             <FoodList foods={foods?.filter((f) => f.name.match(new RegExp(searchValue, "i")))}
                       onDeleteFood={handleDeleteFood} selected={selectedFood} onSelect={handleSelectFood} />
-            {open && <FoodDialog open onClose={handleCloseFoodDialog}/>}
+            {open && <FoodDialog open onValidate={handleValidateFoodDialog} onClose={() => setOpen(false)}/>}
         </div>
     );
 };

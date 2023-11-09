@@ -35,4 +35,4 @@ export type TotalNutrients = {
     [nutrientId: number]: Value
 }
 
-export type AddFood = Omit<Food, "id">
+export type UnidentifiedFood = Omit<Food, "id">

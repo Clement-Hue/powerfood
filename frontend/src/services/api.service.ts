@@ -1,6 +1,6 @@
 import DRI from "@mocks/DRI.json"
 import foods from "@mocks/foods.json"
-import {Nutrient, Food, Unit, AddFood} from "@typing/app.type.ts";
+import {Nutrient, Food, Unit, UnidentifiedFood} from "@typing/app.type.ts";
 import {v4 as uuid} from "uuid"
 
 async function getNutrients() {
@@ -10,7 +10,7 @@ async function getFoods(): Promise<Food[]> {
    return foods as Food[];
 }
 
-async function addFood(_: AddFood) {
+async function addFood(_: UnidentifiedFood) {
    return uuid()
 }
 async function deleteFood(_: string) {

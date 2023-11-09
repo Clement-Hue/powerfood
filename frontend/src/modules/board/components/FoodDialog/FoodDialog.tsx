@@ -2,9 +2,9 @@ import React from 'react';
 import {Button, Dialog, Input, Select} from "@shares";
 import classes from "./FoodDialog.module.scss"
 import {useFetch, useForm, useServices} from "@hooks";
-import {Food, Unit} from "@typing/app.type.ts";
+import {UnidentifiedFood, Unit} from "@typing/app.type.ts";
 
-const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment"} ) => {
+const FoodDialog: React.FC<Props> = ({open,onValidate, onClose, title = "Ajouter un aliment"} ) => {
     const {apiService} = useServices();
     const { setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
         name: "",
@@ -42,8 +42,7 @@ const FoodDialog: React.FC<Props> = ({open, onClose, title = "Ajouter un aliment
             calories: Number(data["calories"]),
             nutrients: nutrientsData ?? []
         }
-        const id = await apiService.addFood(food);
-        onClose?.({...food, id});
+        onValidate?.(food);
     }
 
     const handleMacroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +103,8 @@ type FormValues = {
 type Props = {
    open?: boolean
     title?: string
-   onClose?: (food?: Food) => void
+   onClose?: () => void
+    onValidate?: (food: UnidentifiedFood) => void
 }
 
 export default FoodDialog;

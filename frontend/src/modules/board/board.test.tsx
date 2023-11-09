@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {AddFood, Nutrient} from "@typing/app.type.ts";
+import {UnidentifiedFood, Nutrient} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
 
@@ -332,7 +332,7 @@ describe("Search food", () => {
                         value: 10
                     }
                 ]
-            } as AddFood)
+            } as UnidentifiedFood)
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
         })
         await waitFor(() => {
