@@ -13,7 +13,7 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
             <Input placeholder="Rechercher dans la liste" value={searchValue} onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
             <FoodList selected={selectedFood} onSelect={onSelect} />
-            <FoodDialog open={open} onClose={() => setOpen(false)}/>
+            {open && <FoodDialog open onClose={() => setOpen(false)}/>}
         </div>
     );
 };

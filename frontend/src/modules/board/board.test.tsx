@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {Nutrient} from "@typing/app.type.ts";
+import {AddFood, Nutrient} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
 
@@ -257,9 +257,13 @@ describe("Search food", () => {
     })
 
     it("should add new food", async () => {
-        render( <TestComponent />)
+        const addFood = jest.fn()
+        render( <TestComponent api={{addFood}} />)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
-        fireEvent.change(await screen.findByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
+        await waitFor(() => {
+           expect(screen.getByLabelText(/vitamine c/i)).toBeInTheDocument();
+        })
+        fireEvent.change(screen.getByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
         fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
         fireEvent.change(screen.getByLabelText(/glucide/i), {target: {value: "30"}})
         fireEvent.change(screen.getByLabelText(/lipide/i), {target: {value: "20"}})
@@ -267,6 +271,21 @@ describe("Search food", () => {
         fireEvent.change(screen.getByLabelText(/vitamine c/i), {target: {value: "10"}})
         fireEvent.click(screen.getByRole("button", {name: /valider/i}))
         await waitFor(() => {
+            expect(addFood).toHaveBeenCalledWith({
+               name: "Boeuf",
+               calories: 210,
+               proteins: 50,
+               carbs: 30,
+               lipids: 20,
+                nutrients: [
+                    {
+                        unit: "mcg",
+                        id: 1162,
+                        name: "Vitamine C",
+                        value: 10
+                    }
+                ]
+            } as AddFood)
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
         })
     })
