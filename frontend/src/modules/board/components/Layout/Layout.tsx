@@ -8,8 +8,8 @@ const Layout = () => {
     const [selectedFood, setSelectedFood] = useState<Food | null>(null);
     const [days ] = useState<string[]>( ["Jour par défaut"] )
 
-    const handleSelectFood = (food: Food) => {
-        if (selectedFood?.id === food.id) {
+    const handleSelectFood = (food: Food | null) => {
+        if (selectedFood?.id === food?.id) {
             setSelectedFood(null)
         } else {
             setSelectedFood(food);

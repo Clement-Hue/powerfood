@@ -16,6 +16,7 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
         setFoods((prev) =>  (
             prev?.filter((f) => f.id !== foodId)
         ))
+        onSelect?.(null)
     }
 
     const handleCloseFoodDialog = (food?: Food) => {
@@ -39,6 +40,6 @@ const FoodSearch: React.FC<Props> = ({selectedFood, onSelect}) => {
 
 type Props = {
    selectedFood?: Food | null
-    onSelect?: (food: Food) => void
+   onSelect?: (food: Food | null) => void
 }
 export default FoodSearch;

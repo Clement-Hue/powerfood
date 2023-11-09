@@ -65,6 +65,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 deleteMeal: async () => {},
                 addFoodToMeal: async () => {},
                 deleteFoodFromMeal: async () => {},
+                deleteFood: async () => {},
                 ...api
             }
         }}>
@@ -215,6 +216,18 @@ describe("Analyse", () => {
         fireEvent.click(screen.getByRole("button", {name: /mettre à jour/i}));
         await waitFor(() => {
             expect(within(meal).getByText(/banane 50g/i)).toBeInTheDocument()
+        })
+    })
+
+    it("should disable add food to meal button if the selected food is deleted", async () => {
+        render( <TestComponent />)
+        const food = await screen.findByText(/banane/i)
+        fireEvent.click(food);
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.click(within(screen.getByRole("listitem", {name:/banane/i})).getByRole("button", {name: /supprimer/i}))
+        await waitFor(() => {
+            expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled()
         })
     })
 })
