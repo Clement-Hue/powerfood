@@ -7,25 +7,27 @@ import {UnidentifiedFood, Unit} from "@typing/app.type.ts";
 const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
                                          title = "Ajouter un aliment", initValues} ) => {
     const {nutrients} = useNutrients();
-    const { setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
+    const initBaseFormValues = {
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
         proteins: String(initValues?.proteins ?? 0),
         lipids: String(initValues?.lipids ?? 0),
         carbs: String(initValues?.carbs ?? 0),
         calories: String(initValues?.calories ?? 0)
-    });
-
-    useMemo(() => {
-        if (nutrients) {
-            setValues((prev) => ({
-                ...prev,
-                ...nutrients.reduce((prev, nutrient) => {
+    };
+    const initNutrientsFormValues = nutrients?.reduce((prev, nutrient) => {
                     const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
                     return {...prev,
                         [`value-${nutrient.id}`]: String(init?.amount ?? 0),
                         [`unit-${nutrient.id}`]: init?.unit ?? "mg"}
                 }, {})
+    const {setValues, register, handleSubmit, handleChange } = useForm<FormValues>(initBaseFormValues);
+
+    useMemo(() => {
+        if (nutrients) {
+            setValues((prev) => ({
+                ...prev,
+                ...initNutrientsFormValues
             }))
         }
     }, [initValues?.nutrients, nutrients, setValues]);
@@ -54,8 +56,13 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
         }))
     }
 
+    const handleClose = () => {
+        setValues({...initBaseFormValues, ...initNutrientsFormValues});
+        onClose?.()
+    }
+
     return (
-            <Dialog onClose={onClose} open={open} header={
+            <Dialog onClose={handleClose} open={open} header={
                 <span className={classes["title"]}>{title}</span>
             }
                     actions={

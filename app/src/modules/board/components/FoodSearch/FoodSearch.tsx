@@ -42,7 +42,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
             <FoodList foods={foods?.filter((f) => f.name.match(new RegExp(searchValue, "i")))}
                       onDeleteFood={handleDeleteFood} selected={selectedFood} onSelect={handleSelectFood} />
-            {open && <FoodDialog open onValidate={handleValidateFoodDialog} onClose={() => setOpen(false)}/>}
+            <FoodDialog open={open} onValidate={handleValidateFoodDialog} onClose={() => setOpen(false)}/>
         </div>
     );
 };

@@ -10,7 +10,9 @@ const Dialog: React.FC<Props> = ({children, onClose, header, actions, open = fal
     return (
         <ReactModal
             aria={{labelledby: headerId}}
+            overlayClassName={classes.overlay}
             ariaHideApp={process.env.NODE_ENV !== "test"}
+            bodyOpenClassName={classes.body}
             onRequestClose={onClose} isOpen={open} className={classes.container} shouldCloseOnOverlayClick={false} >
             <div id={headerId}>
                 {header}

@@ -1,5 +1,12 @@
 @use "src/styles/sizing";
 
+.overlay {
+}
+
+.body {
+  overflow: hidden;
+}
+
 .container {
   display: flex;
   flex-direction: column;
