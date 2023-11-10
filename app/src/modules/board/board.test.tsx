@@ -100,7 +100,7 @@ describe("Analyse", () => {
         const addMeal = jest.fn(() => mealId)
         const deleteMeal = jest.fn()
         render( <TestComponent api={{addMeal, deleteMeal}}/>)
-        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.change(await screen.findByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         await waitFor(() => {
             expect(addMeal).toHaveBeenCalledWith("Jour par défaut", "déjeuner");
@@ -128,7 +128,7 @@ describe("Analyse", () => {
 
     it("should disable add food to meal button if no food selected or replace the food in the meal with new quantity", async () => {
         render( <TestComponent/>)
-        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.change(await screen.findByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         await waitFor(() => {
             expect(screen.getByRole("button", {name: /ajouter l'aliment/i})).toBeDisabled();
@@ -157,7 +157,7 @@ describe("Analyse", () => {
 
     it("should empty meal name input once the meal is added", async () => {
         render( <TestComponent/>)
-        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.change(await screen.findByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         await waitFor(() => {
             expect(screen.getByRole("textbox", {name: "Repas"})).toHaveValue("")
@@ -194,7 +194,7 @@ describe("Analyse", () => {
 
     it("should create several meals and compute total nutrients and reset if meal is removed", async () => {
         render( <TestComponent/>)
-        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.change(await screen.findByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "diner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
@@ -403,13 +403,13 @@ describe("Search food", () => {
                             "id": 1162,
                             "name": "Vitamine C",
                             "unit": "g",
-                            "value": 8.7
+                            "amount": 8.7
                         },
                         {
                             "id": 1092,
                             "name": "Potassium",
                             "unit": "mg",
-                            "value": 358
+                            "amount": 358
                         }
                     ]
                 }

@@ -1,6 +1,4 @@
-import {v4 as uuid} from "uuid"
 import {getAll, run, transaction} from "./db.ts";
-
 import {DaySchema, FoodNutrientSchema, FoodSchema, NutrientSchema} from "@typing/schema.type.ts";
 import {Nutrient, Unit, Food, UnidentifiedFood} from "@typing/app.type.ts";
 
@@ -43,8 +41,8 @@ async function addFood(food: UnidentifiedFood) {
             INSERT INTO food (name, description, proteins, lipids, carbs, calories)
             VALUES (?, ?, ?, ?, ?, ?)
         `, [food.name, food.description, food.proteins, food.lipids, food.carbs, food.calories]);
-        await Promise.all(food.nutrients.map( async (nutrient) => {
-            await run(`
+        await Promise.all(food.nutrients.map( (nutrient) => {
+            return run(`
             INSERT INTO food_nutrient (food_id, nutrient_id, unit, amount)
             VALUES (?, ? ,? ,?)        
         `, [id, nutrient.id, nutrient.unit, nutrient.amount])
@@ -52,6 +50,35 @@ async function addFood(food: UnidentifiedFood) {
         return String(id);
     })
 }
+
+async function deleteFood(foodId: string) {
+    await run("DELETE FROM food WHERE id = ?", [foodId])
+}
+
+async function deleteMeal(mealId: string) {
+    await run("DELETE FROM meal WHERE id = ?", [mealId])
+}
+
+async function updateFood(foodId: string, food: UnidentifiedFood) {
+    await transaction(async () => {
+        await Promise.all(
+        [run(`
+                UPDATE food SET name = ?, description = ?, proteins = ?, lipids = ?,
+                carbs = ?, calories = ?
+                WHERE id = ?
+            `, [food.name, food.description, food.proteins, food.lipids,
+                food.carbs, food.calories, foodId]),
+            ...food.nutrients.map((nutrient) => {
+                return run(`
+                    UPDATE food_nutrient SET unit = ?, amount = ?
+                    WHERE food_id = ? AND nutrient_id = ?
+                `, [nutrient.unit, nutrient.amount, foodId, nutrient.id])
+                })
+            ]
+        )
+    })
+}
+
 async function addMeal(dayName: string, mealName: string)  {
     const id = await run(
         "INSERT INTO meal (name, day_name) VALUES (?, ?)",
@@ -60,10 +87,27 @@ async function addMeal(dayName: string, mealName: string)  {
     return String(id);
 }
 
+async function addFoodToMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount?: number, unit?: Unit} = {} ) {
+    await run(`
+        INSERT INTO meal_food (meal_id, food_id, unit, amount) VALUES (?, ?, ?, ?)
+        `,
+        [mealId, foodId, unit, amount]
+    )
+}
+
+async function deleteFoodFromMeal(mealId: string, foodId: string) {
+    await run("DELETE FROM meal_food WHERE meal_id = ? AND food_id = ?", [mealId, foodId])
+}
+
 export default {
     getDays,
-    addMeal,
     getNutrients,
     getFoods,
-    addFood
+    addMeal,
+    addFood,
+    deleteFood,
+    deleteMeal,
+    updateFood,
+    addFoodToMeal,
+    deleteFoodFromMeal
 }

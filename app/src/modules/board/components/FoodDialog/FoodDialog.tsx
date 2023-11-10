@@ -40,7 +40,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
             nutrients: nutrients?.map((nutrient) => ({
                 id: nutrient.id,
                 name: nutrient.name,
-                value: Number(data[`value-${nutrient.id}`]),
+                amount: Number(data[`value-${nutrient.id}`]),
                 unit: data[`unit-${nutrient.id}`]
                 })) ?? []
         })
