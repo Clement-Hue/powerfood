@@ -14,7 +14,7 @@ export type FoodNutrient = {
     id: number;
     name: string;
     unit: Unit;
-    value: number;
+    amount: number;
 }
 
 export type Nutrient = {

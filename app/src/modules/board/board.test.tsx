@@ -338,13 +338,13 @@ describe("Search food", () => {
                         unit: "mcg",
                         id: 1162,
                         name: "Vitamine C",
-                        value: 10
+                        amount: 10
                     },
                     {
                         unit: "mcg",
                         id: 1092,
                         name: "Potassium",
-                        value: 0
+                        amount: 0
                     }
                 ]
             } as UnidentifiedFood)

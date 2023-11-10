@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import handlers from "../handlers.ts"
+import db, {createDatabase} from "../db.ts";
 
 function register<T, R>(fn: (...args: T[]) => Promise<R>, eventName: string = fn.name) {
     ipcMain.handle(eventName, (_, ...args) => fn(...args))
@@ -52,6 +53,7 @@ app.whenReady().then(() => {
     })
     Object.values(handlers).forEach((handler) => register(handler))
     createWindow()
+    createDatabase();
 
     app.on('activate', function () {
         // On macOS it's common to re-create a window in the app when the
@@ -71,3 +73,7 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+app.on("before-quit", () => {
+    db.close()
+})

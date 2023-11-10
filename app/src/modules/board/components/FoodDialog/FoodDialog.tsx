@@ -23,7 +23,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
             ...res.reduce((prev, nutrient) => {
                 const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
                 return {...prev,
-                    [`value-${nutrient.id}`]: String(init?.value ?? 0),
+                    [`value-${nutrient.id}`]: String(init?.amount ?? 0),
                     [`unit-${nutrient.id}`]: init?.unit ?? "mcg"}
             }, {})
         }))

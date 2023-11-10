@@ -1,11 +1,14 @@
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import environmentPlugin from 'vite-plugin-environment'
+import VitePlainText from 'vite-plugin-plain-text';
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
     main: {
-        plugins: [externalizeDepsPlugin()],
+        plugins: [externalizeDepsPlugin(), VitePlainText(["**/*.sql"], {
+            namedExport: false
+        })],
         build: {
             lib: {
                 entry: "src/electron/main/index.ts"
