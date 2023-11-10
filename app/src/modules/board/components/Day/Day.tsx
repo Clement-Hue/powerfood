@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
-import {useFetch, useServices} from "@hooks";
+import {useServices, useNutrients} from "@hooks";
 import {TotalNutrients, Value} from "@typing/app.type.ts";
 import convert from "convert-units"
 import Meal from "../Meal";
@@ -11,7 +11,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
     const [meals, setMeals] = useState<MealsState>({});
     const {apiService} = useServices();
-    const [dri] = useFetch(() => apiService.getNutrients())
+    const {nutrients: dri} = useNutrients();
     const nutrients = dri?.map((nutrient) => {
         const value = Object.values(meals).filter((mealData) => !!mealData.totalNutrients[nutrient.id]).reduce<Value | null>((prev, mealData) => {
             const nutrientValue = mealData.totalNutrients[nutrient.id];

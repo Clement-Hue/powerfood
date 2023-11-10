@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Button, Dialog, Input, Select} from "@shares";
 import classes from "./FoodDialog.module.scss"
-import {useFetch, useForm, useServices} from "@hooks";
+import {useForm, useNutrients} from "@hooks";
 import {UnidentifiedFood, Unit} from "@typing/app.type.ts";
 
 const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
                                          title = "Ajouter un aliment", initValues} ) => {
-    const {apiService} = useServices();
+    const {nutrients} = useNutrients();
     const { setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
@@ -16,19 +16,20 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
         calories: String(initValues?.calories ?? 0)
     });
 
-    const [nutrients] = useFetch(async () => {
-        const res = await apiService.getNutrients()
-        setValues((prev) => ({
-            ...prev,
-            ...res.reduce((prev, nutrient) => {
-                const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
-                return {...prev,
-                    [`value-${nutrient.id}`]: String(init?.amount ?? 0),
-                    [`unit-${nutrient.id}`]: init?.unit ?? "mcg"}
-            }, {})
-        }))
-        return res;
-    })
+    useMemo(() => {
+        if (nutrients) {
+            setValues((prev) => ({
+                ...prev,
+                ...nutrients.reduce((prev, nutrient) => {
+                    const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
+                    return {...prev,
+                        [`value-${nutrient.id}`]: String(init?.amount ?? 0),
+                        [`unit-${nutrient.id}`]: init?.unit ?? "mcg"}
+                }, {})
+            }))
+        }
+    }, [initValues?.nutrients, nutrients, setValues]);
+
 
     const handleValidate = async (data: FormValues) => {
         onValidate?.({
