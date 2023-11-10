@@ -25,6 +25,7 @@ async function deleteFood(_: string) {
 
 // @ts-ignore
 async function addMeal(dayName: string, mealName: string) {
+   await window.api.addMeal(dayName, mealName);
    return uuid();
 }
 

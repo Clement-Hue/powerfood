@@ -1,7 +1,11 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import handlers from "../handlers.ts"
 
+function register<T, R>(fn: (...args: T[]) => Promise<R>, eventName: string = fn.name) {
+    ipcMain.handle(eventName, (_, ...args) => fn(...args))
+}
 function createWindow(): void {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
@@ -46,7 +50,7 @@ app.whenReady().then(() => {
     app.on('browser-window-created', (_, window) => {
         optimizer.watchWindowShortcuts(window)
     })
-
+    Object.values(handlers).forEach((handler) => register(handler))
     createWindow()
 
     app.on('activate', function () {
