@@ -1,9 +1,8 @@
-@use "../../../../styles/sizing";
+@use "src/styles/sizing";
 
 .container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto auto auto;
   gap: sizing.spacing(4);
   min-height: 20px;
   border-top: var(--border);
@@ -13,7 +12,6 @@
 
 .nutrient-container {
   display: flex;
-  width: 200px;
   flex-direction: column;
   gap: sizing.spacing(1);
 }

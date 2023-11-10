@@ -1,8 +1,7 @@
-import { pathsToModuleNameMapper } from 'ts-jest'
-import tsConfig from "./tsconfig.json" assert { type: 'json' }
+const { pathsToModuleNameMapper } = require('ts-jest')
+const tsConfig = require("./tsconfig.json")
 
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-export default {
+module.exports = {
   preset: 'ts-jest',
   testEnvironment: "jsdom",
   clearMocks: true,
