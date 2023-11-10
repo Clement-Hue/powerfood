@@ -1,10 +1,14 @@
 import sqlite from "sqlite3"
-import createTables from "./create-tables.sql"
+import fs from "fs"
+import createTables from "./sql/create-tables.sql"
+import defaultValues from "./sql/defaut-values.sql"
 
 let db!: sqlite.Database
 
 export function createDatabase() {
-    db = new sqlite.Database("app.db")
+    const dbPath = "./app.db"
+    const isDatabaseExist = fs.existsSync(dbPath)
+    db = new sqlite.Database(dbPath)
     db.exec(createTables, (err) => {
         if (err) {
             console.error("Error initialising tables", err.message)
@@ -12,5 +16,36 @@ export function createDatabase() {
             console.info("Tables initialised")
         }
     })
+    if (!isDatabaseExist) {
+        db.exec(defaultValues, (err) => {
+            if (err) {
+                console.error("Error loading default values", err.message)
+            } else {
+                console.info("Default values loaded")
+            }
+        })
+    }
 }
-export default db
+
+export async function getAll<T>(sql: string) {
+    return new Promise<T[]>((resolve, reject) => {
+        db.all(sql, function (err, rows: T[] )  {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(rows)
+        })
+    })
+}
+
+export async function run<P>(sql: string, params: P) {
+    return new Promise<number>((resolve, reject) => {
+        db.run(sql,params, function (err)  {
+            if (err) {
+                return reject(err)
+            }
+            return resolve(this.lastID)
+        });
+    })
+}
+export default () => db;

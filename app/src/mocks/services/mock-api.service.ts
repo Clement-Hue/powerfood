@@ -10,6 +10,10 @@ async function getFoods(): Promise<Food[]> {
     return foods as Food[];
 }
 
+async function getDays() {
+    return [{name: "Jour par défaut"}]
+}
+
 async function addFood(_: UnidentifiedFood) {
     return uuid()
 }
@@ -45,6 +49,7 @@ async function deleteFoodFromMeal(mealId: string, foodId: string) {
 }
 
 export default {
+    getDays,
     getNutrients,
     getFoods,
     addFood,

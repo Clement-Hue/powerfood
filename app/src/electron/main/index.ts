@@ -75,5 +75,5 @@ app.on('window-all-closed', () => {
 // code. You can also put them in separate files and require them here.
 
 app.on("before-quit", () => {
-    db.close()
+    db().close()
 })

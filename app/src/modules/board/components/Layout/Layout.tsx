@@ -1,11 +1,12 @@
-import {useState} from 'react';
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import FoodSearch from "../FoodSearch";
 import {FoodsProvider} from "@providers";
+import {useFetch, useServices} from "@hooks";
 
 const Layout = () => {
-    const [days ] = useState<string[]>( ["Jour par défaut"] )
+    const {apiService} = useServices();
+    const [days ] = useFetch(() => apiService.getDays())
 
 
     return (
@@ -13,7 +14,7 @@ const Layout = () => {
             <div className={classes.container}>
                 <FoodSearch />
                 <div className={classes["days-container"]}>
-                    {days.map((dayName ) => (
+                    {days?.map(({name: dayName} ) => (
                         <Day
                             key={dayName}
                             name={dayName}

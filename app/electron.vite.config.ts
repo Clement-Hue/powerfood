@@ -4,19 +4,23 @@ import environmentPlugin from 'vite-plugin-environment'
 import VitePlainText from 'vite-plugin-plain-text';
 import react from '@vitejs/plugin-react'
 
+const plugins =  [externalizeDepsPlugin(), VitePlainText(["**/*.sql"], {
+            namedExport: false
+})];
 export default defineConfig({
     main: {
-        plugins: [externalizeDepsPlugin(), VitePlainText(["**/*.sql"], {
-            namedExport: false
-        })],
+        plugins,
         build: {
             lib: {
                 entry: "src/electron/main/index.ts"
+            },
+            rollupOptions: {
+                external: ['sqlite3']
             }
         }
     },
     preload: {
-        plugins: [externalizeDepsPlugin()],
+        plugins,
         build: {
             lib: {
                 entry: "src/electron/preload/index.ts"

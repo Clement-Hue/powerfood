@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {UnidentifiedFood, Nutrient} from "@typing/app.type.ts";
+import {UnidentifiedFood, Nutrient, Food} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
 
@@ -9,7 +9,10 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
     return (
         <ServicesProvider overrides={{
             apiService: {
-                async getFoods() {
+                async getDays() {
+                    return [{name: "Jour par défaut"}]
+                },
+                async getFoods(): Promise<Food[]> {
                     return [
                         {
                             "id": "1",
@@ -23,7 +26,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                                     "id": 1162,
                                     "name": "Vitamine C",
                                     "unit": "g",
-                                    "value": 0.002
+                                    "amount": 0.002
                                 }
                             ]
                         },
@@ -39,13 +42,13 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                                     "id": 1162,
                                     "name": "Vitamine C",
                                     "unit": "mg",
-                                    "value": 8.7
+                                    "amount": 8.7
                                 },
                                 {
                                     "id": 1092,
                                     "name": "Potassium",
                                     "unit": "mg",
-                                    "value": 358
+                                    "amount": 358
                                 }
                             ]
                         }

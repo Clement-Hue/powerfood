@@ -11,13 +11,13 @@
         "id": 1162,
         "name": "Vitamine C",
         "unit": "mg",
-        "value": 8.7
+        "amount": 8.7
       },
       {
         "id": 1092,
         "name": "Potassium",
         "unit": "mg",
-        "value": 358
+        "amount": 358
       }
     ]
   }
