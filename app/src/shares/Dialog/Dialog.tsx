@@ -1,11 +1,18 @@
-import React from 'react';
+import React, {useId} from 'react';
 import classes from "./Dialog.module.scss"
-import {createPortal} from "react-dom";
+import ReactModal from "react-modal"
 
-const Dialog: React.FC<Props> = ({children, header, actions, open}) => {
-    return !open ? null :  createPortal(
-        <div className={classes.container} aria-modal="true" role="dialog">
-            <div>
+if (process.env.NODE_ENV !== 'test') {
+    ReactModal.setAppElement("#root");
+}
+const Dialog: React.FC<Props> = ({children, onClose, header, actions, open = false}) => {
+    const headerId = useId();
+    return (
+        <ReactModal
+            aria={{labelledby: headerId}}
+            ariaHideApp={process.env.NODE_ENV !== "test"}
+            onRequestClose={onClose} isOpen={open} className={classes.container} shouldCloseOnOverlayClick={false} >
+            <div id={headerId}>
                 {header}
             </div>
             <div className={classes["content-container"]}>
@@ -14,11 +21,12 @@ const Dialog: React.FC<Props> = ({children, header, actions, open}) => {
             <div className={classes["actions-container"]}>
                 {actions}
             </div>
-        </div>
-    , document.body);
+        </ReactModal>
+    )
 };
 type Props = {
     open?: boolean
+    onClose?: () => void
     header?: React.ReactNode
     children?: React.ReactNode
     actions?: React.ReactNode

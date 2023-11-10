@@ -11,7 +11,7 @@ async function getFoods(): Promise<Food[]> {
     return foods as Food[];
 }
 
-async function getDays(): Promise<DaySchema> {
+async function getDays(): Promise<DaySchema[]> {
     return [{name: "Jour par défaut"}]
 }
 

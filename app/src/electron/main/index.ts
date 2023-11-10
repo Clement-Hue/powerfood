@@ -1,6 +1,6 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import {app, BrowserWindow, ipcMain, shell} from 'electron'
+import {join} from 'path'
+import {electronApp, is, optimizer} from '@electron-toolkit/utils'
 import handlers from "../handlers.ts"
 import db, {createDatabase} from "../db.ts";
 
@@ -36,6 +36,15 @@ function createWindow(): void {
     } else {
         mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
     }
+    mainWindow.webContents.setZoomFactor(1.0)
+    mainWindow.webContents.on('zoom-changed', (_, direction) => {
+        const currentZoom = mainWindow.webContents.getZoomFactor()
+        if (direction === "in") {
+            mainWindow.webContents.setZoomFactor(currentZoom + 0.1);
+        } else if (direction === "out") {
+            mainWindow.webContents.setZoomFactor(currentZoom - 0.1);
+        }
+    });
 }
 
 // This method will be called when Electron has finished
@@ -51,6 +60,7 @@ app.whenReady().then(() => {
     app.on('browser-window-created', (_, window) => {
         optimizer.watchWindowShortcuts(window)
     })
+    // @ts-ignore
     Object.values(handlers).forEach((handler) => register(handler))
     createWindow()
     createDatabase();

@@ -366,13 +366,13 @@ describe("Search food", () => {
                lipids: 20,
                 nutrients: [
                     {
-                        unit: "mcg",
+                        unit: "mg",
                         id: 1162,
                         name: "Vitamine C",
                         amount: 10
                     },
                     {
-                        unit: "mcg",
+                        unit: "mg",
                         id: 1092,
                         name: "Potassium",
                         amount: 0

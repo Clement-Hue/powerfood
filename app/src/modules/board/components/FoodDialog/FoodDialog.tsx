@@ -24,7 +24,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
                     const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
                     return {...prev,
                         [`value-${nutrient.id}`]: String(init?.amount ?? 0),
-                        [`unit-${nutrient.id}`]: init?.unit ?? "mcg"}
+                        [`unit-${nutrient.id}`]: init?.unit ?? "mg"}
                 }, {})
             }))
         }
@@ -55,7 +55,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
     }
 
     return (
-            <Dialog open={open} header={
+            <Dialog onClose={onClose} open={open} header={
                 <span className={classes["title"]}>{title}</span>
             }
                     actions={
