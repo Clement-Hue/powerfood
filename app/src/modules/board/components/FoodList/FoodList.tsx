@@ -52,7 +52,7 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
                 </li>
             ))}
             {showNutrients &&  <NutrientsInfo position={showNutrients.pos} food={showNutrients.food} />}
-            {!!editFood && <FoodDialog open initValues={editFood} onValidate={handleValidateFoodDialog} onClose={() => setEditFood(null)}/>}
+            {!!editFood && <FoodDialog title="Editer l'aliment" open initValues={editFood} onValidate={handleValidateFoodDialog} onClose={() => setEditFood(null)}/>}
         </ul>
     );
 };
