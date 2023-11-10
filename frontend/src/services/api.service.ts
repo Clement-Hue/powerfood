@@ -13,6 +13,11 @@ async function getFoods(): Promise<Food[]> {
 async function addFood(_: UnidentifiedFood) {
    return uuid()
 }
+
+// @ts-ignore
+async function updateFood(foodId: string, data: UnidentifiedFood) {
+
+}
 async function deleteFood(_: string) {
    return
 }
@@ -47,6 +52,7 @@ export default {
    getFoods,
    addFood,
    deleteFood,
+   updateFood,
    addMeal,
    deleteMeal,
    addFoodToMeal,

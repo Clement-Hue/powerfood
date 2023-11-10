@@ -18,6 +18,10 @@ async function deleteFood(_: string) {
     return
 }
 
+// @ts-ignore
+async function updateFood(foodId: string, data: UnidentifiedFood) {
+
+}
 
 // @ts-ignore
 async function addMeal(dayName: string, mealName: string) {
@@ -45,6 +49,7 @@ export default {
     getFoods,
     addFood,
     deleteFood,
+    updateFood,
     addMeal,
     deleteMeal,
     addFoodToMeal,

@@ -59,13 +59,22 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                            amount: 500,
                             unit: "g"
                         }
-                    }]
+                    },
+                        {
+                            id: 1092,
+                            name: "Potassium" ,
+                            DRI: {
+                                amount: 1500,
+                                unit: "mg"
+                            }
+                        }]
                 },
                 addMeal: async () => uuid(),
                 deleteMeal: async () => {},
                 addFoodToMeal: async () => {},
                 deleteFoodFromMeal: async () => {},
                 deleteFood: async () => {},
+                updateFood: async () => {},
                 ...api
             }
         }}>
@@ -309,13 +318,13 @@ describe("Search food", () => {
         render( <TestComponent api={{addFood}} />)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
         await waitFor(() => {
-           expect(screen.getByLabelText(/vitamine c/i)).toBeInTheDocument();
+           expect(screen.getByLabelText(/vitamine c$/i)).toBeInTheDocument();
         })
         fireEvent.change(screen.getByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
         fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
         fireEvent.change(screen.getByLabelText(/glucide/i), {target: {value: "30"}})
         fireEvent.change(screen.getByLabelText(/lipide/i), {target: {value: "20"}})
-        fireEvent.change(screen.getByLabelText(/vitamine c/i), {target: {value: "10"}})
+        fireEvent.change(screen.getByLabelText(/vitamine c$/i), {target: {value: "10"}})
         fireEvent.click(screen.getByRole("button", {name: /valider/i}))
         await waitFor(() => {
             expect(addFood).toHaveBeenCalledWith({
@@ -330,6 +339,12 @@ describe("Search food", () => {
                         id: 1162,
                         name: "Vitamine C",
                         value: 10
+                    },
+                    {
+                        unit: "mcg",
+                        id: 1092,
+                        name: "Potassium",
+                        value: 0
                     }
                 ]
             } as UnidentifiedFood)
@@ -351,6 +366,52 @@ describe("Search food", () => {
         await waitFor(() => {
             expect(screen.getByText(/poulet/i)).toBeInTheDocument()
             expect(screen.queryByText(/banane/i)).not.toBeInTheDocument()
+        })
+    })
+
+    it("should edit food", async () => {
+        const updateFood = jest.fn()
+        render( <TestComponent api={{updateFood}} />)
+        const foodItem = await screen.findByRole("listitem", {name: /banane/i})
+        fireEvent.click(within(foodItem).getByRole("button", {name: /editer/i}))
+        await waitFor(() => {
+            const dialog = screen.getByRole("dialog")
+            expect(within(dialog).getByLabelText(/nom de l'aliment/i)).toHaveValue("Banane")
+            expect(within(dialog).getByLabelText(/protéine/i)).toHaveValue(1.28)
+            expect(within(dialog).getByLabelText(/lipide/i)).toHaveValue(0.39)
+            expect(within(dialog).getByLabelText(/glucide/i)).toHaveValue(29.6)
+            expect(within(dialog).getByLabelText(/vitamine c$/i)).toHaveValue(8.7)
+        })
+        fireEvent.change(screen.getByLabelText(/nom de l'aliment/i), {target: {value: "Banane plantin"}})
+        fireEvent.change(screen.getByLabelText(/vitamine c unité/i), {target: {value: "g"}})
+        fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "10"}})
+        fireEvent.click(screen.getByRole("button", {name: /valider/i}))
+        await waitFor(() => {
+            expect(updateFood).toHaveBeenCalledWith("2",
+                {
+                    "name": "Banane plantin",
+                    "proteins": 10,
+                    "lipids": 0.39,
+                    "carbs": 29.6,
+                    "calories": 161.91,
+                    "nutrients": [
+                        {
+                            "id": 1162,
+                            "name": "Vitamine C",
+                            "unit": "g",
+                            "value": 8.7
+                        },
+                        {
+                            "id": 1092,
+                            "name": "Potassium",
+                            "unit": "mg",
+                            "value": 358
+                        }
+                    ]
+                }
+            )
+            expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+            expect(screen.getByRole("listitem", {name: /banane plantin/i})).toBeInTheDocument()
         })
     })
 })

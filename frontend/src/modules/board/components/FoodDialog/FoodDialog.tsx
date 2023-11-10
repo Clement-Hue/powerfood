@@ -4,45 +4,46 @@ import classes from "./FoodDialog.module.scss"
 import {useFetch, useForm, useServices} from "@hooks";
 import {UnidentifiedFood, Unit} from "@typing/app.type.ts";
 
-const FoodDialog: React.FC<Props> = ({open,onValidate, onClose, title = "Ajouter un aliment"} ) => {
+const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
+                                         title = "Ajouter un aliment", initValues} ) => {
     const {apiService} = useServices();
     const { setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
-        name: "",
-        description: "",
-        proteins: "0",
-        lipids: "0",
-        carbs: "0",
-        calories: "0",
+        name: initValues?.name ?? "",
+        description: initValues?.description ?? "",
+        proteins: String(initValues?.proteins ?? 0),
+        lipids: String(initValues?.lipids ?? 0),
+        carbs: String(initValues?.carbs ?? 0),
+        calories: String(initValues?.calories ?? 0)
     });
+
     const [nutrients] = useFetch(async () => {
         const res = await apiService.getNutrients()
         setValues((prev) => ({
             ...prev,
             ...res.reduce((prev, nutrient) => {
-                return {...prev, [`value-${nutrient.id}`]: 0, [`unit-${nutrient.id}`]: "mcg"}
+                const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
+                return {...prev,
+                    [`value-${nutrient.id}`]: String(init?.value ?? 0),
+                    [`unit-${nutrient.id}`]: init?.unit ?? "mcg"}
             }, {})
         }))
         return res;
     })
 
     const handleValidate = async (data: FormValues) => {
-        const nutrientsData = nutrients?.map((nutrient) => {
-            return {
-                id: nutrient.id,
-                name: nutrient.name,
-                value: Number(data[`value-${nutrient.id}`]),
-                unit: data[`unit-${nutrient.id}`]
-            }
-        })
-        const food = {
+        onValidate?.({
             name: data["name"],
             proteins: Number(data["proteins"]),
             lipids: Number(data["lipids"]),
             carbs: Number(data["carbs"]),
             calories: Number(data["calories"]),
-            nutrients: nutrientsData ?? []
-        }
-        onValidate?.(food);
+            nutrients: nutrients?.map((nutrient) => ({
+                id: nutrient.id,
+                name: nutrient.name,
+                value: Number(data[`value-${nutrient.id}`]),
+                unit: data[`unit-${nutrient.id}`]
+                })) ?? []
+        })
     }
 
     const handleMacroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,16 +68,16 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose, title = "Ajouter
                     <Input {...register("name")} required label="Nom de l'aliment" />
                     <Input {...register("description")} label="Descripton" />
                     <div className={classes["macros-container"]}>
-                        <Input {...register("proteins")} onChange={handleMacroChange} required label="Protéines (g)" min={0}  type="number"/>
-                        <Input {...register("carbs")} onChange={handleMacroChange} required label="Glucides (g)" min={0}  type="number"/>
-                        <Input {...register("lipids")} onChange={handleMacroChange} required label="Lipides (g)" min={0}  type="number"/>
-                        <Input {...register("calories")} readOnly label="Calories" min={0}  type="number"/>
+                        <Input {...register("proteins")} step=".01" onChange={handleMacroChange} required label="Protéines (g)" min={0}  type="number"/>
+                        <Input {...register("carbs")} step=".01" onChange={handleMacroChange} required label="Glucides (g)" min={0}  type="number"/>
+                        <Input {...register("lipids")} step=".01" onChange={handleMacroChange} required label="Lipides (g)" min={0}  type="number"/>
+                        <Input {...register("calories")}  readOnly label="Calories" min={0}  type="number"/>
                     </div>
                     <div className={classes["nutrients-container"]}>
                         {nutrients?.map((nutrient) => (
                             <div key={nutrient.id}>
-                                <Input {...register(`value-${nutrient.id}`)} min={0} type="number" label={nutrient.name}/>
-                                <Select {...register(`unit-${nutrient.id}`)} placeholder="Unité" options={[
+                                <Input {...register(`value-${nutrient.id}`)} step=".01" min={0} type="number" label={nutrient.name}/>
+                                <Select {...register(`unit-${nutrient.id}`)} aria-label={`${nutrient.name} unité`} placeholder="Unité" options={[
                                     {label: "mcg", value: "mcg"},
                                     {label: "mg", value: "mg"},
                                     {label: "g", value: "g"},
@@ -102,9 +103,10 @@ type FormValues = {
 
 type Props = {
    open?: boolean
-    title?: string
+   title?: string
    onClose?: () => void
-    onValidate?: (food: UnidentifiedFood) => void
+   onValidate?: (food: UnidentifiedFood) => void
+   initValues?: UnidentifiedFood
 }
 
 export default FoodDialog;
