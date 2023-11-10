@@ -1,6 +1,6 @@
 import DRI from "@mocks/DRI.json"
 import foods from "@mocks/foods.json"
-import {Nutrient, Food, Unit, UnidentifiedFood} from "@typing/app.type.ts";
+import {Nutrient, Food, Unit, UnidentifiedFood, MealFood} from "@typing/app.type.ts";
 import {v4 as uuid} from "uuid"
 import {DaySchema} from "@typing/schema.type.ts";
 
@@ -49,10 +49,27 @@ async function deleteFoodFromMeal(mealId: string, foodId: string) {
     return
 }
 
+// @ts-ignore
+async function getMeals(dayName: string): Promise<Meal[]> {
+    return []
+}
+// @ts-ignore
+async function getMealFoods(mealId: string): Promise<MealFood[]> {
+    return []
+}
+
+// @ts-ignore
+async function updateFoodMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount: number, unit: Unit} = {} ) {
+    return
+}
+
 export default {
     getDays,
     getNutrients,
     getFoods,
+    updateFoodMeal,
+    getMealFoods,
+    getMeals,
     addFood,
     deleteFood,
     updateFood,

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useFetch, useServices} from "@hooks";
@@ -9,7 +9,7 @@ import classes from "./Day.module.scss"
 
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
-    const [meals, setMeals] = useState<{[mealId: string]: {name: string, totalNutrients: TotalNutrients}}>({});
+    const [meals, setMeals] = useState<MealsState>({});
     const {apiService} = useServices();
     const [dri] = useFetch(() => apiService.getNutrients())
     const nutrients = dri?.map((nutrient) => {
@@ -43,6 +43,19 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         })
     }
 
+    useEffect(() => {
+        (async function () {
+            const res = await apiService.getMeals(dayName);
+            if (!res?.length) {
+                return
+            }
+            setMeals((prev) => ({
+                ...prev, ...res.reduce<MealsState>((reduced, m) => {
+                    return {...reduced, [m.id]: {name: m.name, totalNutrients: []}}
+                }, {})
+            }))
+        })()
+    }, [apiService, dayName]);
 
     return (
         <div className={classes.container}>
@@ -79,5 +92,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
 type Props = {
     name: string
 }
+
+type MealsState = {[mealId: string]: {name: string, totalNutrients: TotalNutrients}}
 
 export default Day;

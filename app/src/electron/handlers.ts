@@ -1,6 +1,13 @@
 import {getAll, run, transaction} from "./db.ts";
-import {DaySchema, FoodNutrientSchema, FoodSchema, NutrientSchema} from "@typing/schema.type.ts";
-import {Nutrient, Unit, Food, UnidentifiedFood} from "@typing/app.type.ts";
+import {
+    DaySchema,
+    FoodNutrientSchema,
+    FoodSchema,
+    MealFoodSchema,
+    MealSchema,
+    NutrientSchema
+} from "@typing/schema.type.ts";
+import {Nutrient, Unit, Food, UnidentifiedFood, Meal, MealFood} from "@typing/app.type.ts";
 
 async function getDays() {
     return getAll<DaySchema>("SELECT * FROM day");
@@ -43,8 +50,8 @@ async function addFood(food: UnidentifiedFood) {
         `, [food.name, food.description, food.proteins, food.lipids, food.carbs, food.calories]);
         await Promise.all(food.nutrients.map( (nutrient) => {
             return run(`
-            INSERT INTO food_nutrient (food_id, nutrient_id, unit, amount)
-            VALUES (?, ? ,? ,?)        
+                INSERT INTO food_nutrient (food_id, nutrient_id, unit, amount)
+                VALUES (?, ? ,? ,?) 
         `, [id, nutrient.id, nutrient.unit, nutrient.amount])
         }))
         return String(id);
@@ -60,8 +67,8 @@ async function deleteMeal(mealId: string) {
 }
 
 async function updateFood(foodId: string, food: UnidentifiedFood) {
-    await transaction(async () => {
-        await Promise.all(
+    await transaction( () => {
+        return Promise.all(
         [run(`
                 UPDATE food SET name = ?, description = ?, proteins = ?, lipids = ?,
                 carbs = ?, calories = ?
@@ -99,15 +106,43 @@ async function deleteFoodFromMeal(mealId: string, foodId: string) {
     await run("DELETE FROM meal_food WHERE meal_id = ? AND food_id = ?", [mealId, foodId])
 }
 
+async function getMeals(dayName: string): Promise<Meal[]> {
+   const res = await getAll<MealSchema>("SELECT * FROM meal WHERE day_name = ?", [dayName]);
+   return res.map((meal) => ({
+        id: String(meal.id), name: meal.name
+    }))
+}
+
+// @ts-ignore
+async function getMealFoods(mealId: string): Promise<MealFood[]> {
+    const res = await getAll<MealFoodSchema>("SELECT * FROM meal_food WHERE meal_id = ?", [mealId])
+    return res.map((mealFood) => ({
+        id: String(mealFood.food_id), unit: mealFood.unit as Unit, amount: mealFood.amount
+    }))
+}
+
+// @ts-ignore
+async function updateFoodMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount: number, unit: Unit} = {} ) {
+    await run(`
+        UPDATE meal_food SET unit = ?, amount = ?
+        WHERE meal_id = ? AND food_id = ?
+        `,
+        [unit, amount, mealId, foodId]
+    )
+}
+
 export default {
     getDays,
     getNutrients,
     getFoods,
+    getMeals,
+    getMealFoods,
     addMeal,
     addFood,
     deleteFood,
     deleteMeal,
     updateFood,
     addFoodToMeal,
-    deleteFoodFromMeal
+    deleteFoodFromMeal,
+    updateFoodMeal
 }

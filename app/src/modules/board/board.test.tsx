@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {UnidentifiedFood, Nutrient, Food} from "@typing/app.type.ts";
+import {UnidentifiedFood, Nutrient, Food, Meal, MealFood} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
 
@@ -78,6 +78,10 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 deleteFoodFromMeal: async () => {},
                 deleteFood: async () => {},
                 updateFood: async () => {},
+                getMeals: async () => {},
+                getMealFoods: async () => {},
+                updateFoodMeal: async () => {},
+                addFood: async () => uuid(),
                 ...api
             }
         }}>
@@ -126,7 +130,7 @@ describe("Analyse", () => {
         })
     })
 
-    it("should disable add food to meal button if no food selected or replace the food in the meal with new quantity", async () => {
+    it("should disable add food to meal button if no food selected and replace the food in the meal with new quantity", async () => {
         render( <TestComponent/>)
         fireEvent.change(await screen.findByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
         fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
@@ -135,8 +139,11 @@ describe("Analyse", () => {
         })
         fireEvent.click(screen.getByText(/banane/i))
         fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}) )
+        await waitFor(() => {
+            expect(screen.getByText(/banane 100g/i)).toBeInTheDocument()
+        })
         fireEvent.change(screen.getByPlaceholderText(/quantité/i), {target: {value: "80"}})
-        fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}) )
+        fireEvent.click(screen.getByRole("button", {name: /mettre à jour/i}) )
         await waitFor(() => {
             expect(screen.getByText(/banane 80g/i)).toBeInTheDocument()
             expect(screen.queryByText(/banane 100g/i)).not.toBeInTheDocument()
@@ -214,7 +221,8 @@ describe("Analyse", () => {
     })
 
     it("should add food and update it", async () => {
-        render( <TestComponent />)
+        const updateFoodMeal = jest.fn()
+        render( <TestComponent api={{updateFoodMeal}} />)
         const food = await screen.findByText(/banane/i)
         fireEvent.click(food);
         fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
@@ -229,6 +237,7 @@ describe("Analyse", () => {
         fireEvent.click(screen.getByRole("button", {name: /mettre à jour/i}));
         await waitFor(() => {
             expect(within(meal).getByText(/banane 50g/i)).toBeInTheDocument()
+            expect(updateFoodMeal).toHaveBeenCalled();
         })
     })
 
@@ -257,6 +266,24 @@ describe("Analyse", () => {
         fireEvent.click(within(screen.getByRole("listitem", {name:/banane/i})).getByRole("button", {name: /supprimer/i}))
         await waitFor(() => {
             expect(screen.queryByText(/banane 100g/i)).not.toBeInTheDocument()
+        })
+    })
+
+    it("should load all meals saved", async () => {
+        const getMeals = jest.fn(() => (
+            [{name: "déjeuner", id: "1"}, {name: "diner", id: "2"}] as Meal[]
+        ));
+        const getMealFoods = jest.fn((id) => (
+            Number(id) === 1 ? [{id: "1", unit: "g", amount: 100}, {id: "2", unit: "g", amount: 50}] as MealFood[] : []
+        ));
+        render( <TestComponent api={{getMeals, getMealFoods}}/>)
+        await waitFor(() => {
+            const meal = screen.getByRole("region", {name: "déjeuner"})
+            expect(meal).toBeInTheDocument();
+            expect(screen.getByRole("region", {name: "diner"})).toBeInTheDocument();
+            expect(within(meal).getByText(/poulet 100g/i)).toBeInTheDocument();
+            expect(within(meal).getByText(/banane 50g/i)).toBeInTheDocument();
+            expect(within(screen.getByRole("region", {name: "diner"})).queryByText(/poulet 100g/i)).not.toBeInTheDocument()
         })
     })
 })

@@ -1,5 +1,3 @@
-
-
 export type Food = {
     id: string
     name: string
@@ -37,3 +35,13 @@ export type TotalNutrients = {
 }
 
 export type UnidentifiedFood = Omit<Food, "id">
+
+export type Meal = {
+    id: string
+    name: string
+}
+export type MealFood = {
+    id: string
+    amount: number
+    unit: Unit
+}

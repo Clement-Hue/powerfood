@@ -27,9 +27,9 @@ export function createDatabase() {
     }
 }
 
-export async function getAll<T>(sql: string) {
+export async function getAll<T, P = unknown>(sql: string, params: P[] = []) {
     return new Promise<T[]>((resolve, reject) => {
-        db.all(sql, function (err, rows: T[] )  {
+        db.all(sql, params, function (err, rows: T[] )  {
             if (err) {
                 return reject(err)
             }

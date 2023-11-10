@@ -2,19 +2,19 @@ import React, {useEffect, useId, useMemo, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
 import convert from "convert-units"
-import {Food, TotalNutrients, Unit} from "@typing/app.type.ts";
-import {useFoods, useServices} from "@hooks";
+import {Food, MealFood, TotalNutrients, Unit} from "@typing/app.type.ts";
+import {useFetch, useFoods, useServices} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete,
                                  onTotalNutrientsChange, id : mealId}) => {
-    const [quantity, setQuantity] = useState(100);
-    const [mealFoods, setMealFoods] = useState<MealFood[]>([])
-    const {foods, selectedFood} = useFoods();
     const {apiService} = useServices();
+    const [quantity, setQuantity] = useState(100);
+    const [mealFoods, setMealFoods] = useFetch(() => apiService.getMealFoods(mealId))
+    const {foods, selectedFood} = useFoods();
     const mealNameId = useId();
     const mealFoodsDetails = useMemo(() => (
        foods?.reduce<(Food & MealFood)[]>((prev, food) => {
-            const mealFood = mealFoods.find((mf) => mf.id === food.id)
+            const mealFood = mealFoods?.find((mf) => mf.id === food.id)
             if (mealFood) {
                return [...prev, {...food, ...mealFood}]
             }
@@ -26,20 +26,24 @@ const Meal: React.FC<Props> = ({name, onDelete,
         if (!selectedFood) {
             return;
         }
-        await apiService.addFoodToMeal(mealId, selectedFood, {amount, unit})
-        setMealFoods((prev) => {
-            const index = prev.findIndex((food) => food.id === selectedFood)
-            if (index !== -1) {
+        const index = mealFoods?.findIndex((food) => food.id === selectedFood)
+        if (index !== undefined && index !== -1) {
+            await apiService.updateFoodMeal(mealId, selectedFood, {amount, unit})
+            setMealFoods((prev = []) => {
                 return  [...prev.slice(0, index), {id: selectedFood, amount, unit}, ...prev.slice(index + 1)];
-            }
-            return [...prev, {id: selectedFood, amount, unit}]
-        })
+            })
+        } else {
+            await apiService.addFoodToMeal(mealId, selectedFood, {amount, unit})
+            setMealFoods((prev = []) => {
+                return [...prev, {id: selectedFood, amount, unit}]
+            })
+        }
     }
 
     const handleDeleteFood = async (foodId: string) => {
         await apiService.deleteFoodFromMeal(mealId, foodId);
         setMealFoods((prev) => {
-            return prev.filter((food) => food.id !== foodId)
+            return prev?.filter((food) => food.id !== foodId)
         })
     }
 
@@ -83,7 +87,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 <Button type="submit"
                         disabled={!quantity || !selectedFood}>
                     {
-                        mealFoods.some((food) => food.id === selectedFood) ?
+                        mealFoods?.some((food) => food.id === selectedFood) ?
                             "Mettre à jour":  "Ajouter l'aliment"
                     }
                 </Button>
@@ -97,12 +101,6 @@ type Props = {
     name: string
     onDelete?: (mealName: string) => void
     onTotalNutrientsChange?: (total: TotalNutrients) => void
-}
-
-type MealFood = {
-    id: string
-    amount: number
-    unit: Unit
 }
 
 export default Meal;
