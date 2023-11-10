@@ -1,6 +1,10 @@
-import type {apiService, foodApiService} from "@services";
+import type {foodApiService} from "@services";
+import handlers from "src/electron/handlers.ts"
+
+export type ApiService = typeof handlers
+export type FoodApiService = typeof foodApiService
 
 export type Services = {
-   apiService: typeof apiService
-   foodApiService: typeof foodApiService
+   apiService: ApiService
+   foodApiService: FoodApiService
 }
