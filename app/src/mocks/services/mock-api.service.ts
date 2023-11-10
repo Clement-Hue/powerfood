@@ -2,6 +2,7 @@ import DRI from "@mocks/DRI.json"
 import foods from "@mocks/foods.json"
 import {Nutrient, Food, Unit, UnidentifiedFood} from "@typing/app.type.ts";
 import {v4 as uuid} from "uuid"
+import {DaySchema} from "@typing/schema.type.ts";
 
 async function getNutrients() {
     return DRI as Nutrient[]
@@ -10,7 +11,7 @@ async function getFoods(): Promise<Food[]> {
     return foods as Food[];
 }
 
-async function getDays() {
+async function getDays(): Promise<DaySchema> {
     return [{name: "Jour par défaut"}]
 }
 

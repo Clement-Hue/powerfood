@@ -86,9 +86,10 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
     )
 }
 describe("Analyse", () => {
-    it("should show nutrients summary", async () => {
+    it("should show day nutrients summary", async () => {
         render( <TestComponent/>)
         await waitFor(() => {
+            expect(screen.getByText(/jour par défaut/i)).toBeInTheDocument();
             expect(within(screen.getByRole("list", {name: "Résultat"})).getByText("Vitamine C")).toBeInTheDocument()
             expect(within(screen.getByRole("list", {name: "Résultat"})).getByText("DRI: 500 g")).toBeInTheDocument()
         })

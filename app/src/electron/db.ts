@@ -38,7 +38,7 @@ export async function getAll<T>(sql: string) {
     })
 }
 
-export async function run<P>(sql: string, params: P) {
+export async function run<P>(sql: string, params: P[] = []) {
     return new Promise<number>((resolve, reject) => {
         db.run(sql,params, function (err)  {
             if (err) {
@@ -47,5 +47,18 @@ export async function run<P>(sql: string, params: P) {
             return resolve(this.lastID)
         });
     })
+}
+
+export async function transaction<T>(fn: () => Promise<T>) {
+    try {
+       await run("BEGIN TRANSACTION")
+       const res = await fn();
+       await run("COMMIT");
+       return res;
+    } catch(err) {
+      console.error("Error during transaction", err)
+      await run("ROLLBACK");
+      throw err;
+    }
 }
 export default () => db;
