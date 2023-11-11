@@ -7,30 +7,25 @@ import {UnidentifiedFood, Unit} from "@typing/app.type.ts";
 const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
                                          title = "Ajouter un aliment", initValues} ) => {
     const {nutrients} = useNutrients();
-    const initBaseFormValues = {
+    const initFormValues: FormValues = useMemo(() => ({
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
         proteins: String(initValues?.proteins ?? 0),
         lipids: String(initValues?.lipids ?? 0),
         carbs: String(initValues?.carbs ?? 0),
-        calories: String(initValues?.calories ?? 0)
-    };
-    const initNutrientsFormValues = useMemo(() => nutrients?.reduce((prev, nutrient) => {
+        calories: String(initValues?.calories ?? 0),
+        ...nutrients?.reduce((prev, nutrient) => {
                     const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
                     return {...prev,
                         [`value-${nutrient.id}`]: String(init?.amount ?? 0),
                         [`unit-${nutrient.id}`]: init?.unit ?? "mg"}
-                }, {}), [initValues?.nutrients, nutrients])
-    const {setValues, register, handleSubmit, handleChange } = useForm<FormValues>(initBaseFormValues);
+        }, {})
+    }), [initValues?.calories, initValues?.carbs, initValues?.description, initValues?.lipids, initValues?.name, initValues?.nutrients, initValues?.proteins, nutrients])
+    const {setValues, register, handleSubmit, handleChange } = useForm<FormValues>(initFormValues);
 
     useMemo(() => {
-        if (nutrients) {
-            setValues((prev) => ({
-                ...prev,
-                ...initNutrientsFormValues
-            }))
-        }
-    }, [initNutrientsFormValues, nutrients, setValues]);
+        setValues(initFormValues)
+    }, [initFormValues, setValues])
 
 
     const handleValidate = async (data: FormValues) => {
@@ -57,7 +52,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
     }
 
     const handleClose = () => {
-        setValues({...initBaseFormValues, ...initNutrientsFormValues}); // reset
+        setValues(initFormValues)
         onClose?.()
     }
 

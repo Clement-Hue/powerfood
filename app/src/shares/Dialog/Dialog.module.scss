@@ -14,13 +14,13 @@
   display: flex;
   flex-direction: column;
   gap: sizing.spacing(2);
-  max-height: 90vh;
-  max-width: 100%;
+  max-height: 95vh;
+  max-width: 95vw;
   box-sizing: border-box;
   z-index: var(--dialog-z-index);
   position: fixed;
   box-shadow: var(--shadow-1);
-  padding: sizing.spacing(2);
+  padding: sizing.spacing(4);
   background-color: white;
   top: 50%;
   left: 50%;
@@ -30,10 +30,10 @@
 .actions-container {
   align-self: end;
   display: flex;
-  gap: sizing.spacing(1);
+  gap: sizing.spacing(2);
 }
 
 .content-container {
   scrollbar-gutter: stable;
-  overflow-y: auto;
+  overflow: auto;
 }
