@@ -2,8 +2,16 @@
 .container {
   padding: 8px;
   cursor: pointer;
+  border: 1px solid var(--dark-primary);
+  background-color: var(--light-primary);
+  border-radius: var(--border-radius);
   &:disabled {
     cursor: default;
+    border-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  &:hover:not([disabled]) {
+    background-color: var(--hover-bg-color);
   }
 }
 

@@ -29,8 +29,9 @@
   flex-direction: column;
   cursor: pointer;
   border: var(--border);
+  border-radius: var(--border-radius);
   &[aria-selected="true"] {
-    border: 3px solid var(--dark-primary);
+    border: 4px solid var(--dark-primary);
   }
   &:hover {
     background-color: var(--hover-bg-color);

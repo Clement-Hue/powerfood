@@ -8,7 +8,8 @@
   padding: sizing.spacing(2);
   background-color: var(--light-primary);
   z-index: var(--tooltip-z-index);
-  border: var(--border);
+  border: 5px solid var(--normal-primary);
+  border-radius: var(--border-radius);
   box-shadow: var(--shadow-1);
 }
 
@@ -29,7 +30,7 @@
 
 .micro-container {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   overflow: auto;
   gap: sizing.spacing(2);
 }
