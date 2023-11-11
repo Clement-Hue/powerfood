@@ -30,18 +30,16 @@ export type Value = {
     amount: number
     unit: Unit
 }
-export type TotalNutrients = {
-    [nutrientId: number]: Value
-}
-
 export type UnidentifiedFood = Omit<Food, "id">
 
 export type Meal = {
     id: string
     name: string
+    foods: MealFood[]
 }
+
 export type MealFood = {
-    id: string
-    amount: number
-    unit: Unit
-}
+    food: Food
+} & Value
+
+export type GetMeals = {id: string, name: string, foods: ({id: string} & Value)[] }[]

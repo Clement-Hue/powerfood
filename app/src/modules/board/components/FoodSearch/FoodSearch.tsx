@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import classes from "./FoodSearch.module.scss"
 import {Button, Input} from "@shares";
 import FoodList from "../FoodList";
-import {UnidentifiedFood} from "@typing/app.type.ts";
+import {Food, UnidentifiedFood} from "@typing/app.type.ts";
 import FoodDialog from "../FoodDialog";
 import {useFoods, useServices} from "@hooks";
 
@@ -12,11 +12,11 @@ const FoodSearch: React.FC<Props> = ( ) => {
     const {apiService} = useServices();
     const {foods, setFoods, setSelectedFood, selectedFood} = useFoods()
 
-    const handleSelectFood = (foodId: string | null) => {
-        if (selectedFood === foodId) {
+    const handleSelectFood = (food: Food | null) => {
+        if (selectedFood?.id === food?.id) {
             setSelectedFood(null)
         } else {
-            setSelectedFood(foodId);
+            setSelectedFood(food);
         }
     }
     const handleDeleteFood = async (foodId: string) => {

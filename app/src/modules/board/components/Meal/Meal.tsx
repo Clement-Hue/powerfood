@@ -1,66 +1,26 @@
-import React, {useEffect, useId, useMemo, useState} from 'react';
+import React, {useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
-import convert from "convert-units"
-import {Food, MealFood, TotalNutrients, Unit} from "@typing/app.type.ts";
-import {useFetch, useFoods, useServices} from "@hooks";
+import {Food, MealFood, Unit} from "@typing/app.type.ts";
+import {useFoods} from "@hooks";
 
-const Meal: React.FC<Props> = ({name, onDelete,
-                                 onTotalNutrientsChange, id : mealId}) => {
-    const {apiService} = useServices();
+const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
+                                 mealFoods = []  }) => {
     const [quantity, setQuantity] = useState(100);
-    const [mealFoods, setMealFoods] = useFetch(() => apiService.getMealFoods(mealId))
-    const {foods, selectedFood} = useFoods();
+    const {selectedFood} = useFoods();
     const mealNameId = useId();
-    const mealFoodsDetails = useMemo(() => (
-       foods?.reduce<(Food & MealFood)[]>((prev, food) => {
-            const mealFood = mealFoods?.find((mf) => mf.id === food.id)
-            if (mealFood) {
-               return [...prev, {...food, ...mealFood}]
-            }
-            return prev
-    }, []) ?? [] 
-    ), [foods, mealFoods])
 
     const handleAddFood = async (amount: number, unit: Unit) => {
         if (!selectedFood) {
             return;
         }
-        const index = mealFoods?.findIndex((food) => food.id === selectedFood)
-        if (index !== undefined && index !== -1) {
-            await apiService.updateFoodMeal(mealId, selectedFood, {amount, unit})
-            setMealFoods((prev = []) => {
-                return  [...prev.slice(0, index), {id: selectedFood, amount, unit}, ...prev.slice(index + 1)];
-            })
+        const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFood.id);
+        if (mealFood) {
+            onUpdateFood?.(mealFood.food, {amount, unit})
         } else {
-            await apiService.addFoodToMeal(mealId, selectedFood, {amount, unit})
-            setMealFoods((prev = []) => {
-                return [...prev, {id: selectedFood, amount, unit}]
-            })
+            onAddFood?.(selectedFood, {amount, unit})
         }
     }
-
-    const handleDeleteFood = async (foodId: string) => {
-        await apiService.deleteFoodFromMeal(mealId, foodId);
-        setMealFoods((prev) => {
-            return prev?.filter((food) => food.id !== foodId)
-        })
-    }
-
-
-    useEffect(() => {
-        const getTotalNutrients = mealFoodsDetails.reduce<TotalNutrients>((prev, food) => {
-            const amount = food.amount
-            food.nutrients.forEach((nutrient) => {
-                if (!prev[nutrient.id]) {
-                    prev[nutrient.id] = {amount: 0, unit: "mg"}
-                }
-                prev[nutrient.id].amount += ( convert(nutrient.amount).from(nutrient.unit).to("mg") / 100) * amount // divide by 100 to get value for 1g
-            })
-            return prev;
-        }, {})
-        onTotalNutrientsChange?.(getTotalNutrients)
-    }, [mealFoodsDetails]);
 
     return (
         <div role="region" aria-labelledby={mealNameId}  className={classes.container}>
@@ -69,10 +29,10 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 <IconButton aria-label={`Supprimer ${name}`} Icon={Icons.Delete} onClick={() => onDelete?.(name)}/>
             </span>
             <div className={classes["foods-container"]}>
-                {mealFoodsDetails?.map((food, i ) => (
-                    <div key={`${food}-${i}`} className={classes["food-container"]}>
-                        <div >{food.name} {food.amount}{food.unit}</div>
-                        <IconButton onClick={() => handleDeleteFood(food.id)} aria-label={`Supprimer ${food.name}`} Icon={Icons.Delete}/>
+                {mealFoods?.map((mealFood  ) => (
+                    <div key={mealFood.food.id} className={classes["food-container"]}>
+                        <div >{mealFood.food.name} {mealFood.amount}{mealFood.unit}</div>
+                        <IconButton onClick={() => onRemoveFood?.(mealFood.food)} aria-label={`Supprimer ${mealFood.food.name}`} Icon={Icons.Delete}/>
                     </div>
                 ))}
             </div>
@@ -87,7 +47,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 <Button type="submit"
                         disabled={!quantity || !selectedFood}>
                     {
-                        mealFoods?.some((food) => food.id === selectedFood) ?
+                        mealFoods?.some((mf) => mf.food.id === selectedFood?.id) ?
                             "Mettre à jour":  "Ajouter l'aliment"
                     }
                 </Button>
@@ -97,10 +57,12 @@ const Meal: React.FC<Props> = ({name, onDelete,
 };
 
 type Props = {
-    id: string
     name: string
     onDelete?: (mealName: string) => void
-    onTotalNutrientsChange?: (total: TotalNutrients) => void
+    onAddFood?: (food: Food,  data: {amount: number, unit: Unit}) => void
+    onUpdateFood?: (food: Food ,data: {amount: number, unit: Unit}) => void
+    onRemoveFood?: (food: Food) => void
+    mealFoods?: MealFood[]
 }
 
 export default Meal;

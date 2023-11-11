@@ -7,7 +7,7 @@ import {
     MealSchema,
     NutrientSchema
 } from "@typing/schema.type.ts";
-import {Nutrient, Unit, Food, UnidentifiedFood, Meal, MealFood} from "@typing/app.type.ts";
+import {Nutrient, Unit, Food, UnidentifiedFood, Meal, MealFood, Value, GetMeals} from "@typing/app.type.ts";
 
 async function getDays() {
     return getAll<DaySchema>("SELECT * FROM day");
@@ -106,20 +106,13 @@ async function deleteFoodFromMeal(mealId: string, foodId: string) {
     await run("DELETE FROM meal_food WHERE meal_id = ? AND food_id = ?", [mealId, foodId])
 }
 
-async function getMeals(dayName: string): Promise<Meal[]> {
+async function getMeals(dayName: string): Promise<GetMeals> {
    const res = await getAll<MealSchema>("SELECT * FROM meal WHERE day_name = ?", [dayName]);
    return res.map((meal) => ({
         id: String(meal.id), name: meal.name
     }))
 }
 
-// @ts-ignore
-async function getMealFoods(mealId: string): Promise<MealFood[]> {
-    const res = await getAll<MealFoodSchema>("SELECT * FROM meal_food WHERE meal_id = ?", [mealId])
-    return res.map((mealFood) => ({
-        id: String(mealFood.food_id), unit: mealFood.unit as Unit, amount: mealFood.amount
-    }))
-}
 
 // @ts-ignore
 async function updateFoodMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount: number, unit: Unit} = {} ) {
@@ -136,7 +129,6 @@ export default {
     getNutrients,
     getFoods,
     getMeals,
-    getMealFoods,
     addMeal,
     addFood,
     deleteFood,

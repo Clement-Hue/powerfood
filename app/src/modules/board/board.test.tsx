@@ -79,7 +79,6 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 deleteFood: async () => {},
                 updateFood: async () => {},
                 getMeals: async () => {},
-                getMealFoods: async () => {},
                 updateFoodMeal: async () => {},
                 addFood: async () => uuid(),
                 ...api
