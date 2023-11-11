@@ -1,0 +1,27 @@
+@use "src/styles/sizing";
+
+.container {
+  width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(2);
+}
+
+.nutrients-container {
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: sizing.spacing(2);
+  overflow: auto;
+  max-height: 330px;
+  border-top: var(--border);
+  padding-top: sizing.spacing(2);
+}
+
+.macros-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: sizing.spacing(2);
+}
+

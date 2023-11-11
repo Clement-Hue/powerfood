@@ -12,7 +12,10 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
     ]
     return !food ? null : createPortal(
         <div aria-label={`Information sur ${food.name}`} role="tooltip" style={{left: position?.x,top: position?.y }} className={classes.container}>
-            <span className="title2-typo">{food.name}</span>
+            <div>
+                <div className="title2-typo">{food.name}</div>
+                <div >{food.description}</div>
+            </div>
             <div className={classes["info-container"]}>
                 <div className={classes["macro-container"]}>
                     {macros.map((macro) => (

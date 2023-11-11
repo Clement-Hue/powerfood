@@ -43,7 +43,6 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
                          onMouseLeave={() => setShowNutrients(undefined)}
                          className={classes["food-container"]}>
                         <span id={`food-${food.id}`}>{food.name}</span>
-                        <span>{food.description}</span>
                         {showNutrients?.food.id === food.id &&  <NutrientsInfo position={showNutrients.pos} food={showNutrients.food} />}
                     </div>
                     <div className={classes["actions-container"]}>

@@ -2,6 +2,8 @@
 
 .container {
   display: grid;
+  width: 100%;
+  box-sizing: border-box;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: sizing.spacing(4);
   min-height: 20px;
