@@ -360,6 +360,7 @@ describe("Search food", () => {
         await waitFor(() => {
             expect(addFood).toHaveBeenCalledWith({
                name: "Boeuf",
+               description: "",
                calories: 500,
                proteins: 50,
                carbs: 30,
@@ -421,6 +422,7 @@ describe("Search food", () => {
             expect(updateFood).toHaveBeenCalledWith("2",
                 {
                     "name": "Banane plantin",
+                    "description": "",
                     "proteins": 10,
                     "lipids": 0.39,
                     "carbs": 29.6,
