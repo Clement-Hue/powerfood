@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS food_nutrient (
     nutrient_id INTEGER,
     unit TEXT NOT NULL,
     amount REAL NOT NULL,
-    FOREIGN KEY (food_id) REFERENCES food(id),
-    FOREIGN KEY (nutrient_id) REFERENCES nutrient(id),
+    FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE,
+    FOREIGN KEY (nutrient_id) REFERENCES nutrient(id) ON DELETE CASCADE,
     PRIMARY KEY (food_id, nutrient_id)
 );
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS meal (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     day_name TEXT,
-    FOREIGN KEY (day_name) REFERENCES day(name)
+    FOREIGN KEY (day_name) REFERENCES day(name) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS meal_food (
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS meal_food (
     food_id INTEGER,
     unit TEXT NOT NULL,
     amount REAL NOT NULL,
-    FOREIGN KEY (meal_id) REFERENCES meal(id),
-    FOREIGN KEY (food_id) REFERENCES food(id),
+    FOREIGN KEY (meal_id) REFERENCES meal(id) ON DELETE CASCADE,
+    FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE,
     PRIMARY KEY (meal_id, food_id)
 );
