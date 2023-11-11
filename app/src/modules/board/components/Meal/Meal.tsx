@@ -68,7 +68,7 @@ const Meal: React.FC<Props> = ({name, onDelete,
                 {name}
                 <IconButton aria-label={`Supprimer ${name}`} Icon={Icons.Delete} onClick={() => onDelete?.(name)}/>
             </span>
-            <div className={classes["mealFoods-container"]}>
+            <div className={classes["foods-container"]}>
                 {mealFoodsDetails?.map((food, i ) => (
                     <div key={`${food}-${i}`} className={classes["food-container"]}>
                         <div >{food.name} {food.amount}{food.unit}</div>

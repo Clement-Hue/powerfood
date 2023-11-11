@@ -10,6 +10,7 @@ VALUES
   ('Thiamin (Vitamin B1)', 1.2, 'mg'),
   ('Riboflavin (Vitamin B2)', 1.3, 'mg'),
   ('Niacin (Vitamin B3)', 16, 'mg'),
+  ('Vitamin B5 (Pantothenic acid)', 5, 'mg'),
   ('Vitamin B6 (Pyridoxine)', 1.3, 'mg'),
   ('Folate (Vitamin B9)', 400, 'mcg'),
   ('Vitamin B12 (Cobalamin)', 2.4, 'mcg'),

@@ -37,13 +37,14 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
                 <li aria-labelledby={`food-${food.id}`} key={food.id} className={classes["item-container"]}>
                     <div onClick={() => onSelect?.(food.id)} aria-selected={selected === food.id}
                          onMouseEnter={(e) => setShowNutrients({
-                             food, pos: {x: e.clientX, y: e.clientY}
+                             food, pos: {x: e.pageX, y: e.pageY}
                          })}
                          data-testid={`food-${food.name}`}
                          onMouseLeave={() => setShowNutrients(undefined)}
                          className={classes["food-container"]}>
                         <span id={`food-${food.id}`}>{food.name}</span>
                         <span>{food.description}</span>
+                        {showNutrients?.food.id === food.id &&  <NutrientsInfo position={showNutrients.pos} food={showNutrients.food} />}
                     </div>
                     <div className={classes["actions-container"]}>
                         <IconButton aria-label="Editer" onClick={() => setEditFood(food)} Icon={Icons.Edit}/>
@@ -51,8 +52,7 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
                     </div>
                 </li>
             ))}
-            {showNutrients &&  <NutrientsInfo position={showNutrients.pos} food={showNutrients.food} />}
-            {!!editFood && <FoodDialog title="Editer l'aliment" open initValues={editFood} onValidate={handleValidateFoodDialog} onClose={() => setEditFood(null)}/>}
+            <FoodDialog title="Editer l'aliment" open={!!editFood} initValues={editFood} onValidate={handleValidateFoodDialog} onClose={() => setEditFood(null)}/>
         </ul>
     );
 };

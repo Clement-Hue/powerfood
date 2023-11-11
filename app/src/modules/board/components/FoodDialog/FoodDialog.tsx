@@ -15,12 +15,12 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
         carbs: String(initValues?.carbs ?? 0),
         calories: String(initValues?.calories ?? 0)
     };
-    const initNutrientsFormValues = nutrients?.reduce((prev, nutrient) => {
+    const initNutrientsFormValues = useMemo(() => nutrients?.reduce((prev, nutrient) => {
                     const init = initValues?.nutrients.find((n) => n.id === nutrient.id)
                     return {...prev,
                         [`value-${nutrient.id}`]: String(init?.amount ?? 0),
                         [`unit-${nutrient.id}`]: init?.unit ?? "mg"}
-                }, {})
+                }, {}), [initValues?.nutrients, nutrients])
     const {setValues, register, handleSubmit, handleChange } = useForm<FormValues>(initBaseFormValues);
 
     useMemo(() => {
@@ -30,7 +30,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
                 ...initNutrientsFormValues
             }))
         }
-    }, [initValues?.nutrients, nutrients, setValues]);
+    }, [initNutrientsFormValues, nutrients, setValues]);
 
 
     const handleValidate = async (data: FormValues) => {
@@ -57,13 +57,13 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
     }
 
     const handleClose = () => {
-        setValues({...initBaseFormValues, ...initNutrientsFormValues});
+        setValues({...initBaseFormValues, ...initNutrientsFormValues}); // reset
         onClose?.()
     }
 
     return (
             <Dialog onClose={handleClose} open={open} header={
-                <span className={classes["title"]}>{title}</span>
+                <span className="title2-typo">{title}</span>
             }
                     actions={
                         <>
@@ -114,7 +114,7 @@ type Props = {
    title?: string
    onClose?: () => void
    onValidate?: (food: UnidentifiedFood) => void
-   initValues?: UnidentifiedFood
+   initValues?: UnidentifiedFood | null
 }
 
 export default FoodDialog;

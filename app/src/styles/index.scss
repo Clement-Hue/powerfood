@@ -43,3 +43,8 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.5;
+}

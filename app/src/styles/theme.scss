@@ -1,6 +1,8 @@
 :root {
   --border: 1px solid black;
   --font-weight-bold: 700;
+  --font-weight-regular: 400;
+  --font-family: Arial, sans-serif;
   --hover-bg-color: rgba(11, 76, 131, 0.34);
 
   --dark-primary: rgb(44, 121, 182);
@@ -12,5 +14,13 @@
   --tooltip-z-index: 1000;
   --dialog-z-index: 800;
   --shadow-1:   0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+  --font-size-15: 1.5rem;
+  --font-size-12: 1.2rem;
+}
 
+.title2-typo {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-12);
+  line-height: 1.5;
 }

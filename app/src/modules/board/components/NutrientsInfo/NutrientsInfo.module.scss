@@ -1,18 +1,22 @@
 @use "src/styles/sizing";
 
 .container {
-  display: flex;
-  flex-direction: row;
   position: absolute;
-  max-width: 400px;
-  max-height: 200px;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(1);
   padding: sizing.spacing(2);
   background-color: var(--light-primary);
   z-index: var(--tooltip-z-index);
-  gap: sizing.spacing(2);
   border: var(--border);
   box-shadow: var(--shadow-1);
+}
+
+.info-container {
+  gap: sizing.spacing(2);
+  max-height: 230px;
+  display: flex;
+  flex-direction: row;
 }
 
 .macro-container {
@@ -24,10 +28,10 @@
 }
 
 .micro-container {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  overflow: auto;
   gap: sizing.spacing(2);
-  flex-wrap: wrap;
 }
 
 .nutrient-container {
