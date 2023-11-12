@@ -8,6 +8,9 @@ export type Food = {
     calories: number
     nutrients: FoodNutrient[];
 }
+export type Foods = {
+    [foodId: string]: Food
+}
 
 export type FoodNutrient = {
     id: number;
@@ -38,7 +41,7 @@ export type Meal = {
     foods: MealFood[]
 }
 
-export type MealFoodWithFoodProp = {
+export type MealFoodDetails = {
     food: Food
 } & Value
 

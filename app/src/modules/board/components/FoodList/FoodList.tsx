@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import classes from "./FoodList.module.scss"
 import NutrientsInfo from "../NutrientsInfo/NutrientsInfo.tsx";
-import {Food, UnidentifiedFood} from "@typing/app.type.ts";
+import {Food, Foods, UnidentifiedFood} from "@typing/app.type.ts";
 import {IconButton, Icons} from "@shares";
 import FoodDialog from "../FoodDialog";
 import {useFoods, useServices} from "@hooks";
@@ -11,29 +11,21 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
     const [showNutrients, setShowNutrients] = useState<{food: Food, pos: {x:number, y:number}}>();
     const [editFood, setEditFood] = useState<Food | null>(null);
     const {setFoods} = useFoods();
-
     const handleValidateFoodDialog = async (data: UnidentifiedFood) => {
         if (!editFood) {
             return
         }
         const foodId = editFood.id
         await apiService.updateFood(foodId, data);
-        setFoods((prev) => {
-            if (!prev) {
-                return
-            }
-            const foodIndex = prev.findIndex((f) => f.id === foodId)
-            if (foodIndex === -1) {
-                return prev;
-            }
-            return [...prev.slice(0, foodIndex), {...data, id: foodId}, ...prev.slice(foodIndex + 1)]
+        setFoods((prev = {}) => {
+            return {...prev, [foodId]: {...data, id: foodId}}
         })
         setEditFood(null)
     }
 
-    return !foods?.length ? null : (
+    return  (
         <ul aria-label="Liste des aliments" className={classes.container}>
-            {foods?.map((food ) => (
+            {Object.values(foods).map((food ) => (
                 <li aria-labelledby={`food-${food.id}`} key={food.id} className={classes["item-container"]}>
                     <div onClick={() => onSelect?.(food.id)} aria-selected={selected === food.id}
                          onMouseEnter={(e) => setShowNutrients({
@@ -63,7 +55,7 @@ type Props = {
     selected: string | null
     onSelect?: (foodId: string) => void
     onDeleteFood?: (foodId: string) => void
-    foods?: Food[]
+    foods?: Foods
 }
 
 export default FoodList;

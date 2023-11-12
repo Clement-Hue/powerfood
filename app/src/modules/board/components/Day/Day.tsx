@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useServices, useFetch, useFoods} from "@hooks";
-import type {Unit, Food, MealFoodWithFoodProp, Meal as MealType} from "@typing/app.type.ts";
+import type {Unit, MealFoodDetails, Meal as MealType, Food} from "@typing/app.type.ts";
 import Meal from "../Meal";
 import classes from "./Day.module.scss"
 import convert from "convert-units";
@@ -14,12 +14,13 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     const [dri] = useFetch(() => apiService.getNutrients())
     const [meals  , setMeals] = useFetch(() => apiService.getMeals(dayName))
     const mealsComputed : MealComputed[] = useMemo( () => meals?.map((meal) => {
-        return {...meal, foods: foods?.reduce<MealFoodWithFoodProp[]>((prev, food) => {
-                const mealFood = meal.foods.find((f) => f.id === food.id)
-                return !mealFood ? prev : [...prev, {food, amount: mealFood.amount, unit: mealFood.unit}]
+        return {...meal, foods: meal.foods?.reduce<MealFoodDetails[]>((prev, mf) => {
+                const food = foods?.[mf.id]
+                return !food ? prev : [...prev, {food, amount: mf.amount, unit: mf.unit}]
             }, []) ?? []}
         }) ?? [], [foods, meals])
-    const nutrients = dri?.map((nutrient) => {
+
+    const nutrients = useMemo( () => dri?.map((nutrient) => {
         const unit = nutrient.DRI.unit
         const amount = mealsComputed?.reduce((prev, meal) => {
             meal.foods?.forEach((mf) => {
@@ -31,7 +32,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
             return prev;
         }, 0) ?? 0;
         return {...nutrient, value: {amount, unit}}
-    })
+    }), [dri, mealsComputed])
 
     const handleAddMeal = async () => {
         const id = await apiService.addMeal(dayName, newMealInput);
@@ -102,7 +103,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     );
 };
 
-type MealComputed = Omit<MealType, "foods"> & {foods: MealFoodWithFoodProp[]}
+type MealComputed = Omit<MealType, "foods"> & {foods: MealFoodDetails[]}
 
 type Props = {
     name: string

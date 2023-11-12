@@ -11,7 +11,6 @@ const FoodSearch: React.FC<Props> = ( ) => {
     const [open, setOpen] = useState(false)
     const {apiService} = useServices();
     const {foods, setFoods, setSelectedFoodId, selectedFoodId} = useFoods()
-
     const handleSelectFood = (foodId: string | null) => {
         if (selectedFoodId === foodId) {
             setSelectedFoodId(null)
@@ -21,17 +20,18 @@ const FoodSearch: React.FC<Props> = ( ) => {
     }
     const handleDeleteFood = async (foodId: string) => {
         await apiService.deleteFood(foodId);
-        setFoods((prev) =>  (
-            prev?.filter((f) => f.id !== foodId)
-        ))
+        setFoods((prev = {}) =>  {
+            const {[foodId]: _ ,...foods} = prev;
+            return foods
+        })
         handleSelectFood(null)
     }
 
     const handleValidateFoodDialog = async (food: UnidentifiedFood) => {
         const id = await apiService.addFood(food);
-        setFoods((prev) => ([
-            ...(prev ?? []), {...food, id}
-        ]))
+        setFoods((prev = {}) => ({
+            ...prev, [id]: {...food, id}
+        }))
         setOpen(false)
     }
 
@@ -40,7 +40,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
             <Input placeholder="Rechercher dans la liste" value={searchValue}
                    onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
-            <FoodList foods={foods?.filter((f) => f.name.match(new RegExp(searchValue, "i")))}
+            <FoodList foods={foods && Object.fromEntries(Object.entries(foods).filter(([_, f]) => f.name.match(new RegExp(searchValue, "i"))))}
                       onDeleteFood={handleDeleteFood} selected={selectedFoodId} onSelect={handleSelectFood} />
             <FoodDialog open={open} onValidate={handleValidateFoodDialog} onClose={() => setOpen(false)}/>
         </div>

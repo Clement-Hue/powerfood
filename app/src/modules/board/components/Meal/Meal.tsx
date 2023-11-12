@@ -1,7 +1,7 @@
 import React, {useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
-import {Food, MealFoodWithFoodProp, Unit} from "@typing/app.type.ts";
+import {Food, MealFoodDetails, Unit} from "@typing/app.type.ts";
 import {useFoods} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
@@ -18,7 +18,7 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
         if (mealFood) {
             onUpdateFood?.(mealFood.food, {amount, unit})
         } else {
-            const food = foods?.find((f) => f.id === selectedFoodId)
+            const food = foods?.[selectedFoodId]
             if (food) {
                 onAddFood?.(food, {amount, unit})
             }
@@ -61,10 +61,10 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
 
 type Props = {
     name: string
-    mealFoods?: MealFoodWithFoodProp[]
+    mealFoods?: MealFoodDetails[]
     onDelete?: (mealName: string) => void
-    onAddFood?: (food: Food,  data: {amount: number, unit: Unit}) => void
-    onUpdateFood?: (food: Food ,data: {amount: number, unit: Unit}) => void
+    onAddFood?: (food: Food, data: {amount: number, unit: Unit}) => void
+    onUpdateFood?: (food: Food , data: {amount: number, unit: Unit}) => void
     onRemoveFood?: (food: Food) => void
 }
 

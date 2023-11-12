@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {UnidentifiedFood, Nutrient, Food, Meal} from "@typing/app.type.ts";
+import {UnidentifiedFood, Nutrient, Foods, Meal} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
 
@@ -12,9 +12,9 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 async getDays() {
                     return [{name: "Jour par défaut"}]
                 },
-                async getFoods(): Promise<Food[]> {
-                    return [
-                        {
+                async getFoods(): Promise<Foods> {
+                    return {
+                       "1": {
                             "id": "1",
                             "name": "Poulet",
                             "proteins": 20,
@@ -30,7 +30,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                                 }
                             ]
                         },
-                        {
+                        "2": {
                             "id": "2",
                             "name": "Banane",
                             "proteins": 1.28,
@@ -52,7 +52,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                                 }
                             ]
                         }
-                    ]
+                    }
                 },
                 async getNutrients(): Promise<Nutrient[]> {
                     return [{
