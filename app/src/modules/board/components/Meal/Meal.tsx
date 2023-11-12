@@ -1,7 +1,7 @@
 import React, {useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
-import {Food, MealFoodDetails, Unit} from "@typing/app.type.ts";
+import {FoodItem, MealFoodDetails, Unit} from "@typing/app.type.ts";
 import {useFoods} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
@@ -63,9 +63,9 @@ type Props = {
     name: string
     mealFoods?: MealFoodDetails[]
     onDelete?: (mealName: string) => void
-    onAddFood?: (food: Food, data: {amount: number, unit: Unit}) => void
-    onUpdateFood?: (food: Food , data: {amount: number, unit: Unit}) => void
-    onRemoveFood?: (food: Food) => void
+    onAddFood?: (food: FoodItem, data: {amount: number, unit: Unit}) => void
+    onUpdateFood?: (food: FoodItem , data: {amount: number, unit: Unit}) => void
+    onRemoveFood?: (food: FoodItem) => void
 }
 
 export default Meal;

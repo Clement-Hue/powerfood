@@ -7,13 +7,13 @@ import {
     MealSchema,
     NutrientSchema
 } from "@typing/schema.type.ts";
-import {Nutrient, Unit, Foods, UnidentifiedFood, Meal } from "@typing/app.type.ts";
+import {NutrientInfo, Unit, FoodDictionary, UnidentifiedFood, Meal } from "@typing/app.type.ts";
 
 async function getDays() {
     return getAll<DaySchema>("SELECT * FROM day");
 }
 
-async function getNutrients(): Promise<Nutrient[]> {
+async function getNutrients(): Promise<NutrientInfo[]> {
     const res = await getAll<NutrientSchema>("SELECT * FROM nutrient");
     return res.map(({id, name, dri_unit, dri_amount}) => ({
         id, name, DRI: {
@@ -22,13 +22,13 @@ async function getNutrients(): Promise<Nutrient[]> {
     }))
 }
 
-async function getFoods(): Promise<Foods> {
+async function getFoods(): Promise<FoodDictionary> {
     const foods = await getAll<FoodSchema & FoodNutrientSchema & {nutrient_name: string}>( `
         SELECT f.*, fn.*, n.name as nutrient_name FROM food f
         JOIN food_nutrient fn ON f.id = fn.food_id
         JOIN nutrient n ON n.id = fn.nutrient_id
     `);
-    return foods.reduce<Foods>((prev, food) => {
+    return foods.reduce<FoodDictionary>((prev, food) => {
         const prevFood = prev[String(food.id)]
         const nutrient = {id: food.nutrient_id, name: food.nutrient_name, unit: food.unit as Unit, amount: food.amount}
         if (prevFood) {

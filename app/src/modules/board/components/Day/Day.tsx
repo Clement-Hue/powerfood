@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useServices, useFetch, useFoods} from "@hooks";
-import type {Unit, MealFoodDetails, Meal as MealType, Food} from "@typing/app.type.ts";
+import type {Unit, MealFoodDetails, Meal as MealType, FoodItem} from "@typing/app.type.ts";
 import Meal from "../Meal";
 import classes from "./Day.module.scss"
 import convert from "convert-units";
@@ -13,7 +13,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     const {foods } = useFoods();
     const [dri] = useFetch(() => apiService.getNutrients())
     const [meals  , setMeals] = useFetch(() => apiService.getMeals(dayName))
-    const mealsComputed : MealComputed[] = useMemo( () => meals?.map((meal) => {
+    const mealsComputed : MealWithFoodDetails[] = useMemo( () => meals?.map((meal) => {
         return {...meal, foods: meal.foods?.reduce<MealFoodDetails[]>((prev, mf) => {
                 const food = foods?.[mf.id]
                 return !food ? prev : [...prev, {food, amount: mf.amount, unit: mf.unit}]
@@ -49,21 +49,21 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         })
     }
 
-    const handleRemoveFood = async (mealId: string ,food: Food) => {
+    const handleRemoveFood = async (mealId: string ,food: FoodItem) => {
         await apiService.deleteFoodFromMeal(mealId, food.id);
         setMeals((prev ) => prev?.map((m) => (
                  m.id !== mealId ? m :  {...m, foods: m.foods.filter((mf) => mf.id !== food.id)}
             )))
     }
 
-    const handleAddFood = async (mealId: string, food: Food, {amount, unit}: {amount: number, unit: Unit}) => {
+    const handleAddFood = async (mealId: string, food: FoodItem, {amount, unit}: {amount: number, unit: Unit}) => {
         await apiService.addFoodToMeal(mealId, food.id, {amount, unit})
         setMeals((prev) => prev?.map((m) => (
             m.id !== mealId ? m : {...m, foods: [...m.foods, {id: food.id, amount, unit}]}
         )))
     }
 
-    const handleUpdateFood = async (mealId: string, food: Food, {amount, unit}: {amount: number, unit: Unit}) => {
+    const handleUpdateFood = async (mealId: string, food: FoodItem, {amount, unit}: {amount: number, unit: Unit}) => {
         await apiService.updateFoodMeal(mealId, food.id, {amount, unit})
         setMeals((prev) => prev?.map((m) => (
             m.id !== mealId ? m : {...m, foods: m.foods.map((mf) => (
@@ -103,7 +103,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     );
 };
 
-type MealComputed = Omit<MealType, "foods"> & {foods: MealFoodDetails[]}
+type MealWithFoodDetails = Omit<MealType, "foods"> & {foods: MealFoodDetails[]}
 
 type Props = {
     name: string

@@ -1,6 +1,6 @@
 import React from 'react';
 import classes from "./NutrientsInfo.module.scss"
-import {Food} from "@typing/app.type.ts";
+import {FoodItem} from "@typing/app.type.ts";
 import {createPortal} from "react-dom";
 
 const NutrientsInfo: React.FC<Props> = ({food, position}) => {
@@ -40,7 +40,7 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
 };
 
 type Props = {
-    food?: Food
+    food?: FoodItem
     position?: {x: number, y: number}
 }
 

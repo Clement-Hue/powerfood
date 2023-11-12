@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
 import classes from "./FoodList.module.scss"
 import NutrientsInfo from "../NutrientsInfo/NutrientsInfo.tsx";
-import {Food, UnidentifiedFood} from "@typing/app.type.ts";
+import {FoodItem, UnidentifiedFood} from "@typing/app.type.ts";
 import {IconButton, Icons} from "@shares";
 import FoodDialog from "../FoodDialog";
 import {useFoods, useServices} from "@hooks";
 
 const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect} ) => {
     const {apiService} = useServices();
-    const [showNutrients, setShowNutrients] = useState<{food: Food, pos: {x:number, y:number}}>();
-    const [editFood, setEditFood] = useState<Food | null>(null);
+    const [showNutrients, setShowNutrients] = useState<{food: FoodItem, pos: {x:number, y:number}}>();
+    const [editFood, setEditFood] = useState<FoodItem | null>(null);
     const {setFoods} = useFoods();
     const handleValidateFoodDialog = async (data: UnidentifiedFood) => {
         if (!editFood) {
@@ -55,7 +55,7 @@ type Props = {
     selected: string | null
     onSelect?: (foodId: string) => void
     onDeleteFood?: (foodId: string) => void
-    foods?: Food[]
+    foods?: FoodItem[]
 }
 
 export default FoodList;

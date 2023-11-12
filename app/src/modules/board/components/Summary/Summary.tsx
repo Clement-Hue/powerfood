@@ -1,10 +1,10 @@
 import React from 'react';
 import {clsx} from "clsx"
 import classes from "./Summary.module.scss"
-import {Nutrient, Value} from "@typing/app.type.ts";
+import {NutrientInfo, MeasurementValue} from "@typing/app.type.ts";
 
 const Summary: React.FC<Props> = ({nutrients}) => {
-    const valueClass = (DRI: Value, value: Value = {amount: 0, unit: "mcg"}) => {
+    const valueClass = (DRI: MeasurementValue, value: MeasurementValue = {amount: 0, unit: "mcg"}) => {
         if (value.amount >= DRI.amount) {
             return "positive";
         }
@@ -28,7 +28,7 @@ const Summary: React.FC<Props> = ({nutrients}) => {
 };
 
 type Props = {
-    nutrients?: (Nutrient & {value?: Value})[]
+    nutrients?: (NutrientInfo & {value?: MeasurementValue})[]
 }
 
 export default Summary;

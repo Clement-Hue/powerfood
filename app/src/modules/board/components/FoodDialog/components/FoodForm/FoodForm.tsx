@@ -1,5 +1,5 @@
 import React from 'react';
-import {Nutrient, UnidentifiedFood, Unit} from "@typing/app.type.ts";
+import {NutrientInfo, UnidentifiedFood, Unit} from "@typing/app.type.ts";
 import {useForm} from "@hooks";
 import {Input, Select} from "@shares";
 import classes from "./FoodForm.module.scss"
@@ -65,7 +65,7 @@ export type FormValues = {
 
 type Props = {
     initValues?: UnidentifiedFood | null
-    nutrients: Nutrient[]
+    nutrients: NutrientInfo[]
     onValidate: (data: FormValues) => Promise<void>
     formId?: string
 }
