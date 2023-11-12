@@ -5,11 +5,11 @@ import {useFetch, useServices} from "@hooks";
 export const Context = createContext<FoodsContext | null >(null  );
 const FoodsProvider: React.FC<Props> = ({children}) => {
     const {apiService} = useServices()
-    const [selectedFood, setSelectedFood] = useState<Food | null>(null);
+    const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null);
     const [foods, setFoods] = useFetch<Food[]>(() => apiService.getFoods())
     return (
         <Context.Provider value={{
-            foods, setFoods, selectedFood, setSelectedFood
+            foods, setFoods, selectedFoodId, setSelectedFoodId
         }} >
             {children}
         </Context.Provider>
@@ -19,8 +19,8 @@ const FoodsProvider: React.FC<Props> = ({children}) => {
 type FoodsContext = {
     foods?: Food[]
     setFoods: React.Dispatch<React.SetStateAction<Food[] | undefined>>
-    selectedFood: Food | null
-    setSelectedFood: React.Dispatch<React.SetStateAction<Food | null>>
+    selectedFoodId: string | null
+    setSelectedFoodId: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 type Props = {

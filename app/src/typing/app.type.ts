@@ -38,8 +38,12 @@ export type Meal = {
     foods: MealFood[]
 }
 
-export type MealFood = {
+export type MealFoodWithFoodProp = {
     food: Food
 } & Value
 
-export type GetMeals = {id: string, name: string, foods: ({id: string} & Value)[] }[]
+export type MealFood = {
+    id: string,
+    amount: number
+    unit: Unit
+}

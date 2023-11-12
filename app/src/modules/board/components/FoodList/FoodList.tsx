@@ -35,7 +35,7 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
         <ul aria-label="Liste des aliments" className={classes.container}>
             {foods?.map((food ) => (
                 <li aria-labelledby={`food-${food.id}`} key={food.id} className={classes["item-container"]}>
-                    <div onClick={() => onSelect?.(food)} aria-selected={selected?.id === food.id}
+                    <div onClick={() => onSelect?.(food.id)} aria-selected={selected === food.id}
                          onMouseEnter={(e) => setShowNutrients({
                              food, pos: {x: e.pageX, y: e.pageY}
                          })}
@@ -57,8 +57,11 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
 };
 
 type Props = {
-    selected: Food | null
-    onSelect?: (food: Food) => void
+    /**
+     * FoodId
+     */
+    selected: string | null
+    onSelect?: (foodId: string) => void
     onDeleteFood?: (foodId: string) => void
     foods?: Food[]
 }

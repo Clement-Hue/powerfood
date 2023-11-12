@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useServices, useFetch, useFoods} from "@hooks";
-import type {Unit, Food, MealFood, Meal as MealType} from "@typing/app.type.ts";
+import type {Unit, Food, MealFoodWithFoodProp, Meal as MealType} from "@typing/app.type.ts";
 import Meal from "../Meal";
 import classes from "./Day.module.scss"
 import convert from "convert-units";
@@ -10,16 +10,15 @@ import convert from "convert-units";
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
     const {apiService} = useServices();
-    const {foods = []} = useFoods();
+    const {foods } = useFoods();
     const [dri] = useFetch(() => apiService.getNutrients())
-    const [meals = [], setMeals] = useFetch(() => apiService.getMeals(dayName))
-    const mealsComputed : MealType[] = useMemo( () => meals.map((meal) => {
-        return {...meal, foods: foods.reduce<MealFood[]>((prev, food) => {
+    const [meals  , setMeals] = useFetch(() => apiService.getMeals(dayName))
+    const mealsComputed : MealComputed[] = useMemo( () => meals?.map((meal) => {
+        return {...meal, foods: foods?.reduce<MealFoodWithFoodProp[]>((prev, food) => {
                 const mealFood = meal.foods.find((f) => f.id === food.id)
                 return !mealFood ? prev : [...prev, {food, amount: mealFood.amount, unit: mealFood.unit}]
-            }, [])}
-        }), [foods, meals])
-
+            }, []) ?? []}
+        }) ?? [], [foods, meals])
     const nutrients = dri?.map((nutrient) => {
         const unit = nutrient.DRI.unit
         const amount = mealsComputed?.reduce((prev, meal) => {
@@ -102,6 +101,8 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         </div>
     );
 };
+
+type MealComputed = Omit<MealType, "foods"> & {foods: MealFoodWithFoodProp[]}
 
 type Props = {
     name: string

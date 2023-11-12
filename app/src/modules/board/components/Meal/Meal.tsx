@@ -1,24 +1,27 @@
 import React, {useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
-import {Food, MealFood, Unit} from "@typing/app.type.ts";
+import {Food, MealFoodWithFoodProp, Unit} from "@typing/app.type.ts";
 import {useFoods} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
                                  mealFoods = []  }) => {
     const [quantity, setQuantity] = useState(100);
-    const {selectedFood} = useFoods();
+    const {foods, selectedFoodId} = useFoods();
     const mealNameId = useId();
 
     const handleAddFood = async (amount: number, unit: Unit) => {
-        if (!selectedFood) {
+        if (!selectedFoodId) {
             return;
         }
-        const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFood.id);
+        const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFoodId);
         if (mealFood) {
             onUpdateFood?.(mealFood.food, {amount, unit})
         } else {
-            onAddFood?.(selectedFood, {amount, unit})
+            const food = foods?.find((f) => f.id === selectedFoodId)
+            if (food) {
+                onAddFood?.(food, {amount, unit})
+            }
         }
     }
 
@@ -42,12 +45,12 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
                       await handleAddFood(quantity, "g")
                   }}
             >
-                <Input disabled={!selectedFood} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
+                <Input disabled={!selectedFoodId} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
                        placeholder="quantité (g)"/>
                 <Button type="submit"
-                        disabled={!quantity || !selectedFood}>
+                        disabled={!quantity || !selectedFoodId}>
                     {
-                        mealFoods?.some((mf) => mf.food.id === selectedFood?.id) ?
+                        mealFoods?.some((mf) => mf.food.id === selectedFoodId) ?
                             "Mettre à jour":  "Ajouter l'aliment"
                     }
                 </Button>
@@ -58,11 +61,11 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
 
 type Props = {
     name: string
+    mealFoods?: MealFoodWithFoodProp[]
     onDelete?: (mealName: string) => void
     onAddFood?: (food: Food,  data: {amount: number, unit: Unit}) => void
     onUpdateFood?: (food: Food ,data: {amount: number, unit: Unit}) => void
     onRemoveFood?: (food: Food) => void
-    mealFoods?: MealFood[]
 }
 
 export default Meal;

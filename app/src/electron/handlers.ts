@@ -7,7 +7,7 @@ import {
     MealSchema,
     NutrientSchema
 } from "@typing/schema.type.ts";
-import {Nutrient, Unit, Food, UnidentifiedFood, Meal, MealFood, Value, GetMeals} from "@typing/app.type.ts";
+import {Nutrient, Unit, Food, UnidentifiedFood, Meal, MealFoodWithFoodProp, Value, MealFood} from "@typing/app.type.ts";
 
 async function getDays() {
     return getAll<DaySchema>("SELECT * FROM day");
@@ -106,11 +106,22 @@ async function deleteFoodFromMeal(mealId: string, foodId: string) {
     await run("DELETE FROM meal_food WHERE meal_id = ? AND food_id = ?", [mealId, foodId])
 }
 
-async function getMeals(dayName: string): Promise<GetMeals> {
-   const res = await getAll<MealSchema>("SELECT * FROM meal WHERE day_name = ?", [dayName]);
-   return res.map((meal) => ({
-        id: String(meal.id), name: meal.name
-    }))
+async function getMeals(dayName: string): Promise<Meal[]> {
+   const res = await getAll<MealSchema & MealFoodSchema>(`
+        SELECT * FROM meal m 
+        JOIN meal_food mf ON mf.meal_id = m.id
+        WHERE day_name = ?
+        `,
+       [dayName]);
+   return res.reduce<Meal[]>((prev, meal) => {
+      const oldMeal = prev.find((m) => m.id === String(meal.id))
+      const food = {id: String(meal.food_id), amount: meal.amount, unit: meal.unit as Unit}
+      if (oldMeal) {
+           oldMeal.foods.push(food)
+           return prev;
+      }
+      return [...prev, {id: String(meal.id), name: meal.name, foods: [food] }]
+   }, [])
 }
 
 

@@ -1,7 +1,7 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {UnidentifiedFood, Nutrient, Food, Meal, MealFood} from "@typing/app.type.ts";
+import {UnidentifiedFood, Nutrient, Food, Meal} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
 
@@ -270,12 +270,12 @@ describe("Analyse", () => {
 
     it("should load all meals saved", async () => {
         const getMeals = jest.fn(() => (
-            [{name: "déjeuner", id: "1"}, {name: "diner", id: "2"}] as Meal[]
+            [
+                {name: "déjeuner", id: "1", foods: [{id: "1", unit: "g", amount: 100}, {id: "2", unit: "g", amount: 50}]},
+                {name: "diner", id: "2", foods: []}
+            ] as Meal[]
         ));
-        const getMealFoods = jest.fn((id) => (
-            Number(id) === 1 ? [{id: "1", unit: "g", amount: 100}, {id: "2", unit: "g", amount: 50}] as MealFood[] : []
-        ));
-        render( <TestComponent api={{getMeals, getMealFoods}}/>)
+        render( <TestComponent api={{getMeals}}/>)
         await waitFor(() => {
             const meal = screen.getByRole("region", {name: "déjeuner"})
             expect(meal).toBeInTheDocument();
