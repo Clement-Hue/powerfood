@@ -9,7 +9,7 @@ let db!: sqlite.Database
 
 export function createDatabase() {
     const userDataPath = app.getPath("userData")
-    const dbPath =  path.join(userDataPath, "app.db")
+    const dbPath =  path.join(userDataPath, "powerfood.db")
     const isDatabaseExist = fs.existsSync(dbPath)
     db = new sqlite.Database(dbPath)
     db.exec(createTables, (err) => {

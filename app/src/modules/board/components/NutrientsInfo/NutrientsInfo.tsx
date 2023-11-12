@@ -14,7 +14,8 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
         <div aria-label={`Information sur ${food.name}`} role="tooltip" style={{left: position?.x,top: position?.y }} className={classes.container}>
             <div>
                 <div className="title2-typo">{food.name}</div>
-                <div >{food.description}</div>
+                <div >Valeurs pour {food.valuesFor === "unit" ? "1 unité" : "100g"}</div>
+                <div className="small-typo">{food.description}</div>
             </div>
             <div className={classes["info-container"]}>
                 <div className={classes["macro-container"]}>

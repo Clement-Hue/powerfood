@@ -36,9 +36,9 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
                     {label: "1 unité", value: "unit"},
                 ]}/>
                 <div className={classes["macros-container"]}>
-                    <Input {...register("proteins")} step=".01" onChange={handleMacroChange} required label="Protéines (g)" min={0}  type="number"/>
-                    <Input {...register("carbs")} step=".01" onChange={handleMacroChange} required label="Glucides (g)" min={0}  type="number"/>
-                    <Input {...register("lipids")} step=".01" onChange={handleMacroChange} required label="Lipides (g)" min={0}  type="number"/>
+                    <Input {...register("proteins")} step=".01" onChange={handleMacroChange} label="Protéines (g)" min={0}  type="number"/>
+                    <Input {...register("carbs")} step=".01" onChange={handleMacroChange} label="Glucides (g)" min={0}  type="number"/>
+                    <Input {...register("lipids")} step=".01" onChange={handleMacroChange} label="Lipides (g)" min={0}  type="number"/>
                     <Input {...register("calories")}  readOnly label="Calories" min={0}  type="number"/>
                 </div>
                 <div className={classes["nutrients-container"]}>

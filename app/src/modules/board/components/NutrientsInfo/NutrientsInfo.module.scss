@@ -6,6 +6,7 @@
   flex-direction: column;
   gap: sizing.spacing(1);
   padding: sizing.spacing(2);
+  max-width: 600px;
   background-color: var(--light-primary);
   z-index: var(--tooltip-z-index);
   border: 5px solid var(--normal-primary);
