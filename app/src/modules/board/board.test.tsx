@@ -285,6 +285,24 @@ describe("Analyse", () => {
             expect(within(screen.getByRole("region", {name: "diner"})).queryByText(/poulet 100g/i)).not.toBeInTheDocument()
         })
     })
+
+    it("should show macros nutrients", async () => {
+        render( <TestComponent />)
+        const list = await screen.findByRole("list", {name: /liste des aliments/i});
+        fireEvent.click( await within(list).findByText(/banane/i))
+        fireEvent.change(screen.getByRole("textbox", {name: "Repas"}), {target: {value: "déjeuner"}})
+        fireEvent.click(screen.getByRole("button", {name: "Ajouter un repas"}));
+        fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}))
+        fireEvent.click(within(list).getByText(/poulet/i))
+        fireEvent.change(screen.getByPlaceholderText(/quantité/i), {target: {value: "50"}})
+        fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}))
+        await waitFor(() => {
+            expect(screen.getByText(/protéines 11.28g/i)).toBeInTheDocument();
+            expect(screen.getByText(/lipides 0.585g/i)).toBeInTheDocument();
+            expect(screen.getByText(/glucides 30.1g/i)).toBeInTheDocument();
+            expect(screen.getByText(/calories 197kcal/i)).toBeInTheDocument();
+        })
+    })
 })
 
 describe("Search food", () => {

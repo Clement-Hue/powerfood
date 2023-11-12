@@ -4,8 +4,8 @@ import {Button, Input} from "@shares";
 import {useServices, useFetch, useFoods} from "@hooks";
 import type {Unit, MealFoodDetails, Meal as MealType, FoodItem} from "@typing/app.type.ts";
 import Meal from "../Meal";
-import classes from "./Day.module.scss"
 import convert from "convert-units";
+import classes from "./Day.module.scss"
 
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
@@ -13,16 +13,25 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     const {foods } = useFoods();
     const [dri] = useFetch(() => apiService.getNutrients())
     const [meals  , setMeals] = useFetch(() => apiService.getMeals(dayName))
-    const mealsComputed : MealWithFoodDetails[] = useMemo( () => meals?.map((meal) => {
+    const mealsWithFoods : MealWithFoodDetails[] = useMemo( () => meals?.map((meal) => {
         return {...meal, foods: meal.foods?.reduce<MealFoodDetails[]>((prev, mf) => {
                 const food = foods?.[mf.id]
                 return !food ? prev : [...prev, {food, amount: mf.amount, unit: mf.unit}]
             }, []) ?? []}
         }) ?? [], [foods, meals])
 
-    const nutrients = useMemo( () => dri?.map((nutrient) => {
+    const macros = useMemo( () => (["calories","proteins", "carbs", "lipids"] as const).map((macroName) => {
+        const res = {name: macroName, amount: 0}
+        mealsWithFoods.forEach((meal) => {
+           meal.foods.forEach((mf) => {
+               res.amount += (mf.food[macroName] / 100) * mf.amount
+           })
+        })
+        return res;
+    }), [mealsWithFoods])
+    const micros = useMemo( () => dri?.map((nutrient) => {
         const unit = nutrient.DRI.unit
-        const amount = mealsComputed?.reduce((prev, meal) => {
+        const amount = mealsWithFoods?.reduce((prev, meal) => {
             meal.foods?.forEach((mf) => {
                 const foodNutrient = mf.food.nutrients.find((n) => n.id === nutrient.id)
                 if (foodNutrient) {
@@ -32,7 +41,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
             return prev;
         }, 0) ?? 0;
         return {...nutrient, value: {amount, unit}}
-    }), [dri, mealsComputed])
+    }), [dri, mealsWithFoods])
 
     const handleAddMeal = async () => {
         const id = await apiService.addMeal(dayName, newMealInput);
@@ -87,7 +96,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
                 <Button disabled={!newMealInput || meals?.some((m) => m.name === newMealInput)} type="submit">Ajouter un repas</Button>
             </form>
             <div className={classes["meals-container"]}>
-                {mealsComputed?.map(( {id: mealId, name: mealName, foods}) => (
+                {mealsWithFoods?.map(( {id: mealId, name: mealName, foods}) => (
                     <Meal
                         name={mealName}
                         mealFoods={foods}
@@ -98,7 +107,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
                         key={mealId} />
                 ))}
             </div>
-            <Summary nutrients={nutrients}/>
+            <Summary macros={macros} micros={micros}/>
         </div>
     );
 };

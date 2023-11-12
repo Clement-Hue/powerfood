@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS food (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     description TEXT,
+    values_for TEXT NOT NULL DEFAULT "100g",
     proteins REAL NOT NULL,
     lipids REAL NOT NULL,
     carbs REAL NOT NULL,

@@ -15,6 +15,7 @@ export type NutrientSchema = {
 export type FoodSchema = {
     id: number;
     name: string;
+    values_for: string
     description: string;
     proteins: number;
     lipids: number;
