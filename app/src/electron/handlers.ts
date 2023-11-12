@@ -25,8 +25,8 @@ async function getNutrients(): Promise<NutrientInfo[]> {
 async function getFoods(): Promise<FoodDictionary> {
     const foods = await getAll<FoodSchema & FoodNutrientSchema & {nutrient_name: string}>( `
         SELECT f.*, fn.*, n.name as nutrient_name FROM food f
-        JOIN food_nutrient fn ON f.id = fn.food_id
-        JOIN nutrient n ON n.id = fn.nutrient_id
+        LEFT JOIN food_nutrient fn ON f.id = fn.food_id
+        LEFT JOIN nutrient n ON n.id = fn.nutrient_id
     `);
     return foods.reduce<FoodDictionary>((prev, food) => {
         const prevFood = prev[String(food.id)]
@@ -109,7 +109,7 @@ async function deleteFoodFromMeal(mealId: string, foodId: string) {
 async function getMeals(dayName: string): Promise<Meal[]> {
    const res = await getAll<MealSchema & MealFoodSchema>(`
         SELECT * FROM meal m 
-        JOIN meal_food mf ON mf.meal_id = m.id
+        LEFT JOIN meal_food mf ON mf.meal_id = m.id
         WHERE day_name = ?
         `,
        [dayName]);

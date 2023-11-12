@@ -12,6 +12,7 @@ VALUES
   ('Vitamin B3', 16, 'mg'),
   ('Vitamin B5', 5, 'mg'),
   ('Vitamin B6', 1.3, 'mg'),
+  ('Vitamin B7', 30, 'mcg'),
   ('Vitamin B9', 400, 'mcg'),
   ('Vitamin B12', 2.4, 'mcg'),
   ('Calcium', 1000, 'mg'),

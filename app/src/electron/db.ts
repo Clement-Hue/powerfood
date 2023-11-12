@@ -1,12 +1,15 @@
 import sqlite from "sqlite3"
+import {app} from "electron";
 import fs from "fs"
+import path from "path";
 import createTables from "./sql/create-tables.sql"
 import defaultValues from "./sql/defaut-values.sql"
 
 let db!: sqlite.Database
 
 export function createDatabase() {
-    const dbPath = "./app.db"
+    const userDataPath = app.getPath("userData")
+    const dbPath =  path.join(userDataPath, "app.db")
     const isDatabaseExist = fs.existsSync(dbPath)
     db = new sqlite.Database(dbPath)
     db.exec(createTables, (err) => {
