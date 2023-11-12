@@ -1,25 +1,37 @@
-import React, {useId, useState} from 'react';
+import React, {useEffect, useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
-import {FoodItem, MealFoodDetails, Unit} from "@typing/app.type.ts";
+import {Food, MealFoodDetails, FoodUnit} from "@typing/app.type.ts";
 import {useFoods} from "@hooks";
 
 const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
                                  mealFoods = []  }) => {
-    const [quantity, setQuantity] = useState(100);
     const {foods, selectedFoodId} = useFoods();
+    const [quantity, setQuantity] = useState(100);
     const mealNameId = useId();
 
-    const handleAddFood = async (amount: number, unit: Unit) => {
+    useEffect(() => {
+       if (selectedFoodId !== null && foods) {
+           const value = {
+               "100g": 100,
+               "unit": 1,
+           }
+           setQuantity(value[foods[selectedFoodId].valuesFor])
+       }
+    }, [selectedFoodId, foods]);
+
+    const handleAddFood = async (amount: number) => {
         if (!selectedFoodId) {
             return;
         }
         const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFoodId);
         if (mealFood) {
+            const unit = mealFood.food.valuesFor === "unit" ? "unit" : "g";
             onUpdateFood?.(mealFood.food, {amount, unit})
         } else {
             const food = foods?.[selectedFoodId]
             if (food) {
+                const unit = food.valuesFor === "unit" ? "unit": "g";
                 onAddFood?.(food, {amount, unit})
             }
         }
@@ -42,11 +54,11 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
             <form className={classes["add-food-container"]}
                   onSubmit={async (e) => {
                       e.preventDefault();
-                      await handleAddFood(quantity, "g")
+                      await handleAddFood(quantity)
                   }}
             >
                 <Input disabled={!selectedFoodId} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
-                       placeholder="quantité (g)"/>
+                       placeholder="quantité" right={selectedFoodId && foods?.[selectedFoodId].valuesFor === "unit" ? "Unité": "g"}/>
                 <Button type="submit"
                         disabled={!quantity || !selectedFoodId}>
                     {
@@ -63,9 +75,9 @@ type Props = {
     name: string
     mealFoods?: MealFoodDetails[]
     onDelete?: (mealName: string) => void
-    onAddFood?: (food: FoodItem, data: {amount: number, unit: Unit}) => void
-    onUpdateFood?: (food: FoodItem , data: {amount: number, unit: Unit}) => void
-    onRemoveFood?: (food: FoodItem) => void
+    onAddFood?: (food: Food, data: {amount: number, unit: FoodUnit}) => void
+    onUpdateFood?: (food: Food , data: {amount: number, unit: FoodUnit}) => void
+    onRemoveFood?: (food: Food) => void
 }
 
 export default Meal;

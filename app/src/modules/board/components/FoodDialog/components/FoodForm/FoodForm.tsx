@@ -1,5 +1,5 @@
 import React from 'react';
-import {NutrientInfo, UnidentifiedFood, Unit} from "@typing/app.type.ts";
+import {NutrientInfo, UnidentifiedFood, NutrientUnit, ValuesFor} from "@typing/app.type.ts";
 import {useForm} from "@hooks";
 import {Input, Select} from "@shares";
 import classes from "./FoodForm.module.scss"
@@ -8,6 +8,7 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
     const {setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
+        valuesFor: initValues?.valuesFor ?? "100g",
         proteins: String(initValues?.proteins ?? 0),
         lipids: String(initValues?.lipids ?? 0),
         carbs: String(initValues?.carbs ?? 0),
@@ -30,6 +31,10 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
             <form id={formId} onSubmit={handleSubmit(onValidate)} className={classes["container"]}>
                 <Input {...register("name")} autoFocus required label="Nom de l'aliment" />
                 <Input {...register("description")} label="Descripton" />
+                <Select {...register("valuesFor")} label="Valeurs pour" options={[
+                    {label: "100g", value: "100g"},
+                    {label: "1 unité", value: "unit"},
+                ]}/>
                 <div className={classes["macros-container"]}>
                     <Input {...register("proteins")} step=".01" onChange={handleMacroChange} required label="Protéines (g)" min={0}  type="number"/>
                     <Input {...register("carbs")} step=".01" onChange={handleMacroChange} required label="Glucides (g)" min={0}  type="number"/>
@@ -59,8 +64,9 @@ export type FormValues = {
     lipids: string
     carbs: string
     calories: string
+    valuesFor: ValuesFor
     [value: `value-${number}`]: string
-    [unit: `unit-${number}`]: Unit
+    [unit: `unit-${number}`]: NutrientUnit
 }
 
 type Props = {

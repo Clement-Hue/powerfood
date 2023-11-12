@@ -7,7 +7,7 @@ import {
     MealSchema,
     NutrientSchema
 } from "@typing/schema.type.ts";
-import {NutrientInfo, Unit, FoodDictionary, UnidentifiedFood, Meal } from "@typing/app.type.ts";
+import {NutrientInfo, NutrientUnit, FoodDictionary, UnidentifiedFood, Meal, ValuesFor, FoodUnit} from "@typing/app.type.ts";
 
 async function getDays() {
     return getAll<DaySchema>("SELECT * FROM day");
@@ -17,7 +17,7 @@ async function getNutrients(): Promise<NutrientInfo[]> {
     const res = await getAll<NutrientSchema>("SELECT * FROM nutrient");
     return res.map(({id, name, dri_unit, dri_amount}) => ({
         id, name, DRI: {
-            amount: dri_amount, unit: dri_unit as Unit
+            amount: dri_amount, unit: dri_unit as NutrientUnit
         }
     }))
 }
@@ -30,13 +30,13 @@ async function getFoods(): Promise<FoodDictionary> {
     `);
     return foods.reduce<FoodDictionary>((prev, food) => {
         const prevFood = prev[String(food.id)]
-        const nutrient = {id: food.nutrient_id, name: food.nutrient_name, unit: food.unit as Unit, amount: food.amount}
+        const nutrient = {id: food.nutrient_id, name: food.nutrient_name, unit: food.unit as NutrientUnit, amount: food.amount}
         if (prevFood) {
            prevFood.nutrients.push(nutrient);
            return prev;
         }
         return {...prev, [String(food.id)]: {id: String(food.id), name: food.name, carbs: food.carbs, calories: food.calories,
-            proteins: food.proteins, lipids: food.lipids, description: food.description,
+            proteins: food.proteins, lipids: food.lipids, description: food.description, valuesFor: food.values_for as ValuesFor,
             nutrients: [nutrient]
         }}
     }, {})
@@ -45,9 +45,9 @@ async function getFoods(): Promise<FoodDictionary> {
 async function addFood(food: UnidentifiedFood) {
     return transaction(async () => {
         const id = await run(`
-            INSERT INTO food (name, description, proteins, lipids, carbs, calories)
-            VALUES (?, ?, ?, ?, ?, ?)
-        `, [food.name, food.description, food.proteins, food.lipids, food.carbs, food.calories]);
+            INSERT INTO food (name, description, proteins, lipids, carbs, calories, values_for)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `, [food.name, food.description, food.proteins, food.lipids, food.carbs, food.calories, food.valuesFor]);
         await Promise.all(food.nutrients.map( (nutrient) => {
             return run(`
                 INSERT INTO food_nutrient (food_id, nutrient_id, unit, amount)
@@ -71,10 +71,10 @@ async function updateFood(foodId: string, food: UnidentifiedFood) {
         return Promise.all(
         [run(`
                 UPDATE food SET name = ?, description = ?, proteins = ?, lipids = ?,
-                carbs = ?, calories = ?
+                carbs = ?, calories = ?, values_for = ?
                 WHERE id = ?
             `, [food.name, food.description, food.proteins, food.lipids,
-                food.carbs, food.calories, foodId]),
+                food.carbs, food.calories, food.valuesFor, foodId]),
             ...food.nutrients.map((nutrient) => {
                 return run(`
                     UPDATE food_nutrient SET unit = ?, amount = ?
@@ -94,7 +94,7 @@ async function addMeal(dayName: string, mealName: string)  {
     return String(id);
 }
 
-async function addFoodToMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount?: number, unit?: Unit} = {} ) {
+async function addFoodToMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount?: number, unit?: FoodUnit} = {} ) {
     await run(`
         INSERT INTO meal_food (meal_id, food_id, unit, amount) VALUES (?, ?, ?, ?)
         `,
@@ -115,7 +115,7 @@ async function getMeals(dayName: string): Promise<Meal[]> {
        [dayName]);
    return res.reduce<Meal[]>((prev, meal) => {
       const oldMeal = prev.find((m) => m.id === String(meal.id))
-      const food = {id: String(meal.food_id), amount: meal.amount, unit: meal.unit as Unit}
+      const food = {id: String(meal.food_id), amount: meal.amount, unit: meal.unit as FoodUnit}
       if (oldMeal) {
            oldMeal.foods.push(food)
            return prev;
@@ -126,7 +126,7 @@ async function getMeals(dayName: string): Promise<Meal[]> {
 
 
 // @ts-ignore
-async function updateFoodMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount: number, unit: Unit} = {} ) {
+async function updateFoodMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount: number, unit: FoodUnit} = {} ) {
     await run(`
         UPDATE meal_food SET unit = ?, amount = ?
         WHERE meal_id = ? AND food_id = ?

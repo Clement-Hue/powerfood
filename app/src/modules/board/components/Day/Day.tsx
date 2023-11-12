@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useServices, useFetch, useFoods} from "@hooks";
-import type {Unit, MealFoodDetails, Meal as MealType, FoodItem} from "@typing/app.type.ts";
+import type {MealFoodDetails, Meal as MealType, Food, FoodUnit} from "@typing/app.type.ts";
 import Meal from "../Meal";
 import convert from "convert-units";
 import classes from "./Day.module.scss"
@@ -24,7 +24,8 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         const res = {name: macroName, amount: 0}
         mealsWithFoods.forEach((meal) => {
            meal.foods.forEach((mf) => {
-               res.amount += (mf.food[macroName] / 100) * mf.amount
+               const denominator = mf.food.valuesFor === "100g" ? 100 : 1
+               res.amount += (mf.food[macroName] / denominator) * mf.amount
            })
         })
         return res;
@@ -34,8 +35,9 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         const amount = mealsWithFoods?.reduce((prev, meal) => {
             meal.foods?.forEach((mf) => {
                 const foodNutrient = mf.food.nutrients.find((n) => n.id === nutrient.id)
+                const denominator = mf.food.valuesFor === "100g" ? 100 : 1
                 if (foodNutrient) {
-                    prev += mf.amount * (convert(foodNutrient.amount).from(foodNutrient.unit).to(unit) / 100)
+                    prev +=  (convert(foodNutrient.amount).from(foodNutrient.unit).to(unit) / denominator) * mf.amount
                 }
             })
             return prev;
@@ -58,21 +60,21 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         })
     }
 
-    const handleRemoveFood = async (mealId: string ,food: FoodItem) => {
+    const handleRemoveFood = async (mealId: string ,food: Food) => {
         await apiService.deleteFoodFromMeal(mealId, food.id);
         setMeals((prev ) => prev?.map((m) => (
                  m.id !== mealId ? m :  {...m, foods: m.foods.filter((mf) => mf.id !== food.id)}
             )))
     }
 
-    const handleAddFood = async (mealId: string, food: FoodItem, {amount, unit}: {amount: number, unit: Unit}) => {
+    const handleAddFood = async (mealId: string, food: Food, {amount, unit}: {amount: number, unit: FoodUnit}) => {
         await apiService.addFoodToMeal(mealId, food.id, {amount, unit})
         setMeals((prev) => prev?.map((m) => (
             m.id !== mealId ? m : {...m, foods: [...m.foods, {id: food.id, amount, unit}]}
         )))
     }
 
-    const handleUpdateFood = async (mealId: string, food: FoodItem, {amount, unit}: {amount: number, unit: Unit}) => {
+    const handleUpdateFood = async (mealId: string, food: Food, {amount, unit}: {amount: number, unit: FoodUnit}) => {
         await apiService.updateFoodMeal(mealId, food.id, {amount, unit})
         setMeals((prev) => prev?.map((m) => (
             m.id !== mealId ? m : {...m, foods: m.foods.map((mf) => (

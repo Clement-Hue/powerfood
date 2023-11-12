@@ -12,3 +12,9 @@
   border: 1px solid;
   min-height: 25px;
 }
+
+.input-container {
+  display: flex;
+  gap: sizing.spacing(1);
+  align-items: center;
+}

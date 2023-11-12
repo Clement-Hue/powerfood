@@ -3,6 +3,7 @@
     "id": "1",
     "name": "Banane",
     "proteins": 1.28,
+    "valuesFor": "100g",
     "lipids": 0.39,
     "carbs": 29.6,
     "calories": 122,

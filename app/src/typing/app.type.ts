@@ -1,6 +1,7 @@
-export type FoodItem = {
+export type Food = {
     id: string
     name: string
+    valuesFor: ValuesFor
     description?: string
     proteins: number
     lipids: number
@@ -8,8 +9,10 @@ export type FoodItem = {
     calories: number
     nutrients: FoodNutrient[];
 }
+
+export type ValuesFor = "unit" | "100g"
 export type FoodDictionary = {
-    [foodId: string]: FoodItem
+    [foodId: string]: Food
 }
 
 export type FoodNutrient = {
@@ -17,8 +20,8 @@ export type FoodNutrient = {
     /**
      * Name of nutrient
      */
-    name: string; // name of nutrient
-    unit: Unit;
+    name: string;
+    unit: NutrientUnit;
     amount: number;
 }
 
@@ -27,16 +30,16 @@ export type NutrientInfo = {
     name: string
     DRI: {
         amount: number,
-        unit: Unit
+        unit: NutrientUnit
     }
 }
 
-export type Unit = "g" | "mcg" | "mg"
-export type MeasurementValue = {
+export type NutrientUnit = "g" | "mcg" | "mg"
+export type MeasurementValue<U = NutrientUnit> = {
     amount: number
-    unit: Unit
+    unit: U
 }
-export type UnidentifiedFood = Omit<FoodItem, "id">
+export type UnidentifiedFood = Omit<Food, "id">
 
 export type Meal = {
     id: string
@@ -45,11 +48,11 @@ export type Meal = {
 }
 
 export type MealFoodDetails = {
-    food: FoodItem
-} & MeasurementValue
+    food: Food
+} & MeasurementValue<FoodUnit>
+
+export type FoodUnit = "g" | "unit"
 
 export type MealFood = {
     id: string,
-    amount: number
-    unit: Unit
-}
+} & MeasurementValue<FoodUnit>

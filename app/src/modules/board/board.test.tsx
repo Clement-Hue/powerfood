@@ -17,6 +17,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                        "1": {
                             "id": "1",
                             "name": "Poulet",
+                            "valuesFor": "100g",
                             "proteins": 20,
                             "lipids": 0.39,
                             "carbs": 1,
@@ -33,6 +34,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                         "2": {
                             "id": "2",
                             "name": "Banane",
+                            "valuesFor": "100g",
                             "proteins": 1.28,
                             "lipids": 0.39,
                             "carbs": 29.6,
@@ -365,10 +367,7 @@ describe("Search food", () => {
         const addFood = jest.fn(() => uuid())
         render( <TestComponent api={{addFood}} />)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
-        await waitFor(() => {
-           expect(screen.getByLabelText(/vitamine c$/i)).toBeInTheDocument();
-        })
-        fireEvent.change(screen.getByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
+        fireEvent.change(await screen.findByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
         fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
         fireEvent.change(screen.getByLabelText(/glucide/i), {target: {value: "30"}})
         fireEvent.change(screen.getByLabelText(/lipide/i), {target: {value: "20"}})
@@ -378,6 +377,7 @@ describe("Search food", () => {
             expect(addFood).toHaveBeenCalledWith({
                name: "Boeuf",
                description: "",
+               valuesFor: "100g",
                calories: 500,
                proteins: 50,
                carbs: 30,
@@ -401,6 +401,60 @@ describe("Search food", () => {
         })
         await waitFor(() => {
             expect(screen.getByText(/boeuf/i)).toBeInTheDocument()
+        })
+    })
+
+    it("should add new food with value for 1 unit", async () => {
+        const addFoodToMeal = jest.fn()
+        const getMeals = jest.fn(() => (
+            [
+                {name: "déjeuner", id: "1", foods: []},
+            ] as Meal[]
+        ));
+        const foodId = uuid()
+        const addFood = jest.fn(() => foodId)
+        render( <TestComponent api={{addFood, getMeals, addFoodToMeal}} />)
+        fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
+        fireEvent.change(await screen.findByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
+        fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
+        fireEvent.change(screen.getByLabelText(/valeurs pour/i), {target: {value: "unit"}})
+        fireEvent.change(screen.getByLabelText(/vitamine c$/i), {target: {value: "100"}})
+        fireEvent.click(screen.getByRole("button", {name: /valider/i}))
+        await waitFor(() => {
+            expect(addFood).toHaveBeenCalledWith({
+                name: "Boeuf",
+                description: "",
+                valuesFor: "unit",
+                calories: 200,
+                proteins: 50,
+                carbs: 0,
+                lipids: 0,
+                nutrients: [
+                    {
+                        unit: "mg",
+                        id: 1162,
+                        name: "Vitamine C",
+                        amount: 100
+                    },
+                    {
+                        unit: "mg",
+                        id: 1092,
+                        name: "Potassium",
+                        amount: 0
+                    }
+                ]
+            } as UnidentifiedFood)
+        })
+        fireEvent.click(await screen.findByText(/boeuf/i));
+        await waitFor(() => {
+            expect(screen.getByPlaceholderText(/quantité/i)).toHaveValue(1)
+        })
+        fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}));
+        await waitFor(() => {
+            expect(addFoodToMeal).toHaveBeenCalledWith("1", foodId, {amount: 1, unit: "unit"} )
+            expect(screen.getByText(/boeuf 1unit/i)).toBeInTheDocument();
+            expect(screen.getByText(/protéines 50g/i)).toBeInTheDocument();
+            expect(screen.getByText(/0.1 g/i)).toBeInTheDocument(); // vitamine C in g
         })
     })
 
@@ -440,6 +494,7 @@ describe("Search food", () => {
                 {
                     "name": "Banane plantin",
                     "description": "",
+                    "valuesFor": "100g",
                     "proteins": 10,
                     "lipids": 0.39,
                     "carbs": 29.6,

@@ -14,6 +14,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
         onValidate?.({
             name: data["name"],
             description: data["description"],
+            valuesFor: data["valuesFor"],
             proteins: Number(data["proteins"]),
             lipids: Number(data["lipids"]),
             carbs: Number(data["carbs"]),
