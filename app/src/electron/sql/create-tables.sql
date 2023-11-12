@@ -40,7 +40,6 @@ CREATE TABLE IF NOT EXISTS meal (
 CREATE TABLE IF NOT EXISTS meal_food (
     meal_id INTEGER,
     food_id INTEGER,
-    unit TEXT NOT NULL,
     amount REAL NOT NULL,
     FOREIGN KEY (meal_id) REFERENCES meal(id) ON DELETE CASCADE,
     FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE,

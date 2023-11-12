@@ -42,6 +42,5 @@ export type MealSchema = {
 export type MealFoodSchema = {
     meal_id: number;
     food_id: number;
-    unit: string;
     amount: number;
 };

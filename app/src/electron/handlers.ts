@@ -7,7 +7,7 @@ import {
     MealSchema,
     NutrientSchema
 } from "@typing/schema.type.ts";
-import {NutrientInfo, NutrientUnit, FoodDictionary, UnidentifiedFood, Meal, ValuesFor, FoodUnit} from "@typing/app.type.ts";
+import {NutrientInfo, NutrientUnit, FoodDictionary, UnidentifiedFood, Meal, ValuesFor} from "@typing/app.type.ts";
 
 async function getDays() {
     return getAll<DaySchema>("SELECT * FROM day");
@@ -94,11 +94,11 @@ async function addMeal(dayName: string, mealName: string)  {
     return String(id);
 }
 
-async function addFoodToMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount?: number, unit?: FoodUnit} = {} ) {
+async function addFoodToMeal(mealId: string, foodId: string, {amount = 0}: {amount?: number} = {} ) {
     await run(`
-        INSERT INTO meal_food (meal_id, food_id, unit, amount) VALUES (?, ?, ?, ?)
+        INSERT INTO meal_food (meal_id, food_id, amount) VALUES (?, ?, ?)
         `,
-        [mealId, foodId, unit, amount]
+        [mealId, foodId, amount]
     )
 }
 
@@ -115,7 +115,7 @@ async function getMeals(dayName: string): Promise<Meal[]> {
        [dayName]);
    return res.reduce<Meal[]>((prev, meal) => {
       const oldMeal = prev.find((m) => m.id === String(meal.id))
-      const food = {id: String(meal.food_id), amount: meal.amount, unit: meal.unit as FoodUnit}
+      const food = {id: String(meal.food_id), amount: meal.amount}
       if (oldMeal) {
            oldMeal.foods.push(food)
            return prev;
@@ -126,12 +126,12 @@ async function getMeals(dayName: string): Promise<Meal[]> {
 
 
 // @ts-ignore
-async function updateFoodMeal(mealId: string, foodId: string, {amount = 0, unit = "g"}: {amount: number, unit: FoodUnit} = {} ) {
+async function updateFoodMeal(mealId: string, foodId: string, {amount = 0}: {amount: number} = {} ) {
     await run(`
-        UPDATE meal_food SET unit = ?, amount = ?
+        UPDATE meal_food SET amount = ?
         WHERE meal_id = ? AND food_id = ?
         `,
-        [unit, amount, mealId, foodId]
+        [amount, mealId, foodId]
     )
 }
 

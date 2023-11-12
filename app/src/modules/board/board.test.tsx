@@ -188,7 +188,7 @@ describe("Analyse", () => {
         fireEvent.click(await screen.findByRole("button", {name: /ajouter l'aliment/i}));
         const meal = screen.getByRole("region", {name: "déjeuner"});
         await waitFor(() => {
-            expect(addFoodToMeal).toHaveBeenCalledWith(mealId, "2", {amount: 80, unit: "g"})
+            expect(addFoodToMeal).toHaveBeenCalledWith(mealId, "2", {amount: 80})
             expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
             expect(screen.getByText(/0.007 g/i)).toBeInTheDocument()
         })
@@ -273,7 +273,7 @@ describe("Analyse", () => {
     it("should load all meals saved", async () => {
         const getMeals = jest.fn(() => (
             [
-                {name: "déjeuner", id: "1", foods: [{id: "1", unit: "g", amount: 100}, {id: "2", unit: "g", amount: 50}]},
+                {name: "déjeuner", id: "1", foods: [{id: "1", amount: 100}, {id: "2", amount: 50}]},
                 {name: "diner", id: "2", foods: []}
             ] as Meal[]
         ));
@@ -451,7 +451,7 @@ describe("Search food", () => {
         })
         fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}));
         await waitFor(() => {
-            expect(addFoodToMeal).toHaveBeenCalledWith("1", foodId, {amount: 1, unit: "unit"} )
+            expect(addFoodToMeal).toHaveBeenCalledWith("1", foodId, {amount: 1} )
             expect(screen.getByText(/boeuf 1unit/i)).toBeInTheDocument();
             expect(screen.getByText(/protéines 50g/i)).toBeInTheDocument();
             expect(screen.getByText(/0.1 g/i)).toBeInTheDocument(); // vitamine C in g

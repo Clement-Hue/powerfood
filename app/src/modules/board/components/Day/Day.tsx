@@ -2,7 +2,7 @@ import React, {useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useServices, useFetch, useFoods} from "@hooks";
-import type {MealFoodDetails, Meal as MealType, Food, FoodUnit} from "@typing/app.type.ts";
+import type {MealFoodDetails, Meal as MealType, Food} from "@typing/app.type.ts";
 import Meal from "../Meal";
 import convert from "convert-units";
 import classes from "./Day.module.scss"
@@ -16,7 +16,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     const mealsWithFoods : MealWithFoodDetails[] = useMemo( () => meals?.map((meal) => {
         return {...meal, foods: meal.foods?.reduce<MealFoodDetails[]>((prev, mf) => {
                 const food = foods?.[mf.id]
-                return !food ? prev : [...prev, {food, amount: mf.amount, unit: mf.unit}]
+                return !food ? prev : [...prev, {food, amount: mf.amount} ]
             }, []) ?? []}
         }) ?? [], [foods, meals])
 
@@ -67,18 +67,18 @@ const Day: React.FC<Props> = ({name: dayName}) => {
             )))
     }
 
-    const handleAddFood = async (mealId: string, food: Food, {amount, unit}: {amount: number, unit: FoodUnit}) => {
-        await apiService.addFoodToMeal(mealId, food.id, {amount, unit})
+    const handleAddFood = async (mealId: string, food: Food, {amount}: {amount: number}) => {
+        await apiService.addFoodToMeal(mealId, food.id, {amount})
         setMeals((prev) => prev?.map((m) => (
-            m.id !== mealId ? m : {...m, foods: [...m.foods, {id: food.id, amount, unit}]}
+            m.id !== mealId ? m : {...m, foods: [...m.foods, {id: food.id, amount}]}
         )))
     }
 
-    const handleUpdateFood = async (mealId: string, food: Food, {amount, unit}: {amount: number, unit: FoodUnit}) => {
-        await apiService.updateFoodMeal(mealId, food.id, {amount, unit})
+    const handleUpdateFood = async (mealId: string, food: Food, {amount}: {amount: number}) => {
+        await apiService.updateFoodMeal(mealId, food.id, {amount})
         setMeals((prev) => prev?.map((m) => (
             m.id !== mealId ? m : {...m, foods: m.foods.map((mf) => (
-                    mf.id !== food.id ? mf : {...mf, unit, amount}
+                    mf.id !== food.id ? mf : {...mf, amount}
                 ))}
         )))
     }

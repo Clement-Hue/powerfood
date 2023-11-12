@@ -29,7 +29,8 @@
       "@providers": ["src/providers"],
       "@providers/*": ["src/providers/*"],
       "@typing/*": ["src/typing/*"],
-      "@mocks/*": ["src/mocks/*"]
+      "@mocks/*": ["src/mocks/*"],
+      "@utils": ["src/utils"]
     }
   },
   "include": ["src"],

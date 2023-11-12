@@ -1,8 +1,9 @@
 import React, {useEffect, useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
-import {Food, MealFoodDetails, FoodUnit} from "@typing/app.type.ts";
+import {Food, MealFoodDetails} from "@typing/app.type.ts";
 import {useFoods} from "@hooks";
+import {getFoodUnit} from "@utils";
 
 const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
                                  mealFoods = []  }) => {
@@ -26,13 +27,11 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
         }
         const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFoodId);
         if (mealFood) {
-            const unit = mealFood.food.valuesFor === "unit" ? "unit" : "g";
-            onUpdateFood?.(mealFood.food, {amount, unit})
+            onUpdateFood?.(mealFood.food, {amount})
         } else {
             const food = foods?.[selectedFoodId]
             if (food) {
-                const unit = food.valuesFor === "unit" ? "unit": "g";
-                onAddFood?.(food, {amount, unit})
+                onAddFood?.(food, {amount})
             }
         }
     }
@@ -46,7 +45,7 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
             <div className={classes["foods-container"]}>
                 {mealFoods?.map((mealFood  ) => (
                     <div key={mealFood.food.id} className={classes["food-container"]}>
-                        <div >{mealFood.food.name} {mealFood.amount}{mealFood.unit}</div>
+                        <div >{mealFood.food.name} {mealFood.amount}{getFoodUnit(mealFood.food)}</div>
                         <IconButton onClick={() => onRemoveFood?.(mealFood.food)} aria-label={`Supprimer ${mealFood.food.name}`} Icon={Icons.Delete}/>
                     </div>
                 ))}
@@ -75,8 +74,8 @@ type Props = {
     name: string
     mealFoods?: MealFoodDetails[]
     onDelete?: (mealName: string) => void
-    onAddFood?: (food: Food, data: {amount: number, unit: FoodUnit}) => void
-    onUpdateFood?: (food: Food , data: {amount: number, unit: FoodUnit}) => void
+    onAddFood?: (food: Food, data: {amount: number}) => void
+    onUpdateFood?: (food: Food , data: {amount: number}) => void
     onRemoveFood?: (food: Food) => void
 }
 

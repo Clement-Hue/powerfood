@@ -49,10 +49,12 @@ export type Meal = {
 
 export type MealFoodDetails = {
     food: Food
-} & MeasurementValue<FoodUnit>
+    amount: number
+}
 
 export type FoodUnit = "g" | "unit"
 
 export type MealFood = {
     id: string,
-} & MeasurementValue<FoodUnit>
+    amount: number
+}
