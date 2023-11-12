@@ -1,10 +1,10 @@
 @use "src/styles/sizing";
 
 .container {
-  width: 700px;
+  width: 800px;
   display: flex;
   flex-direction: column;
-  gap: sizing.spacing(2);
+  gap: sizing.spacing(3);
 }
 
 .nutrients-container {
@@ -13,7 +13,7 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: sizing.spacing(2);
   overflow: auto;
-  max-height: 330px;
+  max-height: 260px;
   border-top: var(--border);
   padding-top: sizing.spacing(2);
 }

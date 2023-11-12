@@ -6,7 +6,7 @@ const Select: React.FC<Props> = ({options, label, ...props}) => {
     return (
         <div className={classes.container}>
             <label htmlFor={id}>{label}</label>
-            <select {...props} id={id}>
+            <select {...props} className={classes.select} id={id}>
                 {options?.map(({value, label}) => (
                     <option key={label} value={value}>{label}</option>
                 ))}

@@ -5,3 +5,11 @@
   flex-direction: column;
   gap: sizing.spacing(1);
 }
+
+.select {
+  box-sizing: border-box;
+  padding: 4px 8px;
+  border-radius: var(--border-radius);
+  border: 1px solid;
+  min-height: 35px;
+}
