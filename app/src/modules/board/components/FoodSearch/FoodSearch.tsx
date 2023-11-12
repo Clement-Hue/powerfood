@@ -40,7 +40,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
             <Input placeholder="Rechercher dans la liste" value={searchValue}
                    onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
-            <FoodList foods={foods && Object.fromEntries(Object.entries(foods).filter(([_, f]) => f.name.match(new RegExp(searchValue, "i"))))}
+            <FoodList foods={foods && Object.values(foods).filter((f) => f.name.match(new RegExp(searchValue, "i")))}
                       onDeleteFood={handleDeleteFood} selected={selectedFoodId} onSelect={handleSelectFood} />
             <FoodDialog open={open} onValidate={handleValidateFoodDialog} onClose={() => setOpen(false)}/>
         </div>

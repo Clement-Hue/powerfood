@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import classes from "./FoodList.module.scss"
 import NutrientsInfo from "../NutrientsInfo/NutrientsInfo.tsx";
-import {Food, Foods, UnidentifiedFood} from "@typing/app.type.ts";
+import {Food, UnidentifiedFood} from "@typing/app.type.ts";
 import {IconButton, Icons} from "@shares";
 import FoodDialog from "../FoodDialog";
 import {useFoods, useServices} from "@hooks";
@@ -25,7 +25,7 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
 
     return  (
         <ul aria-label="Liste des aliments" className={classes.container}>
-            {Object.values(foods).map((food ) => (
+            {foods.map((food ) => (
                 <li aria-labelledby={`food-${food.id}`} key={food.id} className={classes["item-container"]}>
                     <div onClick={() => onSelect?.(food.id)} aria-selected={selected === food.id}
                          onMouseEnter={(e) => setShowNutrients({
@@ -55,7 +55,7 @@ type Props = {
     selected: string | null
     onSelect?: (foodId: string) => void
     onDeleteFood?: (foodId: string) => void
-    foods?: Foods
+    foods?: Food[]
 }
 
 export default FoodList;
