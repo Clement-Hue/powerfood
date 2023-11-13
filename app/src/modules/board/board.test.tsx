@@ -498,7 +498,7 @@ describe("Search food", () => {
                     "proteins": 10,
                     "lipids": 0.39,
                     "carbs": 29.6,
-                    "calories": 161.91,
+                    "calories": 162,
                     "nutrients": [
                         {
                             "id": 1162,

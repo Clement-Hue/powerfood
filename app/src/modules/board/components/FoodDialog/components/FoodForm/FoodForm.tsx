@@ -1,10 +1,17 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {NutrientInfo, UnidentifiedFood, NutrientUnit, ValuesFor} from "@typing/app.type.ts";
-import {useForm} from "@hooks";
-import {Input, Select} from "@shares";
+import {useDebounce, useForm} from "@hooks";
+import {Autocomplete, Input, Select} from "@shares";
 import classes from "./FoodForm.module.scss"
 
 const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) => {
+    const [search, setSearch] = useState<string | null>("");
+    const [searchInput, setSearchInput] = useState<string>("");
+    const apiCall = useCallback(() => {
+        console.log("api call", searchInput)
+    }, [searchInput])
+
+    useDebounce(apiCall)
     const {setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
@@ -24,17 +31,22 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
     const handleMacroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChange(e)
         setValues((prev) => ({
-            ...prev, calories: String(Number(prev.proteins) * 4 + Number(prev.carbs) * 4 + Number(prev.lipids) * 9)
+            ...prev, calories: String(Math.ceil(Number(prev.proteins) * 4 + Number(prev.carbs) * 4 + Number(prev.lipids) * 9))
         }))
     }
+
+
     return (
             <form id={formId} onSubmit={handleSubmit(onValidate)} className={classes["container"]}>
-                <Input {...register("name")} autoFocus required label="Nom de l'aliment" />
-                <Input {...register("description")} label="Descripton" />
+                <Autocomplete
+                    inputValue={searchInput} onInputChange={setSearchInput}
+                    value={search} onChange={setSearch} helpText="Gagner du temps en pré-remplissant les champs avec des aliments depuis internet" label="Rechercher un aliment sur internet" noOptionsMessage={() => "Pas d'aliment(s)"} />
                 <Select {...register("valuesFor")} label="Valeurs pour" options={[
                     {label: "100g", value: "100g"},
                     {label: "1 unité", value: "unit"},
                 ]}/>
+                <Input {...register("name")} autoFocus required label="Nom de l'aliment" />
+                <Input {...register("description")} label="Descripton" />
                 <div className={classes["macros-container"]}>
                     <Input {...register("proteins")} step=".01" onChange={handleMacroChange} label="Protéines (g)" min={0}  type="number"/>
                     <Input {...register("carbs")} step=".01" onChange={handleMacroChange} label="Glucides (g)" min={0}  type="number"/>
