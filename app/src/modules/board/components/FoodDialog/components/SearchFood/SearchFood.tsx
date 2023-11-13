@@ -3,7 +3,8 @@ import {Autocomplete} from "@shares";
 import {useDebounce, useServices} from "@hooks";
 import classes from "./SearchFood.module.scss"
 import {computeCalories, getFoodUnitText} from "@utils";
-import {UnidentifiedFood, ValuesFor} from "@typing/app.type.ts";
+import {ValuesFor} from "@typing/app.type.ts";
+import {FoodFormValues} from "../FoodForm";
 
 const SearchFood: React.FC<Props> = ({valuesFor = "100g", onSearch}) => {
     const [search, setSearch] = useState<Option | null>();
@@ -33,16 +34,17 @@ const SearchFood: React.FC<Props> = ({valuesFor = "100g", onSearch}) => {
         setSearch(null);
         if (option) {
             const res = await foodApiService.getFoodInfo(option.value, valuesFor)
-            const food = res.foods[0];
-            onSearch?.({
-                name: food.food_name,
-                valuesFor,
-                lipids: food.nf_total_fat,
-                carbs: food.nf_total_carbohydrate,
-                proteins: food.nf_protein,
-                calories: computeCalories(food.nf_protein, food.nf_total_carbohydrate, food.nf_total_fat),
-                nutrients: []
-            })
+            const food = res.foods?.[0];
+            if (food) {
+                onSearch?.({
+                    name: food.food_name,
+                    valuesFor,
+                    lipids: String(food.nf_total_fat),
+                    carbs: String(food.nf_total_carbohydrate),
+                    proteins: String(food.nf_protein),
+                    calories: String(computeCalories(food.nf_protein, food.nf_total_carbohydrate, food.nf_total_fat)),
+                })
+            }
         }
     }
 
@@ -65,6 +67,6 @@ type Option = {value: string, label: React.ReactNode}
 
 type Props = {
     valuesFor?: ValuesFor
-    onSearch?: (food: UnidentifiedFood) => void
+    onSearch?: (formValues: Omit<FoodFormValues, "description">) => void
 }
 export default SearchFood;

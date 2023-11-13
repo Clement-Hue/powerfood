@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS day (
 );
 
 CREATE TABLE IF NOT EXISTS nutrient (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     dri_amount REAL,
     dri_unit TEXT

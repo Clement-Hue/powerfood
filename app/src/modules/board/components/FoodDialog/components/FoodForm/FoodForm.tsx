@@ -7,7 +7,7 @@ import SearchFood from "../SearchFood";
 import {computeCalories} from "@utils";
 
 const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) => {
-    const {setValues, values, register, handleSubmit, handleChange  } = useForm<FormValues>({
+    const {setValues, values, register, handleSubmit, handleChange  } = useForm<FoodFormValues>({
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
         valuesFor: initValues?.valuesFor ?? "100g",
@@ -31,7 +31,7 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
 
     return (
             <form id={formId} onSubmit={handleSubmit(onValidate)} className={classes["container"]}>
-                <SearchFood valuesFor={values.valuesFor} onSearch={(f) => setValues(f)} />
+                <SearchFood valuesFor={values.valuesFor} onSearch={(f) => setValues((prev) => ({...prev, ...f}))}  />
                 <Select {...register("valuesFor")} label="Valeurs pour" options={[
                     {label: "100g", value: "100g"},
                     {label: "1 unité", value: "unit"},
@@ -60,7 +60,7 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
     );
 };
 
-export type FormValues = {
+export type FoodFormValues = {
     name: string
     description: string
     proteins: string
@@ -75,7 +75,7 @@ export type FormValues = {
 type Props = {
     initValues?: UnidentifiedFood | null
     nutrients: NutrientInfo[]
-    onValidate: (data: FormValues) => Promise<void>
+    onValidate: (data: FoodFormValues) => Promise<void>
     formId?: string
 }
 

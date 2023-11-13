@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Dialog} from "@shares";
 import {UnidentifiedFood} from "@typing/app.type.ts";
-import {FormValues} from "./components/FoodForm";
+import {FoodFormValues} from "./components/FoodForm";
 import {FoodForm} from "./components";
 import {useFetch, useServices} from "@hooks";
 
@@ -10,7 +10,7 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
     const {apiService} = useServices();
     const [nutrients] = useFetch(() => apiService.getNutrients())
 
-    const handleValidate = async (data: FormValues) => {
+    const handleValidate = async (data: FoodFormValues) => {
         onValidate?.({
             name: data["name"],
             description: data["description"],
