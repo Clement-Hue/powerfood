@@ -47,7 +47,7 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
                 <div className={classes["nutrients-container"]}>
                     {nutrients.map((nutrient) => (
                         <div key={nutrient.id}>
-                            <Input {...register(`value-${nutrient.id}`)} step=".01" min={0} type="number" label={nutrient.name}/>
+                            <Input {...register(`value-${nutrient.id}`)} step=".0001" min={0} type="number" label={nutrient.name}/>
                             <Select {...register(`unit-${nutrient.id}`)} aria-label={`${nutrient.name} unité`} placeholder="Unité" options={[
                                 {label: "mcg", value: "mcg"},
                                 {label: "mg", value: "mg"},
