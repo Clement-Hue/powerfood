@@ -4,9 +4,10 @@ import {useForm} from "@hooks";
 import {Input, Select} from "@shares";
 import classes from "./FoodForm.module.scss"
 import SearchFood from "../SearchFood";
+import {computeCalories} from "@utils";
 
 const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) => {
-    const {setValues, register, handleSubmit, handleChange  } = useForm<FormValues>({
+    const {setValues, values, register, handleSubmit, handleChange  } = useForm<FormValues>({
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
         valuesFor: initValues?.valuesFor ?? "100g",
@@ -24,13 +25,13 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
     const handleMacroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChange(e)
         setValues((prev) => ({
-            ...prev, calories: String(Math.ceil(Number(prev.proteins) * 4 + Number(prev.carbs) * 4 + Number(prev.lipids) * 9))
+            ...prev, calories: String(Math.ceil(computeCalories(Number(prev.proteins), Number(prev.carbs), Number(prev.lipids))))
         }))
     }
 
     return (
             <form id={formId} onSubmit={handleSubmit(onValidate)} className={classes["container"]}>
-                <SearchFood />
+                <SearchFood valuesFor={values.valuesFor} onSearch={(f) => setValues(f)} />
                 <Select {...register("valuesFor")} label="Valeurs pour" options={[
                     {label: "100g", value: "100g"},
                     {label: "1 unité", value: "unit"},

@@ -1,7 +1,10 @@
 
 
 export default function request(url: string,
-    {queries = {}, method = "GET"}: {queries?: Record<string, string | number | boolean>, method?: string} = {}) {
+    {queries = {}, method = "GET", body}: {
+        queries?: Record<string, string | number | boolean>,
+        body?: Record<string, string | number | boolean>
+        method?: string} = {}) {
     const appID = "5a2166a9"
     const appKey = "6c7e3b3f97c039a9c73b230d51eec319";
     const urlQuery = Object.entries(queries).reduce((prev, [key, value]) => {
@@ -13,7 +16,9 @@ export default function request(url: string,
     }, "")
     return fetch(`https://trackapi.nutritionix.com/v2/${url}${urlQuery}`, {
         method,
+        body: body ? JSON.stringify(body) : undefined,
         headers: {
+            "Content-Type": "application/json",
             "x-app-id": appID,
             "x-app-key": appKey,
             "x-remote-user-id": "0"
