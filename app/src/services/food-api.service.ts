@@ -3,7 +3,8 @@ import {SearchResult} from "@typing/food-api.type.ts";
 
 function searchFood(food: string): Promise<SearchResult> {
     return request("search/instant", {queries: {
-            query: food
+            query: food,
+            branded: false
         }} );
 }
 

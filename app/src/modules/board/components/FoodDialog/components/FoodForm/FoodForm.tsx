@@ -1,18 +1,12 @@
-import React, {useCallback, useState} from 'react';
+import React from 'react';
 import {NutrientInfo, UnidentifiedFood, NutrientUnit, ValuesFor} from "@typing/app.type.ts";
-import {useDebounce, useForm} from "@hooks";
-import {Autocomplete, Input, Select} from "@shares";
+import {useForm} from "@hooks";
+import {Input, Select} from "@shares";
 import classes from "./FoodForm.module.scss"
+import SearchFood from "../SearchFood";
 
 const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) => {
-    const [search, setSearch] = useState<string | null>("");
-    const [searchInput, setSearchInput] = useState<string>("");
-    const apiCall = useCallback(() => {
-        console.log("api call", searchInput)
-    }, [searchInput])
-
-    useDebounce(apiCall)
-    const {setValues, register, handleSubmit, handleChange } = useForm<FormValues>({
+    const {setValues, register, handleSubmit, handleChange  } = useForm<FormValues>({
         name: initValues?.name ?? "",
         description: initValues?.description ?? "",
         valuesFor: initValues?.valuesFor ?? "100g",
@@ -27,7 +21,6 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
                 [`unit-${nutrient.id}`]: init?.unit ?? "mg"}
         }, {})
     });
-
     const handleMacroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChange(e)
         setValues((prev) => ({
@@ -35,12 +28,9 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
         }))
     }
 
-
     return (
             <form id={formId} onSubmit={handleSubmit(onValidate)} className={classes["container"]}>
-                <Autocomplete
-                    inputValue={searchInput} onInputChange={setSearchInput}
-                    value={search} onChange={setSearch} helpText="Gagner du temps en pré-remplissant les champs avec des aliments depuis internet" label="Rechercher un aliment sur internet" noOptionsMessage={() => "Pas d'aliment(s)"} />
+                <SearchFood />
                 <Select {...register("valuesFor")} label="Valeurs pour" options={[
                     {label: "100g", value: "100g"},
                     {label: "1 unité", value: "unit"},

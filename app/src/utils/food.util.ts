@@ -1,8 +1,15 @@
-import {Food, FoodUnit} from "@typing/app.type.ts";
+import {FoodUnit, ValuesFor} from "@typing/app.type.ts";
 
-export function getFoodUnit(food: Food): FoodUnit {
+export function getFoodUnit(valuesFor: ValuesFor): FoodUnit {
     return ({
        "100g": "g",
        "unit": "unit"
-    }as const)[food.valuesFor]
+    }as const)[valuesFor]
+}
+
+export function getFoodUnitText(valuesFor: ValuesFor): string {
+    return ({
+        "100g": "100g",
+        "unit": "unité"
+    }as const)[valuesFor]
 }

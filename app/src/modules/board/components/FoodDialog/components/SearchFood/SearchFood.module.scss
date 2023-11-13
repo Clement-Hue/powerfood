@@ -1,0 +1,13 @@
+@use "src/styles/sizing";
+
+.option-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: sizing.spacing(2);
+  height: 40px;
+}
+
+.option-img {
+  height: 100%;
+}

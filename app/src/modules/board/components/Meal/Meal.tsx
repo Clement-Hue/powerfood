@@ -45,7 +45,7 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
             <div className={classes["foods-container"]}>
                 {mealFoods?.map((mealFood  ) => (
                     <div key={mealFood.food.id} className={classes["food-container"]}>
-                        <div >{mealFood.food.name} {mealFood.amount}{getFoodUnit(mealFood.food)}</div>
+                        <div >{mealFood.food.name} {mealFood.amount}{getFoodUnit(mealFood.food.valuesFor)}</div>
                         <IconButton onClick={() => onRemoveFood?.(mealFood.food)} aria-label={`Supprimer ${mealFood.food.name}`} Icon={Icons.Delete}/>
                     </div>
                 ))}
