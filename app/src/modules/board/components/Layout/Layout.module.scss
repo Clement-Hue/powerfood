@@ -6,7 +6,10 @@
 }
 
 .days-container {
-  flex: 1 0 auto;
+  box-sizing: border-box;
+  position: absolute;
+  left: var(--food-search-width);
+  right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;

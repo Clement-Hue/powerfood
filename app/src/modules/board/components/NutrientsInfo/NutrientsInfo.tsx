@@ -5,7 +5,7 @@ import {createPortal} from "react-dom";
 
 const NutrientsInfo: React.FC<Props> = ({food, position}) => {
     const macros = [
-        {name: "Calories", amount: food?.calories, unit: "cal"},
+        {name: "Calories", amount: food?.calories, unit: "kcal"},
         {name: "Protéines", amount: food?.proteins, unit: "g"},
         {name: "Glucides", amount: food?.carbs, unit: "g"},
         {name: "Lipides", amount: food?.lipids, unit: "g"},

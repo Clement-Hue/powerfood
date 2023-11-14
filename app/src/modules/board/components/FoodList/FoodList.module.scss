@@ -1,8 +1,10 @@
 @use "src/styles/sizing";
 
 .container {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  padding: sizing.spacing(1);
   gap: sizing.spacing(1);
   width: 100%;
   height: 100%;

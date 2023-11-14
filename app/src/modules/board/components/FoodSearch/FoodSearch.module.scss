@@ -7,9 +7,10 @@
   gap: sizing.spacing(1);
   box-sizing: border-box;
   padding: sizing.spacing(1);
-  width: 200px;
+  width: var(--food-search-width);
   position: fixed;
   background-color: var(--normal-primary);
   box-shadow: var(--shadow-1);
   height: 100%;
+  z-index: var(--food-search-z-index);
 }

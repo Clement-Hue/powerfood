@@ -72,6 +72,9 @@ export function apiNutrientMapping(apiId: number): {id: string, unit: NutrientUn
     if (apiId === 406) {
         return {id: "vit_b3", unit: "mg"}
     }
+    if (apiId === 410) {
+        return {id: "vit_b5", unit: "mg"}
+    }
     if (apiId === 415) {
         return {id: "vit_b6", unit: "mg"}
     }
