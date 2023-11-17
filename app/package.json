@@ -16,6 +16,7 @@
     "build:linux": "npm run build && electron-builder --linux --config"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.9.7",
     "@types/convert-units": "^2.3.9",
     "clsx": "^2.0.0",
     "convert-units": "^2.3.4",

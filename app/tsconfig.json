@@ -30,6 +30,8 @@
       "@providers/*": ["src/providers/*"],
       "@typing/*": ["src/typing/*"],
       "@mocks/*": ["src/mocks/*"],
+      "@store/*": ["src/store/*"],
+      "@store": ["src/store"],
       "@utils": ["src/utils"]
     }
   },

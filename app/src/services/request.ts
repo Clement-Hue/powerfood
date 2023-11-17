@@ -19,8 +19,8 @@ export default function request(url: string,
         body: body ? JSON.stringify(body) : undefined,
         headers: {
             "Content-Type": "application/json",
-            "x-app-id": appID,
-            "x-app-key": appKey,
+            "x-app-id": appID!,
+            "x-app-key": appKey!,
             "x-remote-user-id": "0"
         }
     })
