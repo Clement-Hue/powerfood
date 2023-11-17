@@ -1,9 +1,0 @@
-@use "src/styles/sizing";
-
-.container {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: sizing.spacing(2);
-  background-color: var(--light-primary);
-  box-shadow: var(--shadow-1);
-}

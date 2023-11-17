@@ -42,7 +42,8 @@ export default defineConfig({
             environmentPlugin({
                 NODE_ENV: "development",
                 DEBUG: "false",
-                API_BASE_URL: null,
+                APP_ID: null,
+                APP_KEY: null,
             }),
         ]
     }

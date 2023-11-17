@@ -5,8 +5,8 @@ export default function request(url: string,
         queries?: Record<string, string | number | boolean>,
         body?: Record<string, string | number | boolean>
         method?: string} = {}) {
-    const appID = "5a2166a9"
-    const appKey = "6c7e3b3f97c039a9c73b230d51eec319";
+    const appID = process.env.APP_ID
+    const appKey = process.env.APP_KEY;
     const urlQuery = Object.entries(queries).reduce((prev, [key, value]) => {
         if (value === "") {
             return prev;
