@@ -1,15 +1,18 @@
-import React, {Provider} from "react-redux";
-import store from "@store";
+import {ReactNode} from "react";
+import {Provider} from "react-redux";
+import {AppStore} from "@store";
 
-function Wrapper({children}: Props) {
-    return (
-        <Provider store={store} >
-            {children}
-        </Provider>
-    )
+const wrapper = (store: AppStore) => {
+    return function ({children}: Props) {
+        return (
+            <Provider store={store} >
+                {children}
+            </Provider>
+        )
+    }
 }
 type Props = {
-    children?: React.ReactNode
+    children?: ReactNode
 }
 
-export default Wrapper;
+export default wrapper;
