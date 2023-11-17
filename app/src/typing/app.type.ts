@@ -16,7 +16,7 @@ export type FoodDictionary = {
 }
 
 export type FoodNutrient = {
-    id: number;
+    id: string;
     /**
      * Name of nutrient
      */
@@ -26,7 +26,7 @@ export type FoodNutrient = {
 }
 
 export type NutrientInfo = {
-    id: number
+    id: string
     name: string
     DRI: {
         amount: number,

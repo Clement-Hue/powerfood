@@ -48,6 +48,9 @@ export function apiNutrientMapping(apiId: number): {id: string, unit: NutrientUn
     if (apiId === 312) {
         return {id: "min_cop", unit: "mg"}
     }
+    if (apiId === 315) {
+        return {id: "min_man", unit: "mg"}
+    }
     if (apiId === 317) {
         return {id: "min_sel", unit: "mcg"}
     }

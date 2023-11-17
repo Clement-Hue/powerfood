@@ -24,4 +24,5 @@ VALUES
   ('min_zinc','Zinc', 11, 'mg'),
   ('min_iod','Iodine', 150, 'mcg'),
   ('min_sel','Selenium', 55, 'mcg'),
-  ('min_cop','Copper', 900, 'mcg');
+  ('min_cop','Copper', 900, 'mcg'),
+  ('min_man','Manganese', 2.3, 'mg');

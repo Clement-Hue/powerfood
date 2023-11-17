@@ -5,7 +5,7 @@ export type DaySchema = {
 
 // nutrient table
 export type NutrientSchema = {
-   id: number
+   id: string
    name: string
    dri_amount: number
    dri_unit: string
@@ -26,7 +26,7 @@ export type FoodSchema = {
 // food_nutrient table
 export type FoodNutrientSchema = {
     food_id: number;
-    nutrient_id: number;
+    nutrient_id: string;
     unit: string;
     amount: number;
 };

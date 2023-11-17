@@ -6,7 +6,7 @@ const Autocomplete = <T extends unknown> ({options, helpText, label, onInputChan
     return (
         <div>
             {label && <label htmlFor={id} >{label}</label>}
-            <Select id={id} onInputChange={(value) => onInputChange?.(value)} onChange={(value) => onChange?.(value)}
+            <Select inputId={id} onInputChange={(value) => onInputChange?.(value)} onChange={(value) => onChange?.(value)}
                     isMulti={false} isClearable isSearchable options={options} isDisabled={disabled} {...props} />
             <div className="small-typo">{helpText}</div>
         </div>

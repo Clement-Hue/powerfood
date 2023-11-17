@@ -1,6 +1,6 @@
 [
   {
-    "id": 1104,
+    "id": "vit_a",
     "name": "Vitamin A (Retinol)",
     "DRI": {
       "amount": 900,
@@ -8,7 +8,7 @@
     }
   },
   {
-    "id": 1162,
+    "id": "vit_c",
     "name": "Vitamin C (Ascorbic Acid)",
     "DRI": {
       "amount": 90,
@@ -16,7 +16,7 @@
     }
   },
   {
-    "id": 1114,
+    "id": "vit_d",
     "name": "Vitamin D",
     "DRI": {
       "amount": 15,
@@ -24,7 +24,7 @@
     }
   },
   {
-    "id": 1109,
+    "id": "vit_e",
     "name": "Vitamin E (Tocopherol)",
     "DRI": {
       "amount": 15,
@@ -32,7 +32,7 @@
     }
   },
   {
-    "id": 1185,
+    "id": "vit_k",
     "name": "Vitamin K",
     "DRI": {
       "amount": 120,
@@ -40,7 +40,7 @@
     }
   },
   {
-    "id": 1165,
+    "id": "vit_b1",
     "name": "Thiamin (Vitamin B1)",
     "DRI": {
       "amount": 1.2,
@@ -48,7 +48,7 @@
     }
   },
   {
-    "id": 1166,
+    "id": "vit_b2",
     "name": "Riboflavin (Vitamin B2)",
     "DRI": {
       "amount": 1.3,
@@ -56,7 +56,7 @@
     }
   },
   {
-    "id": 1167,
+    "id": "vit_b3",
     "name": "Niacin (Vitamin B3)",
     "DRI": {
       "amount": 16,
@@ -64,7 +64,7 @@
     }
   },
   {
-    "id": 1175,
+    "id": "vit_b6",
     "name": "Vitamin B6 (Pyridoxine)",
     "DRI": {
       "amount": 1.3,
@@ -72,7 +72,7 @@
     }
   },
   {
-    "id": 1177,
+    "id": "vit_b9",
     "name": "Folate (Vitamin B9)",
     "DRI": {
       "amount": 400,
@@ -80,7 +80,7 @@
     }
   },
   {
-    "id": 1178,
+    "id": "vit_b12",
     "name": "Vitamin B12 (Cobalamin)",
     "DRI": {
       "amount": 2.4,
@@ -88,7 +88,7 @@
     }
   },
   {
-    "id": 1087,
+    "id": "min_calc",
     "name": "Calcium",
     "DRI": {
       "amount": 1000,
@@ -96,7 +96,7 @@
     }
   },
   {
-    "id": 1089,
+    "id": "min_iron",
     "name": "Iron",
     "DRI": {
       "amount": 8,
@@ -104,7 +104,7 @@
     }
   },
   {
-    "id": 1090,
+    "id": "min_mag",
     "name": "Magnesium",
     "DRI": {
       "amount": 400,
@@ -112,7 +112,7 @@
     }
   },
   {
-    "id": 1091,
+    "id": "min_pho",
     "name": "Phosphorus",
     "DRI": {
       "amount": 700,
@@ -120,7 +120,7 @@
     }
   },
   {
-    "id": 1092,
+    "id": "min_pot",
     "name": "Potassium",
     "DRI": {
       "amount": 2300,
@@ -128,7 +128,7 @@
     }
   },
   {
-    "id": 1093,
+    "id": "min_sod",
     "name": "Sodium",
     "DRI": {
       "amount": 1500,
@@ -136,7 +136,7 @@
     }
   },
   {
-    "id": 1095,
+    "id": "min_zinc",
     "name": "Zinc",
     "DRI": {
       "amount": 11,
@@ -144,7 +144,7 @@
     }
   },
   {
-    "id": 1096,
+    "id": "min_iod",
     "name": "Iodine",
     "DRI": {
       "amount": 150,
@@ -152,7 +152,7 @@
     }
   },
   {
-    "id": 1103,
+    "id": "min_sel",
     "name": "Selenium",
     "DRI": {
       "amount": 55,
@@ -160,7 +160,7 @@
     }
   },
   {
-    "id": 1198,
+    "id": "min_cop",
     "name": "Copper",
     "DRI": {
       "amount": 900,

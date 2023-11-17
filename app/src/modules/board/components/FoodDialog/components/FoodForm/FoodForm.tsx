@@ -68,8 +68,8 @@ export type FoodFormValues = {
     carbs: string
     calories: string
     valuesFor: ValuesFor
-    [value: `value-${number}`]: string
-    [unit: `unit-${number}`]: NutrientUnit
+    [value: `value-${string}`]: string
+    [unit: `unit-${string}`]: NutrientUnit
 }
 
 type Props = {

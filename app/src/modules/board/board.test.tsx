@@ -24,7 +24,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                             "calories": 150,
                             nutrients: [
                                 {
-                                    "id": 1162,
+                                    "id": "vit_c",
                                     "name": "Vitamine C",
                                     "unit": "g",
                                     "amount": 0.002
@@ -41,13 +41,13 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                             "calories": 122,
                             "nutrients": [
                                 {
-                                    "id": 1162,
+                                    "id": "vit_c",
                                     "name": "Vitamine C",
                                     "unit": "mg",
                                     "amount": 8.7
                                 },
                                 {
-                                    "id": 1092,
+                                    "id": "min_pot",
                                     "name": "Potassium",
                                     "unit": "mg",
                                     "amount": 358
@@ -58,7 +58,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 },
                 async getNutrients(): Promise<NutrientInfo[]> {
                     return [{
-                       id: 1162,
+                       id: "vit_c",
                        name: "Vitamine C" ,
                         DRI: {
                            amount: 500,
@@ -66,7 +66,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                         }
                     },
                         {
-                            id: 1092,
+                            id: "min_pot",
                             name: "Potassium" ,
                             DRI: {
                                 amount: 1500,
@@ -385,13 +385,13 @@ describe("Search food", () => {
                 nutrients: [
                     {
                         unit: "mg",
-                        id: 1162,
+                        id: "vit_c",
                         name: "Vitamine C",
                         amount: 10
                     },
                     {
                         unit: "mg",
-                        id: 1092,
+                        id: "min_pot",
                         name: "Potassium",
                         amount: 0
                     }
@@ -432,13 +432,13 @@ describe("Search food", () => {
                 nutrients: [
                     {
                         unit: "mg",
-                        id: 1162,
+                        id: "vit_c",
                         name: "Vitamine C",
                         amount: 100
                     },
                     {
                         unit: "mg",
-                        id: 1092,
+                        id: "min_pot",
                         name: "Potassium",
                         amount: 0
                     }
@@ -501,13 +501,13 @@ describe("Search food", () => {
                     "calories": 162,
                     "nutrients": [
                         {
-                            "id": 1162,
+                            "id": "vit_c",
                             "name": "Vitamine C",
                             "unit": "g",
                             "amount": 8.7
                         },
                         {
-                            "id": 1092,
+                            "id": "min_pot",
                             "name": "Potassium",
                             "unit": "mg",
                             "amount": 358

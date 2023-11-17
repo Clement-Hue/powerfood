@@ -18,7 +18,7 @@ const SearchFood: React.FC<Props> = ({valuesFor = "100g", onSearch}) => {
             setOptions(res.common.map((food) => ({
                 value: food.food_name, label: (
                     <div className={classes["option-container"]}>
-                        <img className={classes["option-img"]} src={food.photo.thumb} />
+                        <img className={classes["option-img"]} src={food.photo?.thumb} />
                         <div>
                             {food.food_name}
                             <div className="small-typo">{getFoodUnitText(valuesFor)}</div>

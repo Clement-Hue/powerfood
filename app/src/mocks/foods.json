@@ -9,13 +9,13 @@
     "calories": 122,
     "nutrients": [
       {
-        "id": 1162,
+        "id": "vit_c",
         "name": "Vitamine C",
         "unit": "mg",
         "amount": 8.7
       },
       {
-        "id": 1092,
+        "id": "min_pot",
         "name": "Potassium",
         "unit": "mg",
         "amount": 358
