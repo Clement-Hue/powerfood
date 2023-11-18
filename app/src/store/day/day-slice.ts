@@ -18,11 +18,11 @@ export default createSlice({
                 state.days[dayName] = []
             })
         },
-        mealsFetched(state, {payload: {dayName, meals}}: PayloadAction<{dayName: string, meals: Meal[]}>) {
-            state.days[dayName] = meals
+        mealsFetched(state, {payload: {dayName, meals = []}}: PayloadAction<{dayName: string, meals: Meal[]}>) {
+            state.days[dayName] = meals;
         },
         mealAdded(state, {payload: {id, mealName, dayName}}: PayloadAction<{id: string, mealName: string, dayName: string}>) {
-            state.days[dayName].push({id, name: mealName, foods: []})
+            state.days[dayName]?.push({id, name: mealName, foods: []})
         },
         mealDeleted(state, {payload: {mealId, dayName}}: PayloadAction<{mealId: string, dayName: string}>) {
             state.days[dayName] = state.days[dayName].filter((m) => m.id !== mealId)
