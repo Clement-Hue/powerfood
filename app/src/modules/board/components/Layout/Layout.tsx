@@ -8,11 +8,12 @@ import {daySelectors} from "@store/day";
 
 const Layout = () => {
     const daysName = useAppSelector(daySelectors.selectDaysName)
-    const {day: {daysFetched}} = useThunks();
+    const {day: {daysFetched}, food: {foodsFetched}} = useThunks();
     const dispatch = useAppDispatch()
 
     useEffect(() => {
         dispatch(daysFetched())
+        dispatch(foodsFetched())
     }, []);
 
     return (

@@ -1,38 +1,39 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
-import {useServices, useFetch, useFoods} from "@hooks";
-import type {MealFoodDetails, Meal as MealType, Food} from "@typing/app.type.ts";
+import {useAppDispatch, useAppSelector, useFetch, useServices, useThunks} from "@hooks";
 import Meal from "../Meal";
 import convert from "convert-units";
 import classes from "./Day.module.scss"
+import {daySelectors} from "@store/day";
 
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
     const {apiService} = useServices();
-    const {foods } = useFoods();
     const [dri] = useFetch(() => apiService.getNutrients())
-    const [meals  , setMeals] = useFetch(() => apiService.getMeals(dayName))
-    const mealsWithFoods : MealWithFoodDetails[] = useMemo( () => meals?.map((meal) => {
-        return {...meal, foods: meal.foods?.reduce<MealFoodDetails[]>((prev, mf) => {
-                const food = foods?.[mf.id]
-                return !food ? prev : [...prev, {food, amount: mf.amount} ]
-            }, []) ?? []}
-        }) ?? [], [foods, meals])
+    const meals = useAppSelector((state) => daySelectors.selectMeals(state, dayName))
+    const {day: {mealAdded, mealDeleted, foodAddedToMeal, foodUpdatedFromMeal,
+        foodRemovedFromMeal, mealsFetched}} = useThunks();
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(mealsFetched({dayName}))
+    }, []);
 
     const macros = useMemo( () => (["calories","proteins", "carbs", "lipids"] as const).map((macroName) => {
         const res = {name: macroName, amount: 0}
-        mealsWithFoods.forEach((meal) => {
+        meals.forEach((meal) => {
            meal.foods.forEach((mf) => {
                const denominator = mf.food.valuesFor === "100g" ? 100 : 1
                res.amount += (mf.food[macroName] / denominator) * mf.amount
            })
         })
         return res;
-    }), [mealsWithFoods])
+    }), [meals])
+
     const micros = useMemo( () => dri?.map((nutrient) => {
         const unit = nutrient.DRI.unit
-        const amount = mealsWithFoods?.reduce((prev, meal) => {
+        const amount = meals.reduce((prev, meal) => {
             meal.foods?.forEach((mf) => {
                 const foodNutrient = mf.food.nutrients.find((n) => n.id === nutrient.id)
                 const denominator = mf.food.valuesFor === "100g" ? 100 : 1
@@ -43,44 +44,11 @@ const Day: React.FC<Props> = ({name: dayName}) => {
             return prev;
         }, 0) ?? 0;
         return {...nutrient, value: {amount, unit}}
-    }), [dri, mealsWithFoods])
+    }), [dri, meals])
 
     const handleAddMeal = async () => {
-        const id = await apiService.addMeal(dayName, newMealInput);
-        setMeals((prev = []) => {
-            return [...prev, {id, name: newMealInput, foods: []}]
-        })
+        dispatch(mealAdded({dayName, mealName: newMealInput}))
         setNewMealInput("") // reset input
-    }
-
-    const handleDeleteMeal = async (mealId: string) => {
-        await apiService.deleteMeal(mealId)
-        setMeals((prev = []) => {
-            return prev.filter((m) => m.id !== mealId)
-        })
-    }
-
-    const handleRemoveFood = async (mealId: string ,food: Food) => {
-        await apiService.deleteFoodFromMeal(mealId, food.id);
-        setMeals((prev ) => prev?.map((m) => (
-                 m.id !== mealId ? m :  {...m, foods: m.foods.filter((mf) => mf.id !== food.id)}
-            )))
-    }
-
-    const handleAddFood = async (mealId: string, food: Food, {amount}: {amount: number}) => {
-        await apiService.addFoodToMeal(mealId, food.id, {amount})
-        setMeals((prev) => prev?.map((m) => (
-            m.id !== mealId ? m : {...m, foods: [...m.foods, {id: food.id, amount}]}
-        )))
-    }
-
-    const handleUpdateFood = async (mealId: string, food: Food, {amount}: {amount: number}) => {
-        await apiService.updateFoodMeal(mealId, food.id, {amount})
-        setMeals((prev) => prev?.map((m) => (
-            m.id !== mealId ? m : {...m, foods: m.foods.map((mf) => (
-                    mf.id !== food.id ? mf : {...mf, amount}
-                ))}
-        )))
     }
 
     return (
@@ -98,14 +66,14 @@ const Day: React.FC<Props> = ({name: dayName}) => {
                 <Button disabled={!newMealInput || meals?.some((m) => m.name === newMealInput)} type="submit">Ajouter un repas</Button>
             </form>
             <div className={classes["meals-container"]}>
-                {mealsWithFoods?.map(( {id: mealId, name: mealName, foods}) => (
+                {meals.map(( {id: mealId, name: mealName, foods}) => (
                     <Meal
                         name={mealName}
                         mealFoods={foods}
-                        onUpdateFood={(food, data) => handleUpdateFood(mealId, food, data)}
-                        onAddFood={(food, data) => handleAddFood(mealId, food, data)}
-                        onRemoveFood={(food) => handleRemoveFood(mealId, food)}
-                        onDelete={() => handleDeleteMeal(mealId)}
+                        onUpdateFood={(food, {amount}) => dispatch(foodUpdatedFromMeal({dayName, foodId: food.id, mealId, amount}))}
+                        onAddFood={(food, {amount}) => dispatch(foodAddedToMeal({dayName, foodId: food.id, mealId, amount}))}
+                        onRemoveFood={(food) => dispatch(foodRemovedFromMeal({dayName, foodId: food.id, mealId}))}
+                        onDelete={() => dispatch(mealDeleted({dayName, mealId}))}
                         key={mealId} />
                 ))}
             </div>
@@ -114,7 +82,6 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     );
 };
 
-type MealWithFoodDetails = Omit<MealType, "foods"> & {foods: MealFoodDetails[]}
 
 type Props = {
     name: string
