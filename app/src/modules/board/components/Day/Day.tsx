@@ -4,8 +4,8 @@ import {Button, Input} from "@shares";
 import {useAppDispatch, useAppSelector, useFetch, useServices, useThunks} from "@hooks";
 import Meal from "../Meal";
 import convert from "convert-units";
-import classes from "./Day.module.scss"
 import {daySelectors} from "@store/day";
+import classes from "./Day.module.scss"
 
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
@@ -46,11 +46,6 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         return {...nutrient, value: {amount, unit}}
     }), [dri, meals])
 
-    const handleAddMeal = async () => {
-        dispatch(mealAdded({dayName, mealName: newMealInput}))
-        setNewMealInput("") // reset input
-    }
-
     return (
         <div className={classes.container}>
             <div className={classes["day__name"]}>
@@ -59,8 +54,9 @@ const Day: React.FC<Props> = ({name: dayName}) => {
             <form
                 className={classes["day__add-meal"]}
                 onSubmit={async (e) => {
-                e.preventDefault();
-                await handleAddMeal()
+                    e.preventDefault();
+                    dispatch(mealAdded({dayName, mealName: newMealInput}))
+                    setNewMealInput("") // reset input
             }}>
                 <Input placeholder="Repas" aria-label="Repas"  value={newMealInput} onChange={(e) => setNewMealInput(e.target.value)}/>
                 <Button disabled={!newMealInput || meals?.some((m) => m.name === newMealInput)} type="submit">Ajouter un repas</Button>

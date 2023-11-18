@@ -4,22 +4,19 @@ import NutrientsInfo from "../NutrientsInfo/NutrientsInfo.tsx";
 import {Food, UnidentifiedFood} from "@typing/app.type.ts";
 import {IconButton, Icons} from "@shares";
 import FoodDialog from "../FoodDialog";
-import {useFoods, useServices} from "@hooks";
+import {useAppDispatch, useThunks} from "@hooks";
 
 const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect} ) => {
-    const {apiService} = useServices();
     const [showNutrients, setShowNutrients] = useState<{food: Food, pos: {x:number, y:number}}>();
     const [editFood, setEditFood] = useState<Food | null>(null);
-    const {setFoods} = useFoods();
+    const {food: {foodUpdated}} = useThunks()
+    const dispatch = useAppDispatch()
     const handleValidateFoodDialog = async (data: UnidentifiedFood) => {
         if (!editFood) {
             return
         }
         const foodId = editFood.id
-        await apiService.updateFood(foodId, data);
-        setFoods((prev = {}) => {
-            return {...prev, [foodId]: {...data, id: foodId}}
-        })
+        dispatch(foodUpdated({foodId, data}))
         setEditFood(null)
     }
 

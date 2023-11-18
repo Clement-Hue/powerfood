@@ -1,7 +1,6 @@
 import classes from "./Layout.module.scss"
 import Day from "../Day";
 import FoodSearch from "../FoodSearch";
-import {FoodsProvider} from "@providers";
 import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
 import {useEffect} from "react";
 import {daySelectors} from "@store/day";
@@ -17,19 +16,17 @@ const Layout = () => {
     }, []);
 
     return (
-        <FoodsProvider>
-                <div className={classes.container}>
-                    <FoodSearch />
-                    <div className={classes["days-container"]}>
-                        {daysName?.map((dayName) => (
-                            <Day
-                                key={dayName}
-                                name={dayName}
-                            />
-                        ))}
-                    </div>
+            <div className={classes.container}>
+                <FoodSearch />
+                <div className={classes["days-container"]}>
+                    {daysName?.map((dayName) => (
+                        <Day
+                            key={dayName}
+                            name={dayName}
+                        />
+                    ))}
                 </div>
-        </FoodsProvider>
+            </div>
     );
 };
 

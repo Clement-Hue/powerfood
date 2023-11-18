@@ -2,12 +2,14 @@ import React, {useEffect, useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
 import {Food, MealFoodDetails} from "@typing/app.type.ts";
-import {useFoods} from "@hooks";
+import {useAppSelector} from "@hooks";
 import {getFoodUnit} from "@utils";
+import {foodSelectors} from "@store/food";
 
 const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
                                  mealFoods = []  }) => {
-    const {foods, selectedFoodId} = useFoods();
+    const foods = useAppSelector(foodSelectors.selectFoods)
+    const selectedFoodId = useAppSelector(foodSelectors.selectSelectedFoodId)
     const [quantity, setQuantity] = useState(100);
     const mealNameId = useId();
 

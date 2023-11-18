@@ -23,13 +23,17 @@ export default createSlice({
         },
         foodDeleted(state, {payload: {foodId}}: PayloadAction<{foodId: string}>) {
             delete state.foods[foodId];
+            if (state.selectedFoodId === foodId) {
+                state.selectedFoodId = null;
+            }
         },
         foodSelected(state, {payload: {foodId}}: PayloadAction<{foodId: string}>) {
-           state.selectedFoodId = foodId
+            if (state.selectedFoodId === foodId) {
+                state.selectedFoodId = null
+            } else {
+                state.selectedFoodId = foodId
+            }
         },
-        foodUnselected(state) {
-            state.selectedFoodId = null
-        }
     },
 })
 

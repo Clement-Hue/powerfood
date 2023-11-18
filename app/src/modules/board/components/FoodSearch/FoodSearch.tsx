@@ -4,34 +4,25 @@ import {Button, Input} from "@shares";
 import FoodList from "../FoodList";
 import {UnidentifiedFood} from "@typing/app.type.ts";
 import FoodDialog from "../FoodDialog";
-import {useFoods, useServices} from "@hooks";
+import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
+import foodSlice, {foodSelectors} from "@store/food";
 
 const FoodSearch: React.FC<Props> = ( ) => {
     const [searchValue, setSearchValue] = useState("")
     const [open, setOpen] = useState(false)
-    const {apiService} = useServices();
-    const {foods, setFoods, setSelectedFoodId, selectedFoodId} = useFoods()
-    const handleSelectFood = (foodId: string | null) => {
-        if (selectedFoodId === foodId) {
-            setSelectedFoodId(null)
-        } else {
-            setSelectedFoodId(foodId);
-        }
+    const foods = useAppSelector(foodSelectors.selectFoods)
+    const selectedFoodId = useAppSelector(foodSelectors.selectSelectedFoodId)
+    const {food: {foodDeleted, foodAdded}} = useThunks();
+    const dispatch = useAppDispatch()
+    const handleSelectFood = (foodId: string) => {
+        dispatch(foodSlice.actions.foodSelected({foodId}))
     }
     const handleDeleteFood = async (foodId: string) => {
-        await apiService.deleteFood(foodId);
-        setFoods((prev = {}) =>  {
-            const {[foodId]: _ ,...foods} = prev;
-            return foods
-        })
-        handleSelectFood(null)
+        dispatch(foodDeleted({foodId}))
     }
 
     const handleValidateFoodDialog = async (food: UnidentifiedFood) => {
-        const id = await apiService.addFood(food);
-        setFoods((prev = {}) => ({
-            ...prev, [id]: {...food, id}
-        }))
+        dispatch(foodAdded({data: food}))
         setOpen(false)
     }
 
