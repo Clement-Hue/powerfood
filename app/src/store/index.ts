@@ -1,10 +1,12 @@
 import {combineReducers, configureStore, PreloadedState} from '@reduxjs/toolkit'
-import food from "@store/food.ts";
-import nutrient from "@store/nutrient.ts";
+import food from "@store/food";
+import nutrient from "@store/nutrient";
+import day from "@store/day"
 
 export const reducer= combineReducers({
         food: food.reducer,
-        nutrient: nutrient.reducer
+        nutrient: nutrient.reducer,
+        day: day.reducer
 });
 export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
     return configureStore({

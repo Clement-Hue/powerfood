@@ -11,6 +11,9 @@ export type Food = {
 }
 
 export type ValuesFor = "unit" | "100g"
+export type DayDictionary = {
+    [dayName: string]: Meal[]
+}
 export type FoodDictionary = {
     [foodId: string]: Food
 }
