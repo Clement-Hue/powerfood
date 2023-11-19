@@ -1,30 +1,10 @@
 import FoodDialog from "./FoodDialog.tsx";
 import {render, screen, fireEvent, waitFor} from "@testing"
 import {ServicesProvider} from "@providers";
-import type {NutrientInfo} from "@typing/app.type.ts";
 
 function TestComponent() {
     return (
-        <ServicesProvider overrides={{apiService: {
-                async getNutrients(): Promise<NutrientInfo[]> {
-                    return [{
-                        id: "vit_c",
-                        name: "Vitamine C" ,
-                        DRI: {
-                            amount: 500,
-                            unit: "g"
-                        }
-                    },
-                        {
-                            id: "min_pot",
-                            name: "Potassium" ,
-                            DRI: {
-                                amount: 1500,
-                                unit: "mg"
-                            }
-                        }]
-                },
-        }, foodApiService: {
+        <ServicesProvider overrides={{foodApiService: {
                 async searchFood() {
                    return {
                         common: [
@@ -61,13 +41,39 @@ function TestComponent() {
     )
 }
 
+function renderWithNutrients() {
+    render(<TestComponent/>, {preloadedState: {
+            nutrient: {
+                nutrients: [{
+                    id: "vit_c",
+                    name: "Vitamine C" ,
+                    DRI: {
+                        amount: 500,
+                        unit: "g"
+                    }
+                },
+                    {
+                        id: "min_pot",
+                        name: "Potassium" ,
+                        DRI: {
+                            amount: 1500,
+                            unit: "mg"
+                        }
+                    }]
+            }
+        }})
+}
+
 describe("FoodDialog component", () => {
     test("should search on the food api", async () => {
-        render(<TestComponent/>)
+        renderWithNutrients();
         fireEvent.change( await screen.findByLabelText(/rechercher un aliment sur internet/i), {
             target: {value: "banana"}
         } )
-        fireEvent.click(await screen.findByText(/banana raw/i))
+        await waitFor(() => {
+            expect(screen.getByText(/banana raw/i)).toBeInTheDocument();
+        })
+        fireEvent.click(screen.getByText(/banana raw/i))
         await waitFor(() => {
             expect(screen.getByLabelText(/nom de l'aliment/i)).toHaveValue("banana raw")
             expect(screen.getByLabelText(/lipide/i)).toHaveValue(1)
