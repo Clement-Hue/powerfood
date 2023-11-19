@@ -8,6 +8,7 @@ type DayState = {
 const initialState: DayState = {
     days: {}
 }
+
 const daySlice = createSlice({
     name: "food",
     initialState,

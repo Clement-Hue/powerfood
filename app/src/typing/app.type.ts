@@ -1,3 +1,14 @@
+export type FoodUnit = "g" | "unit"
+export type NutrientUnit = "g" | "mcg" | "mg"
+export type ValuesFor = "unit" | "100g"
+
+export type DayDictionary = {
+    [dayName: string]: Meal[]
+}
+export type FoodDictionary = {
+    [foodId: string]: Food
+}
+
 export type Food = {
     id: string
     name: string
@@ -10,13 +21,7 @@ export type Food = {
     nutrients: FoodNutrient[];
 }
 
-export type ValuesFor = "unit" | "100g"
-export type DayDictionary = {
-    [dayName: string]: Meal[]
-}
-export type FoodDictionary = {
-    [foodId: string]: Food
-}
+export type UnidentifiedFood = Omit<Food, "id">
 
 export type FoodNutrient = {
     id: string;
@@ -37,12 +42,10 @@ export type NutrientInfo = {
     }
 }
 
-export type NutrientUnit = "g" | "mcg" | "mg"
 export type MeasurementValue<U = NutrientUnit> = {
     amount: number
     unit: U
 }
-export type UnidentifiedFood = Omit<Food, "id">
 
 export type Meal = {
     id: string
@@ -50,14 +53,12 @@ export type Meal = {
     foods: MealFood[]
 }
 
-export type MealFoodDetails = {
-    food: Food
+export type MealFood = {
+    id: string,
     amount: number
 }
 
-export type FoodUnit = "g" | "unit"
-
-export type MealFood = {
-    id: string,
+export type MealFoodDetails = {
+    food: Food
     amount: number
 }
