@@ -1,16 +1,16 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
-import {useAppDispatch, useAppSelector, useFetch, useServices, useThunks} from "@hooks";
+import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
 import Meal from "../Meal";
 import convert from "convert-units";
 import {daySelectors} from "@store/day";
 import classes from "./Day.module.scss"
+import {nutrientSelectors} from "@store/nutrient";
 
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
-    const {apiService} = useServices();
-    const [dri] = useFetch(() => apiService.getNutrients())
+    const nutrients = useAppSelector(nutrientSelectors.selectNutrient)
     const meals = useAppSelector((state) => daySelectors.selectMeals(state, dayName))
     const {day: {mealAdded, mealDeleted, foodAddedToMeal, foodUpdatedFromMeal,
         foodRemovedFromMeal, mealsFetched}} = useThunks();
@@ -31,7 +31,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
         return res;
     }), [meals])
 
-    const micros = useMemo( () => dri?.map((nutrient) => {
+    const micros = useMemo( () => nutrients?.map((nutrient) => {
         const unit = nutrient.DRI.unit
         const amount = meals.reduce((prev, meal) => {
             meal.foods?.forEach((mf) => {
@@ -44,7 +44,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
             return prev;
         }, 0) ?? 0;
         return {...nutrient, value: {amount, unit}}
-    }), [dri, meals])
+    }), [nutrients, meals])
 
     return (
         <div className={classes.container}>

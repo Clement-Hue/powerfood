@@ -1,6 +1,6 @@
 import {ApiService} from "@typing/internal.type.ts";
 import {AppDispatch} from "@store";
-import {dayActions} from "./day-reducer.ts";
+import {dayActions} from "./reducer.ts";
 
 export default (apiService: ApiService) => ({
     daysFetched() {

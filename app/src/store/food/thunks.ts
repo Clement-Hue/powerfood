@@ -1,6 +1,6 @@
 import {ApiService} from "@typing/internal.type.ts";
 import {AppDispatch} from "@store";
-import {foodActions} from "./food-reducer.ts"
+import {foodActions} from "./reducer.ts"
 import {UnidentifiedFood} from "@typing/app.type.ts";
 
 export default (apiService: ApiService) => ({

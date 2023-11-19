@@ -3,12 +3,12 @@ import {Button, Dialog} from "@shares";
 import {UnidentifiedFood} from "@typing/app.type.ts";
 import {FoodFormValues} from "./components/FoodForm";
 import {FoodForm} from "./components";
-import {useFetch, useServices} from "@hooks";
+import {useAppSelector} from "@hooks";
+import {nutrientSelectors} from "@store/nutrient";
 
 const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
                                          title = "Ajouter un aliment", initValues} ) => {
-    const {apiService} = useServices();
-    const [nutrients] = useFetch(() => apiService.getNutrients())
+    const nutrients = useAppSelector(nutrientSelectors.selectNutrient)
 
     const handleValidate = async (data: FoodFormValues) => {
         onValidate?.({
