@@ -5,7 +5,10 @@ export default {
     selectFoods: createSelector((state: RootState) => state.food.foods,(foods) => {
        return foods;
     }),
-    selectSelectedFoodId: createSelector((state: RootState) => state.food.selectedFoodId, (selectedFoodId) => {
-        return selectedFoodId;
+    selectSelectedFood: createSelector(
+        (state: RootState) => state.food.foods,
+        (state: RootState) => state.food.selectedFoodId,
+        (foods, selectedFoodId) => {
+            return selectedFoodId !== null ? foods[selectedFoodId] ?? null : null
     })
 }

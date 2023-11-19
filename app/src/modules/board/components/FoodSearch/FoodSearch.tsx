@@ -11,7 +11,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
     const [searchValue, setSearchValue] = useState("")
     const [open, setOpen] = useState(false)
     const foods = useAppSelector(foodSelectors.selectFoods)
-    const selectedFoodId = useAppSelector(foodSelectors.selectSelectedFoodId)
+    const selectedFood = useAppSelector(foodSelectors.selectSelectedFood)
     const {food: {foodDeleted, foodAdded}} = useThunks();
     const dispatch = useAppDispatch()
     const handleSelectFood = (foodId: string) => {
@@ -32,7 +32,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
                    onChange={(e) => setSearchValue(e.target.value)} label="Rechercher un aliment"/>
             <Button onClick={() => setOpen(true)}>Ajouter un aliment à la liste</Button>
             <FoodList foods={foods && Object.values(foods).filter((f) => f.name.match(new RegExp(searchValue, "i")))}
-                      onDeleteFood={handleDeleteFood} selected={selectedFoodId} onSelect={handleSelectFood} />
+                      onDeleteFood={handleDeleteFood} selected={selectedFood} onSelect={handleSelectFood} />
             <FoodDialog open={open} onValidate={handleValidateFoodDialog} onClose={() => setOpen(false)}/>
         </div>
     );

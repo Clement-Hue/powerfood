@@ -8,33 +8,29 @@ import {foodSelectors} from "@store/food";
 
 const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
                                  mealFoods = []  }) => {
-    const foods = useAppSelector(foodSelectors.selectFoods)
-    const selectedFoodId = useAppSelector(foodSelectors.selectSelectedFoodId)
+    const selectedFood = useAppSelector(foodSelectors.selectSelectedFood)
     const [quantity, setQuantity] = useState(100);
     const mealNameId = useId();
 
     useEffect(() => {
-       if (selectedFoodId !== null && foods) {
+       if (selectedFood) {
            const value = {
                "100g": 100,
                "unit": 1,
            }
-           setQuantity(value[foods[selectedFoodId].valuesFor])
+           setQuantity(value[selectedFood.valuesFor])
        }
-    }, [selectedFoodId, foods]);
+    }, [selectedFood]);
 
     const handleAddFood = async (amount: number) => {
-        if (!selectedFoodId) {
+        if (!selectedFood) {
             return;
         }
-        const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFoodId);
+        const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFood.id);
         if (mealFood) {
             onUpdateFood?.(mealFood.food, {amount})
         } else {
-            const food = foods?.[selectedFoodId]
-            if (food) {
-                onAddFood?.(food, {amount})
-            }
+            onAddFood?.(selectedFood, {amount})
         }
     }
 
@@ -58,12 +54,12 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
                       await handleAddFood(quantity)
                   }}
             >
-                <Input disabled={!selectedFoodId} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
-                       placeholder="quantité" right={selectedFoodId && foods?.[selectedFoodId].valuesFor === "unit" ? "Unité": "g"}/>
+                <Input disabled={!selectedFood} required value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} min={0} type="number"
+                       placeholder="quantité" right={selectedFood?.valuesFor === "unit" ? "Unité": "g"}/>
                 <Button type="submit"
-                        disabled={!quantity || !selectedFoodId}>
+                        disabled={!quantity || !selectedFood}>
                     {
-                        mealFoods?.some((mf) => mf.food.id === selectedFoodId) ?
+                        mealFoods?.some((mf) => mf.food.id === selectedFood?.id) ?
                             "Mettre à jour":  "Ajouter l'aliment"
                     }
                 </Button>
