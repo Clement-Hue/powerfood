@@ -11,7 +11,7 @@ const initialState: FoodState = {
     selectedFoodId: null
 }
 
-export default createSlice({
+const foodSlice = createSlice({
     name: "food",
     initialState,
     reducers: {
@@ -37,3 +37,5 @@ export default createSlice({
     },
 })
 
+export const {actions: foodActions} = foodSlice;
+export default foodSlice.reducer;

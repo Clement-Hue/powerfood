@@ -8,8 +8,7 @@ type DayState = {
 const initialState: DayState = {
     days: {}
 }
-
-export default createSlice({
+const daySlice = createSlice({
     name: "food",
     initialState,
     reducers: {
@@ -49,3 +48,5 @@ export default createSlice({
     },
 })
 
+export const {actions: dayActions} = daySlice;
+export default daySlice.reducer;

@@ -5,7 +5,7 @@ import FoodList from "../FoodList";
 import {UnidentifiedFood} from "@typing/app.type.ts";
 import FoodDialog from "../FoodDialog";
 import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
-import foodSlice, {foodSelectors} from "@store/food";
+import {foodSelectors, foodActions} from "@store/food";
 
 const FoodSearch: React.FC<Props> = ( ) => {
     const [searchValue, setSearchValue] = useState("")
@@ -15,7 +15,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
     const {food: {foodDeleted, foodAdded}} = useThunks();
     const dispatch = useAppDispatch()
     const handleSelectFood = (foodId: string) => {
-        dispatch(foodSlice.actions.foodSelected({foodId}))
+        dispatch(foodActions.foodSelected({foodId}))
     }
     const handleDeleteFood = async (foodId: string) => {
         dispatch(foodDeleted({foodId}))
