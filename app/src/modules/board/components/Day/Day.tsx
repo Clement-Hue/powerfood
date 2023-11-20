@@ -1,45 +1,18 @@
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
 import Meal from "../Meal";
-import convert from "convert-units";
 import {daySelectors} from "@store/day";
 import classes from "./Day.module.scss"
-import {nutrientSelectors} from "@store/nutrient";
 
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
-    const nutrients = useAppSelector(nutrientSelectors.selectNutrient)
     const meals = useAppSelector((state) => daySelectors.selectMeals(state, dayName))
+    const macros = useAppSelector((state) => daySelectors.selectMacros(state, dayName))
+    const micros = useAppSelector((state) => daySelectors.selectMicros(state, dayName))
     const {day: {mealAdded, mealDeleted}} = useThunks();
     const dispatch = useAppDispatch()
-
-    const macros = useMemo( () => (["calories","proteins", "carbs", "lipids"] as const).map((macroName) => {
-        const res = {name: macroName, amount: 0}
-        meals.forEach((meal) => {
-           meal.foods.forEach((mf) => {
-               const denominator = mf.food.valuesFor === "100g" ? 100 : 1
-               res.amount += (mf.food[macroName] / denominator) * mf.amount
-           })
-        })
-        return res;
-    }), [meals])
-
-    const micros = useMemo( () => nutrients?.map((nutrient) => {
-        const unit = nutrient.DRI.unit
-        const amount = meals.reduce((prev, meal) => {
-            meal.foods?.forEach((mf) => {
-                const foodNutrient = mf.food.nutrients.find((n) => n.id === nutrient.id)
-                const denominator = mf.food.valuesFor === "100g" ? 100 : 1
-                if (foodNutrient) {
-                    prev +=  (convert(foodNutrient.amount).from(foodNutrient.unit).to(unit) / denominator) * mf.amount
-                }
-            })
-            return prev;
-        }, 0) ?? 0;
-        return {...nutrient, value: {amount, unit}}
-    }), [nutrients, meals])
 
     return (
         <div className={classes.container}>
