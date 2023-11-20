@@ -16,7 +16,7 @@ const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect
             return
         }
         const foodId = editFood.id
-        dispatch(foodUpdated({foodId, data}))
+        await dispatch(foodUpdated({foodId, data}))
         setEditFood(null)
     }
 

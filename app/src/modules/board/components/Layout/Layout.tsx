@@ -6,7 +6,7 @@ import {useEffect} from "react";
 import {daySelectors} from "@store/day";
 
 const Layout = () => {
-    const daysName = useAppSelector(daySelectors.selectDaysName)
+    const dayNames = useAppSelector(daySelectors.selectDaysName)
     const {day: {daysFetched}, food: {foodsFetched}, nutrient: {nutrientFetched}} = useThunks();
     const dispatch = useAppDispatch()
 
@@ -20,7 +20,7 @@ const Layout = () => {
             <div className={classes.container}>
                 <FoodSearch />
                 <div className={classes["days-container"]}>
-                    {daysName?.map((dayName) => (
+                    {dayNames?.map((dayName) => (
                         <Day
                             key={dayName}
                             name={dayName}

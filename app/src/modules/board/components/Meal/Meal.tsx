@@ -2,14 +2,16 @@ import React, {useEffect, useId, useState} from 'react';
 import classes from "./Meal.module.scss"
 import {Button, IconButton, Icons, Input} from "@shares";
 import {Food, MealFoodDetails} from "@typing/app.type.ts";
-import {useAppSelector} from "@hooks";
+import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
 import {getFoodUnit} from "@utils";
 import {foodSelectors} from "@store/food";
 
-const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemoveFood,
+const Meal: React.FC<Props> = ({id: mealId, name: mealName, dayName, onDelete,
                                  mealFoods = []  }) => {
     const selectedFood = useAppSelector(foodSelectors.selectSelectedFood)
     const [quantity, setQuantity] = useState(100);
+    const {day: {foodAddedToMeal, foodUpdatedFromMeal, foodRemovedFromMeal}} = useThunks();
+    const dispatch = useAppDispatch()
     const mealNameId = useId();
 
     useEffect(() => {
@@ -28,23 +30,27 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
         }
         const mealFood = mealFoods?.find((mf) => mf.food.id === selectedFood.id);
         if (mealFood) {
-            onUpdateFood?.(mealFood.food, {amount})
+            dispatch(foodUpdatedFromMeal({dayName, foodId: mealFood.food.id, mealId, amount}))
         } else {
-            onAddFood?.(selectedFood, {amount})
+            dispatch(foodAddedToMeal({dayName, foodId: selectedFood.id, mealId, amount}))
         }
+    }
+
+    const handleRemoveFood = (food: Food) => {
+        dispatch(foodRemovedFromMeal({dayName, foodId: food.id, mealId}));
     }
 
     return (
         <div role="region" aria-labelledby={mealNameId}  className={classes.container}>
             <span id={mealNameId} className={classes["meal__name"]}>
-                {name}
-                <IconButton aria-label={`Supprimer ${name}`} Icon={Icons.Delete} onClick={() => onDelete?.(name)}/>
+                {mealName}
+                <IconButton aria-label={`Supprimer ${mealName}`} Icon={Icons.Delete} onClick={() => onDelete?.(mealName)}/>
             </span>
             <div className={classes["foods-container"]}>
                 {mealFoods?.map((mealFood  ) => (
                     <div key={mealFood.food.id} className={classes["food-container"]}>
                         <div >{mealFood.food.name} {mealFood.amount}{getFoodUnit(mealFood.food.valuesFor)}</div>
-                        <IconButton onClick={() => onRemoveFood?.(mealFood.food)} aria-label={`Supprimer ${mealFood.food.name}`} Icon={Icons.Delete}/>
+                        <IconButton onClick={() => handleRemoveFood(mealFood.food)} aria-label={`Supprimer ${mealFood.food.name}`} Icon={Icons.Delete}/>
                     </div>
                 ))}
             </div>
@@ -69,12 +75,11 @@ const Meal: React.FC<Props> = ({name, onDelete, onUpdateFood, onAddFood, onRemov
 };
 
 type Props = {
+    id: string
     name: string
+    dayName: string
     mealFoods?: MealFoodDetails[]
     onDelete?: (mealName: string) => void
-    onAddFood?: (food: Food, data: {amount: number}) => void
-    onUpdateFood?: (food: Food , data: {amount: number}) => void
-    onRemoveFood?: (food: Food) => void
 }
 
 export default Meal;

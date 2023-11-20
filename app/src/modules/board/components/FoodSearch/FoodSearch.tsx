@@ -22,7 +22,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
     }
 
     const handleValidateFoodDialog = async (food: UnidentifiedFood) => {
-        dispatch(foodAdded({data: food}))
+        await dispatch(foodAdded({data: food}))
         setOpen(false)
     }
 

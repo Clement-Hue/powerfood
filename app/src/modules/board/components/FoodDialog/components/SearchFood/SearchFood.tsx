@@ -13,48 +13,50 @@ const SearchFood: React.FC<Props> = ({valuesFor = "100g", onSearch}) => {
     const {foodApiService} = useServices()
 
     const apiCall = useCallback(async () => {
-        if (searchInput) {
-            const res = await foodApiService.searchFood(searchInput)
-            setOptions(res.common.map((food) => ({
-                value: food.food_name, label: (
-                    <div className={classes["option-container"]}>
-                        <img className={classes["option-img"]} src={food.photo?.thumb} />
-                        <div>
-                            {food.food_name}
-                            <div className="small-typo">{getFoodUnitText(valuesFor)}</div>
-                        </div>
-                    </div>
-                )
-            })))
+        if (!searchInput) {
+            return;
         }
+        const res = await foodApiService.searchFood(searchInput)
+        setOptions(res.common.map((food) => ({
+            value: food.food_name, label: (
+                <div className={classes["option-container"]}>
+                    <img className={classes["option-img"]} src={food.photo?.thumb} />
+                    <div>
+                        {food.food_name}
+                        <div className="small-typo">{getFoodUnitText(valuesFor)}</div>
+                    </div>
+                </div>
+            )
+        })))
     }, [searchInput, foodApiService, valuesFor])
 
     useDebounce(apiCall)
     const handleSearchChange = async (option: Option | null) => {
+        if (!option) {
+            return
+        }
         setSearch(null);
-        if (option) {
-            const res = await foodApiService.getFoodInfo(option.value, valuesFor)
-            const food = res.foods?.[0];
-            if (food) {
-                onSearch?.({
-                    name: food.food_name,
-                    valuesFor,
-                    lipids: String(food.nf_total_fat),
-                    carbs: String(food.nf_total_carbohydrate),
-                    proteins: String(food.nf_protein),
-                    calories: String(computeCalories(food.nf_protein, food.nf_total_carbohydrate, food.nf_total_fat)),
-                    ...food.full_nutrients.reduce((prev, nut) => {
-                       const nutInfo = apiNutrientMapping(nut.attr_id)
-                        if (!nutInfo) {
-                            return prev;
-                        }
-                        return {...prev,
-                            [`value-${nutInfo.id}`]: String(nut.value),
-                            [`unit-${nutInfo.id}`]: nutInfo.unit,
-                        }
-                    }, {})
-                })
-            }
+        const res = await foodApiService.getFoodInfo(option.value, valuesFor)
+        const food = res.foods?.[0];
+        if (food) {
+            onSearch?.({
+                name: food.food_name,
+                valuesFor,
+                lipids: String(food.nf_total_fat),
+                carbs: String(food.nf_total_carbohydrate),
+                proteins: String(food.nf_protein),
+                calories: String(computeCalories(food.nf_protein, food.nf_total_carbohydrate, food.nf_total_fat)),
+                ...food.full_nutrients.reduce((prev, nut) => {
+                   const nutInfo = apiNutrientMapping(nut.attr_id)
+                    if (!nutInfo) {
+                        return prev;
+                    }
+                    return {...prev,
+                        [`value-${nutInfo.id}`]: String(nut.value),
+                        [`unit-${nutInfo.id}`]: nutInfo.unit,
+                    }
+                }, {})
+            })
         }
     }
 

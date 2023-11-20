@@ -12,8 +12,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
     const nutrients = useAppSelector(nutrientSelectors.selectNutrient)
     const meals = useAppSelector((state) => daySelectors.selectMeals(state, dayName))
-    const {day: {mealAdded, mealDeleted, foodAddedToMeal, foodUpdatedFromMeal,
-        foodRemovedFromMeal}} = useThunks();
+    const {day: {mealAdded, mealDeleted}} = useThunks();
     const dispatch = useAppDispatch()
 
     const macros = useMemo( () => (["calories","proteins", "carbs", "lipids"] as const).map((macroName) => {
@@ -60,11 +59,10 @@ const Day: React.FC<Props> = ({name: dayName}) => {
             <div className={classes["meals-container"]}>
                 {meals.map(( {id: mealId, name: mealName, foods}) => (
                     <Meal
+                        id={mealId}
                         name={mealName}
+                        dayName={dayName}
                         mealFoods={foods}
-                        onUpdateFood={(food, {amount}) => dispatch(foodUpdatedFromMeal({dayName, foodId: food.id, mealId, amount}))}
-                        onAddFood={(food, {amount}) => dispatch(foodAddedToMeal({dayName, foodId: food.id, mealId, amount}))}
-                        onRemoveFood={(food) => dispatch(foodRemovedFromMeal({dayName, foodId: food.id, mealId}))}
                         onDelete={() => dispatch(mealDeleted({dayName, mealId}))}
                         key={mealId} />
                 ))}
