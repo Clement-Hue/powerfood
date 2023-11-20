@@ -10,7 +10,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
         <ServicesProvider overrides={{
             apiService: {
                 async getDays() {
-                    return [{name: "Jour par défaut"}]
+                    return {["Jour par défaut"]: []};
                 },
                 async getFoods(): Promise<FoodDictionary> {
                     return {
@@ -80,7 +80,6 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 deleteFoodFromMeal: async () => {},
                 deleteFood: async () => {},
                 updateFood: async () => {},
-                getMeals: async () => {},
                 updateFoodMeal: async () => {},
                 addFood: async () => uuid(),
                 ...api
@@ -271,13 +270,14 @@ describe("Analyse", () => {
     })
 
     it("should load all meals saved", async () => {
-        const getMeals = jest.fn(() => (
-            [
-                {name: "déjeuner", id: "1", foods: [{id: "1", amount: 100}, {id: "2", amount: 50}]},
-                {name: "diner", id: "2", foods: []}
-            ] as Meal[]
+        const getDays = jest.fn(() => ({
+               ["Jour par défaut"]: [
+                       {name: "déjeuner", id: "1", foods: [{id: "1", amount: 100}, {id: "2", amount: 50}]},
+                       {name: "diner", id: "2", foods: []}
+                   ] as Meal[]
+            }
         ));
-        render( <TestComponent api={{getMeals}}/>)
+        render( <TestComponent api={{getDays}}/>)
         await waitFor(() => {
             const meal = screen.getByRole("region", {name: "déjeuner"})
             expect(meal).toBeInTheDocument();
@@ -406,14 +406,14 @@ describe("Search food", () => {
 
     it("should add new food with value for 1 unit", async () => {
         const addFoodToMeal = jest.fn()
-        const getMeals = jest.fn(() => (
-            [
+        const getDays = jest.fn(() => ({
+            ["Jour par défaut"]: [
                 {name: "déjeuner", id: "1", foods: []},
-            ] as Meal[]
-        ));
+            ]
+        }))
         const foodId = uuid()
         const addFood = jest.fn(() => foodId)
-        render( <TestComponent api={{addFood, getMeals, addFoodToMeal}} />)
+        render( <TestComponent api={{addFood, getDays, addFoodToMeal}} />)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
         fireEvent.change(await screen.findByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
         fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})

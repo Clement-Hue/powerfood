@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import Summary from "../Summary"
 import {Button, Input} from "@shares";
 import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
@@ -13,12 +13,8 @@ const Day: React.FC<Props> = ({name: dayName}) => {
     const nutrients = useAppSelector(nutrientSelectors.selectNutrient)
     const meals = useAppSelector((state) => daySelectors.selectMeals(state, dayName))
     const {day: {mealAdded, mealDeleted, foodAddedToMeal, foodUpdatedFromMeal,
-        foodRemovedFromMeal, mealsFetched}} = useThunks();
+        foodRemovedFromMeal}} = useThunks();
     const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        dispatch(mealsFetched({dayName}))
-    }, []);
 
     const macros = useMemo( () => (["calories","proteins", "carbs", "lipids"] as const).map((macroName) => {
         const res = {name: macroName, amount: 0}

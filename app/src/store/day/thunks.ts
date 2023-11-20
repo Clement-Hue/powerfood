@@ -6,13 +6,7 @@ export default (apiService: ApiService) => ({
     daysFetched() {
         return async function (dispatch: AppDispatch) {
             const days = await apiService.getDays();
-            dispatch(dayActions.daysFetched({days: days.map((d) => d.name)}))
-        }
-    },
-    mealsFetched({dayName}: {dayName: string}) {
-        return async function (dispatch: AppDispatch) {
-           const meals = await apiService.getMeals(dayName)
-           dispatch(dayActions.mealsFetched({dayName, meals}))
+            dispatch(dayActions.daysFetched({days}))
         }
     },
     mealAdded({dayName,mealName}: {dayName: string, mealName: string}) {

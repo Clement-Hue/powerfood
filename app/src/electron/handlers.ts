@@ -1,16 +1,36 @@
 import {getAll, run, transaction} from "./db.ts";
 import {
-    DaySchema,
     FoodNutrientSchema,
     FoodSchema,
-    MealFoodSchema,
-    MealSchema,
     NutrientSchema
 } from "@typing/schema.type.ts";
-import {NutrientInfo, NutrientUnit, FoodDictionary, UnidentifiedFood, Meal, ValuesFor} from "@typing/app.type.ts";
+import {
+    NutrientInfo,
+    NutrientUnit,
+    FoodDictionary,
+    UnidentifiedFood,
+    ValuesFor,
+    DayDictionary
+} from "@typing/app.type.ts";
 
-async function getDays() {
-    return getAll<DaySchema>("SELECT * FROM day");
+async function getDays(): Promise<DayDictionary> {
+    const res = await getAll<{
+        day_name: string, meal_name: string, amount: number, food_id: number, meal_id: number
+    }>(`
+        SELECT d.name as day_name, m.name as meal_name, mf.amount, mf.food_id, m.id as meal_id FROM day d
+        LEFT JOIN meal m ON m.day_name = d.name
+        LEFT JOIN meal_food mf ON mf.meal_id = m.id
+    `);
+    return res.reduce<DayDictionary>((prev, data) => {
+        const oldMeal = prev[data.day_name]?.find((m) => m.id === String(data.meal_id))
+        const food = {id: String(data.food_id), amount: data.amount}
+        if (oldMeal) {
+            oldMeal.foods.push(food)
+            return prev;
+        }
+        prev[data.day_name] = [...(prev[data.day_name] ?? []), {id: String(data.meal_id), name: data.meal_name, foods: [food]}]
+        return prev;
+    }, {})
 }
 
 async function getNutrients(): Promise<NutrientInfo[]> {
@@ -106,27 +126,7 @@ async function deleteFoodFromMeal(mealId: string, foodId: string) {
     await run("DELETE FROM meal_food WHERE meal_id = ? AND food_id = ?", [mealId, foodId])
 }
 
-async function getMeals(dayName: string): Promise<Meal[]> {
-   const res = await getAll<MealSchema & MealFoodSchema>(`
-        SELECT * FROM meal m 
-        LEFT JOIN meal_food mf ON mf.meal_id = m.id
-        WHERE day_name = ?
-        `,
-       [dayName]);
-   return res.reduce<Meal[]>((prev, meal) => {
-      const oldMeal = prev.find((m) => m.id === String(meal.id))
-      const food = {id: String(meal.food_id), amount: meal.amount}
-      if (oldMeal) {
-           oldMeal.foods.push(food)
-           return prev;
-      }
-      return [...prev, {id: String(meal.id), name: meal.name, foods: [food] }]
-   }, [])
-}
-
-
-// @ts-ignore
-async function updateFoodMeal(mealId: string, foodId: string, {amount = 0}: {amount: number} = {} ) {
+async function updateFoodMeal(mealId: string, foodId: string, {amount}: {amount: number} ) {
     await run(`
         UPDATE meal_food SET amount = ?
         WHERE meal_id = ? AND food_id = ?
@@ -139,7 +139,6 @@ export default {
     getDays,
     getNutrients,
     getFoods,
-    getMeals,
     addMeal,
     addFood,
     deleteFood,

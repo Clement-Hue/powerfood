@@ -13,10 +13,8 @@ const daySlice = createSlice({
     name: "food",
     initialState,
     reducers: {
-        daysFetched(state, {payload: {days}}: PayloadAction<{days: string[]}>) {
-            days.forEach((dayName) => {
-                state.days[dayName] = []
-            })
+        daysFetched(state, {payload: {days}}: PayloadAction<{days: DayDictionary}>) {
+            state.days = days;
         },
         mealsFetched(state, {payload: {dayName, meals = []}}: PayloadAction<{dayName: string, meals: Meal[]}>) {
             state.days[dayName] = meals;
