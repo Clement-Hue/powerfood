@@ -20,6 +20,7 @@ async function getDays(): Promise<DayDictionary> {
         SELECT d.name as day_name, m.name as meal_name, mf.amount, mf.food_id, m.id as meal_id FROM day d
         LEFT JOIN meal m ON m.day_name = d.name
         LEFT JOIN meal_food mf ON mf.meal_id = m.id
+        ORDER BY m.id
     `);
     return res.reduce<DayDictionary>((prev, data) => {
         const oldMeal = prev[data.day_name]?.find((m) => m.id === String(data.meal_id))

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {clsx} from "clsx"
 import classes from "./Summary.module.scss"
 import {NutrientInfo, MeasurementValue} from "@typing/app.type.ts";
+import NutrientGraph from "../NutrientGraph";
 
 const Summary: React.FC<Props> = ({micros, macros}) => {
+    const [showNutrientGraph, setShowNutrientGraph] = useState<{pos: {x: number, y:number}, nutId: string} | null>(null)
     const valueClass = (DRI: MeasurementValue, value: MeasurementValue = {amount: 0, unit: "mcg"}) => {
         if (value.amount >= DRI.amount) {
             return "positive";
@@ -22,23 +24,30 @@ const Summary: React.FC<Props> = ({micros, macros}) => {
     }
     const displayAmount = (value: number) => parseFloat(value.toFixed(3)).toString()
     return (
-        <ul aria-label="Résultat" className={classes.container}>
-            <div className={classes["macros-container"]}>
+        <div role="region" aria-label="Résultat" className={classes.container}>
+            <ul className={classes["macros-container"]}>
                 {macros?.map((macro) => (
-                    <span key={macro.name} >{macroVisualName[macro.name]} {displayAmount(macro.amount)}{macro.name === "calories" ? "kcal": "g"}</span>
+                    <li key={macro.name} >{macroVisualName[macro.name]} {displayAmount(macro.amount)}{macro.name === "calories" ? "kcal": "g"}</li>
                 ))}
-            </div>
-            <div className={classes["micros-container"]}>
-                {micros?.map(({name,value, DRI}) => (
-                    <div key={name} className={clsx(classes["nutrient-container"],
-                        classes[`value--${valueClass(DRI, value)}`])}>
-                        <span className={classes["nutrient__name"]}>{name}</span>
+            </ul>
+            <ul className={classes["micros-container"]}>
+                {micros?.map(({id: nutId,name,value, DRI}) => (
+                    <li key={name} className={clsx(classes["nutrient-container"],
+                        classes[`value--${valueClass(DRI, value)}`])}
+                         onMouseEnter={(e) => setShowNutrientGraph({
+                             pos: {x: e.clientX, y: e.clientY}, nutId
+                         })}
+                        onMouseLeave={() => setShowNutrientGraph(null)}
+                        aria-labelledby={`nutId-${nutId}`}
+                    >
+                        <span id={`nutId-${nutId}`} className={classes["nutrient__name"]}>{name}</span>
                         <span> Total: {!value ? 0 : `${displayAmount(value.amount)} ${value.unit}`}</span>
                         <span>DRI: {DRI.amount} {DRI.unit}</span>
-                    </div>
+                        {showNutrientGraph?.nutId === nutId && <NutrientGraph position={showNutrientGraph.pos} nutrientId={nutId} />}
+                    </li>
                 ))}
-            </div>
-        </ul>
+            </ul>
+        </div>
     );
 };
 

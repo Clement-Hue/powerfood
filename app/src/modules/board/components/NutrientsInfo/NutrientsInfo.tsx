@@ -34,7 +34,6 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
                         </div>
                     ))}
                 </div>
-
             </div>
         </div>, document.body
     );

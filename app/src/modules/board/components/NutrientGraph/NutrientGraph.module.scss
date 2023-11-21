@@ -1,0 +1,10 @@
+
+.container {
+  position: fixed;
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  z-index: var(--tooltip-z-index);
+  border: var(--border);
+  border-radius: var(--border-radius);
+}

@@ -1,7 +1,7 @@
 @use "src/styles/sizing";
 
 .container {
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   gap: sizing.spacing(1);

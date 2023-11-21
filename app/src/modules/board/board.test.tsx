@@ -94,8 +94,8 @@ describe("Analyse", () => {
         render( <TestComponent/>)
         await waitFor(() => {
             expect(screen.getByText(/jour par défaut/i)).toBeInTheDocument();
-            expect(within(screen.getByRole("list", {name: "Résultat"})).getByText("Vitamine C")).toBeInTheDocument()
-            expect(within(screen.getByRole("list", {name: "Résultat"})).getByText("DRI: 500 g")).toBeInTheDocument()
+            expect(within(screen.getByRole("region", {name: "Résultat"})).getByText("Vitamine C")).toBeInTheDocument()
+            expect(within(screen.getByRole("region", {name: "Résultat"})).getByText("DRI: 500 g")).toBeInTheDocument()
         })
     })
 
