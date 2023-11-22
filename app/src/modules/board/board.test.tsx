@@ -368,10 +368,11 @@ describe("Search food", () => {
         render( <TestComponent api={{addFood}} />)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
         fireEvent.change(await screen.findByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
-        fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
-        fireEvent.change(screen.getByLabelText(/glucide/i), {target: {value: "30"}})
-        fireEvent.change(screen.getByLabelText(/lipide/i), {target: {value: "20"}})
-        fireEvent.change(screen.getByLabelText(/vitamine c$/i), {target: {value: "10"}})
+        const dialog = screen.getByRole("dialog");
+        fireEvent.change(within(dialog).getByLabelText(/protéine/i), {target: {value: "50"}})
+        fireEvent.change(within(dialog).getByLabelText(/glucide/i), {target: {value: "30"}})
+        fireEvent.change(within(dialog).getByLabelText(/lipide/i), {target: {value: "20"}})
+        fireEvent.change(within(dialog).getByLabelText(/vitamine c$/i), {target: {value: "10"}})
         fireEvent.click(screen.getByRole("button", {name: /valider/i}))
         await waitFor(() => {
             expect(addFood).toHaveBeenCalledWith({
@@ -416,9 +417,10 @@ describe("Search food", () => {
         render( <TestComponent api={{addFood, getDays, addFoodToMeal}} />)
         fireEvent.click(screen.getByRole("button", {name: /ajouter un aliment à la liste/i}));
         fireEvent.change(await screen.findByLabelText(/nom de l'aliment/i), {target: {value: "Boeuf"}})
-        fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "50"}})
-        fireEvent.change(screen.getByLabelText(/valeurs pour/i), {target: {value: "unit"}})
-        fireEvent.change(screen.getByLabelText(/vitamine c$/i), {target: {value: "100"}})
+        const dialog = screen.getByRole("dialog");
+        fireEvent.change(within(dialog).getByLabelText(/protéine/i), {target: {value: "50"}})
+        fireEvent.change(within(dialog).getByLabelText(/valeurs pour/i), {target: {value: "unit"}})
+        fireEvent.change(within(dialog).getByLabelText(/vitamine c$/i), {target: {value: "100"}})
         fireEvent.click(screen.getByRole("button", {name: /valider/i}))
         await waitFor(() => {
             expect(addFood).toHaveBeenCalledWith({
