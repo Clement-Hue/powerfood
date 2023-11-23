@@ -10,6 +10,7 @@
     "build": "npm run typecheck && electron-vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "test": "jest",
+    "tdd": "npm run test -- --watch",
     "postinstall": "electron-builder install-app-deps",
     "build:win": "npm run build && electron-builder --win --config",
     "build:mac": "npm run build build && electron-builder --mac --config",
@@ -17,6 +18,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
+    "@types/d3": "^7.4.3",
     "clsx": "^2.0.0",
     "convert-units": "^2.3.4",
     "d3": "^7.8.5",

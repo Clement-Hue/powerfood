@@ -34,25 +34,41 @@ const selectMacros = createSelector(selectMeals,(meals) => {
         return res;
     })
 })
-
-const selectMicros = createSelector(selectMeals, nutrientSelectors.selectNutrient, (meals, nutrients) => {
+const selectMicrosFoods = createSelector(selectMeals, nutrientSelectors.selectNutrient, (meals, nutrients) => {
     return nutrients?.map((nutrient) => {
         const unit = nutrient.DRI.unit
-        const amount = meals.reduce((prev, meal) => {
+        const nutrientFoods = meals.reduce<{food: Food, amount: number}[]>((prev, meal) => {
             meal.foods?.forEach((mf) => {
                 const foodNutrient = mf.food.nutrients.find((n) => n.id === nutrient.id)
-                const denominator = mf.food.valuesFor === "100g" ? 100 : 1
-                if (foodNutrient) {
-                    prev +=  (convert(foodNutrient.amount).from(foodNutrient.unit).to(unit) / denominator) * mf.amount
+                if (!foodNutrient) {
+                    return;
                 }
+                const denominator = mf.food.valuesFor === "100g" ? 100 : 1
+                const existingFood = prev.find((f) => f.food.id === mf.food.id);
+                const amount = (convert(foodNutrient.amount).from(foodNutrient.unit).to(unit) / denominator) * mf.amount;
+                if (existingFood) {
+                    existingFood.amount += amount;
+                } else {
+                    prev.push({food: mf.food, amount})
+                } 
             })
             return prev;
-        }, 0) ?? 0;
-        return {...nutrient, value: {amount, unit}}
+        }, []) ?? [];
+        return {...nutrient, foods: nutrientFoods};
+    })
+})
+
+const selectMicros = createSelector(selectMicrosFoods, (micros) => {
+    return micros?.map((micro) => {
+        const unit = micro.DRI.unit;
+        return {...micro, value: {amount: micro.foods.reduce((prev, f) => {
+            return prev + f.amount;
+        }, 0) ,unit}}
     })
 })
 
 export default {
+    selectMicrosFoods,
     selectDaysName,
     selectMeals,
     selectMacros,
