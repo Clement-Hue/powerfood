@@ -9,8 +9,6 @@ import classes from "./Day.module.scss"
 const Day: React.FC<Props> = ({name: dayName}) => {
     const [newMealInput, setNewMealInput] = useState("");
     const meals = useAppSelector((state) => daySelectors.selectMeals(state, dayName))
-    const macros = useAppSelector((state) => daySelectors.selectMacros(state, dayName))
-    const micros = useAppSelector((state) => daySelectors.selectMicros(state, dayName))
     const {day: {mealAdded, mealDeleted}} = useThunks();
     const dispatch = useAppDispatch()
 
@@ -40,7 +38,7 @@ const Day: React.FC<Props> = ({name: dayName}) => {
                         key={mealId} />
                 ))}
             </div>
-            <Summary macros={macros} micros={micros}/>
+            <Summary dayName={dayName} />
         </div>
     );
 };

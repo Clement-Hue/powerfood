@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
 import {clsx} from "clsx"
 import classes from "./Summary.module.scss"
-import {NutrientInfo, MeasurementValue} from "@typing/app.type.ts";
+import {MeasurementValue} from "@typing/app.type.ts";
 import NutrientGraph from "../NutrientGraph";
+import { useAppSelector } from '@hooks';
+import { daySelectors } from '@store/day';
 
-const Summary: React.FC<Props> = ({micros, macros}) => {
+const Summary: React.FC<Props> = ({dayName}) => {
+    const macros = useAppSelector((state) => daySelectors.selectMacros(state, dayName))
+    const micros = useAppSelector((state) => daySelectors.selectMicros(state, dayName))
     const [showNutrientGraph, setShowNutrientGraph] = useState<{pos: {x: number, y:number}, nutId: string} | null>(null)
     const valueClass = (DRI: MeasurementValue, value: MeasurementValue = {amount: 0, unit: "mcg"}) => {
         if (value.amount >= DRI.amount) {
@@ -43,7 +47,7 @@ const Summary: React.FC<Props> = ({micros, macros}) => {
                         <span id={`nutId-${nutId}`} className={classes["nutrient__name"]}>{name}</span>
                         <span> Total: {!value ? 0 : `${displayAmount(value.amount)} ${value.unit}`}</span>
                         <span>DRI: {DRI.amount} {DRI.unit}</span>
-                        {showNutrientGraph?.nutId === nutId && <NutrientGraph position={showNutrientGraph.pos} nutrientId={nutId} />}
+                        {showNutrientGraph?.nutId === nutId && <NutrientGraph position={showNutrientGraph.pos} nutrientId={nutId} dayName={dayName} />}
                     </li>
                 ))}
             </ul>
@@ -51,14 +55,9 @@ const Summary: React.FC<Props> = ({micros, macros}) => {
     );
 };
 
-type Macro = {
-    name: "proteins" | "carbs" | "lipids" | "calories"
-    amount: number
-}
 
 type Props = {
-    micros?: (NutrientInfo & {value?: MeasurementValue})[]
-    macros?: Macro[]
+    dayName: string
 }
 
 export default Summary;

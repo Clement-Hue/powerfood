@@ -34,13 +34,14 @@ const selectMacros = createSelector(selectMeals,(meals) => {
         return res;
     })
 })
+
 const selectMicrosFoods = createSelector(selectMeals, nutrientSelectors.selectNutrient, (meals, nutrients) => {
     return nutrients?.map((nutrient) => {
         const unit = nutrient.DRI.unit
         const nutrientFoods = meals.reduce<{food: Food, amount: number}[]>((prev, meal) => {
             meal.foods?.forEach((mf) => {
                 const foodNutrient = mf.food.nutrients.find((n) => n.id === nutrient.id)
-                if (!foodNutrient) {
+                if (!foodNutrient || !foodNutrient.amount) {
                     return;
                 }
                 const denominator = mf.food.valuesFor === "100g" ? 100 : 1
