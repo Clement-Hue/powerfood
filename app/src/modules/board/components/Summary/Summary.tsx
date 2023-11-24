@@ -26,7 +26,7 @@ const Summary: React.FC<Props> = ({dayName}) => {
         lipids: "Lipides",
         calories: "Calories"
     }
-    const displayAmount = (value: number) => value.toLocaleString("en-US", {maximumFractionDigits: 3})
+    const displayAmount = (value: number) => value.toLocaleString("en-US", {maximumFractionDigits: 2})
     return (
         <div role="region" aria-label="Résultat" className={classes.container}>
             <ul className={classes["macros-container"]}>

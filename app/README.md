@@ -1,0 +1,4 @@
+- Remove test Summary
+- Create unit test for the store selectMicros
+- Create test for the visiblity of tooltip on mouse over
+- Refacto NutritionGraph

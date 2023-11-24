@@ -62,7 +62,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                        name: "Vitamine C" ,
                         DRI: {
                            amount: 500,
-                            unit: "g"
+                            unit: "mg"
                         }
                     },
                         {
@@ -96,7 +96,7 @@ describe("Analyse", () => {
             expect(screen.getByText(/jour par défaut/i)).toBeInTheDocument();
             const region = screen.getByRole("region", {name: "Résultat"});
             expect(within(region).getByRole("listitem", {name: "Vitamine C"})).toBeInTheDocument()
-            expect(within(region).getByText("DRI: 500 g")).toBeInTheDocument()
+            expect(within(region).getByText("DRI: 500 mg")).toBeInTheDocument()
         })
     })
 
@@ -190,7 +190,7 @@ describe("Analyse", () => {
         await waitFor(() => {
             expect(addFoodToMeal).toHaveBeenCalledWith(mealId, "2", {amount: 80})
             expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
-            expect(screen.getByText(/0.007 g/i)).toBeInTheDocument()
+            expect(screen.getByText(/6.96 mg/i)).toBeInTheDocument()
         })
         expect(within(meal).getByText(/banane 80g/i)).toBeInTheDocument()
         fireEvent.click(within(meal).getByRole("button", {name: /supprimer banane/i}))
@@ -213,11 +213,11 @@ describe("Analyse", () => {
         fireEvent.click( await screen.findByText(/poulet/i) );
         fireEvent.click(addFoodButtons[0]);
         await waitFor(() => {
-            expect(screen.getByText(/0.019 g/i)).toBeInTheDocument() // Vitamine C
+            expect(screen.getByText(/19.4 mg/i)).toBeInTheDocument() // Vitamine C
         })
         fireEvent.click(screen.getByRole("button", {name: /supprimer déjeuner/i}))
         await waitFor(() => {
-            expect(screen.getByText(/0.009 g/i)).toBeInTheDocument()
+            expect(screen.getByText(/8.7 mg/i)).toBeInTheDocument()
         })
     })
 
@@ -301,7 +301,7 @@ describe("Analyse", () => {
         fireEvent.click(screen.getByRole("button", {name: /ajouter l'aliment/i}))
         await waitFor(() => {
             expect(screen.getByText(/protéines 11.28g/i)).toBeInTheDocument();
-            expect(screen.getByText(/lipides 0.585g/i)).toBeInTheDocument();
+            expect(screen.getByText(/lipides 0.59g/i)).toBeInTheDocument();
             expect(screen.getByText(/glucides 30.1g/i)).toBeInTheDocument();
             expect(screen.getByText(/calories 197kcal/i)).toBeInTheDocument();
         })
@@ -457,7 +457,7 @@ describe("Search food", () => {
             expect(addFoodToMeal).toHaveBeenCalledWith("1", foodId, {amount: 1} )
             expect(screen.getByText(/boeuf 1unit/i)).toBeInTheDocument();
             expect(screen.getByText(/protéines 50g/i)).toBeInTheDocument();
-            expect(screen.getByText(/0.1 g/i)).toBeInTheDocument(); // vitamine C in g
+            expect(screen.getByText(/100 mg/i)).toBeInTheDocument(); // vitamine C in g
         })
     })
 

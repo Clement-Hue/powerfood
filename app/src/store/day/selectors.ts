@@ -35,7 +35,7 @@ const selectMacros = createSelector(selectMeals,(meals) => {
     })
 })
 
-const selectMicrosFoods = createSelector(selectMeals, nutrientSelectors.selectNutrient, (meals, nutrients) => {
+const selectMicros = createSelector(selectMeals, nutrientSelectors.selectNutrient, (meals, nutrients) => {
     return nutrients?.map((nutrient) => {
         const unit = nutrient.DRI.unit
         const nutrientFoods = meals.reduce<{food: Food, amount: number}[]>((prev, meal) => {
@@ -55,23 +55,15 @@ const selectMicrosFoods = createSelector(selectMeals, nutrientSelectors.selectNu
             })
             return prev;
         }, []) ?? [];
-        return {...nutrient, foods: nutrientFoods};
+        return {...nutrient, foods: nutrientFoods, value: {unit, amount: nutrientFoods.reduce((prev, f) => prev + f.amount
+        , 0)}};
     })
 })
 
-const selectMicros = createSelector(selectMicrosFoods, (micros) => {
-    return micros?.map((micro) => {
-        const unit = micro.DRI.unit;
-        return {...micro, value: {amount: micro.foods.reduce((prev, f) => {
-            return prev + f.amount;
-        }, 0) ,unit}}
-    })
-})
 
 export default {
-    selectMicrosFoods,
+    selectMicros, 
     selectDaysName,
     selectMeals,
     selectMacros,
-    selectMicros
 }

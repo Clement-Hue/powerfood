@@ -12,7 +12,7 @@ const NutrientGraph: React.FC<Props> = ({ nutrientId, dayName, open: show = fals
             top: 30, right: 30, bottom: 130, left:60
         }
     }), []);
-    const micros = useAppSelector((state) => daySelectors.selectMicrosFoods(state, dayName));
+    const micros = useAppSelector((state) => daySelectors.selectMicros(state, dayName));
     const titleId = useId();
     const nutrientInfo = micros?.find((m) => m.id === nutrientId);
 
