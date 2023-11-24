@@ -1,11 +1,19 @@
 @use "src/styles/sizing";
 
 .container {
-  position: fixed;
+  visibility: hidden;
+  position: absolute;
+  box-sizing: border-box;
+  top: 0;
+  left: 100%;
   padding: sizing.spacing(4);
   background-color: white;
   z-index: var(--tooltip-z-index);
   border: var(--border);
   border-radius: var(--border-radius);
   overflow: auto;
+}
+
+.show {
+  visibility: visible;
 }

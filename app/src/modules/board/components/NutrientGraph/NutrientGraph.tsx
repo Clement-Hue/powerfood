@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef } from 'react';
-import {createPortal} from "react-dom";
 import * as d3 from "d3";
 import classes from "./NutrientGraph.module.scss"
 import { useAppSelector } from '@hooks';
 import { daySelectors } from '@store/day';
+import clsx from 'clsx';
 
-const NutrientGraph: React.FC<Props> = ({position, nutrientId, dayName}) => {
+const NutrientGraph: React.FC<Props> = ({ nutrientId, dayName, open: show = false}) => {
     const graphContainerRef = useRef(null);
     const chartProps = useMemo(() => ({
         width: 500, height: 300, margin: {
@@ -55,7 +55,7 @@ const NutrientGraph: React.FC<Props> = ({position, nutrientId, dayName}) => {
             .data(nutrientInfo.foods)
             .enter()
             .append("rect")
-            .attr("x", (d) => xAxis(d.food.name))
+            .attr("x", (d) => xAxis(d.food.name) ?? "")
             .attr("y", (d) => yAxis(d.amount))
             .attr("width", xAxis.bandwidth())
             .attr("height", (d) => chartProps.height - yAxis(d.amount))
@@ -70,18 +70,20 @@ const NutrientGraph: React.FC<Props> = ({position, nutrientId, dayName}) => {
     }, [makeGraph])
 
 
-    return createPortal(
-        <div role="tooltip" aria-labelledby={titleId} className={classes.container} style={{left: position?.x,top: position?.y }} >
+    return (
+        <div role="tooltip" aria-labelledby={titleId} className={clsx(classes.container, {
+            [classes.show]: show
+        })} >
             <div className='title2-typo' id={titleId}>{nutrientInfo?.name}</div>
             <div ref={graphContainerRef}/>
-        </div>, document.body
+        </div>
     );
 };
 
 type Props = {
-    position: {x: number, y: number}
     dayName: string
     nutrientId: string
+    open?: boolean
 }
 
 export default NutrientGraph;

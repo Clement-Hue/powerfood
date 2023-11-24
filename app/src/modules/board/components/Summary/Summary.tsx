@@ -9,7 +9,7 @@ import { daySelectors } from '@store/day';
 const Summary: React.FC<Props> = ({dayName}) => {
     const macros = useAppSelector((state) => daySelectors.selectMacros(state, dayName))
     const micros = useAppSelector((state) => daySelectors.selectMicros(state, dayName))
-    const [showNutrientGraph, setShowNutrientGraph] = useState<{pos: {x: number, y:number}, nutId: string} | null>(null)
+    const [showNutrientGraph, setShowNutrientGraph] = useState<{nutId: string} | null>(null)
     const valueClass = (DRI: MeasurementValue, value: MeasurementValue = {amount: 0, unit: "mcg"}) => {
         if (value.amount >= DRI.amount) {
             return "positive";
@@ -38,16 +38,14 @@ const Summary: React.FC<Props> = ({dayName}) => {
                 {micros?.map(({id: nutId,name,value, DRI}) => (
                     <li key={name} className={clsx(classes["nutrient-container"],
                         classes[`value--${valueClass(DRI, value)}`])}
-                         onMouseEnter={(e) => setShowNutrientGraph({
-                             pos: {x: e.clientX, y: e.clientY}, nutId
-                         })}
+                         onMouseEnter={() => setShowNutrientGraph({ nutId })}
                         onMouseLeave={() => setShowNutrientGraph(null)}
                         aria-labelledby={`nutId-${nutId}`}
                     >
                         <span id={`nutId-${nutId}`} className={classes["nutrient__name"]}>{name}</span>
                         <span> Total: {!value ? 0 : `${displayAmount(value.amount)} ${value.unit}`}</span>
                         <span>DRI: {DRI.amount} {DRI.unit}</span>
-                        {showNutrientGraph?.nutId === nutId && <NutrientGraph position={showNutrientGraph.pos} nutrientId={nutId} dayName={dayName} />}
+                        <NutrientGraph open={showNutrientGraph?.nutId === nutId} nutrientId={nutId} dayName={dayName} />
                     </li>
                 ))}
             </ul>

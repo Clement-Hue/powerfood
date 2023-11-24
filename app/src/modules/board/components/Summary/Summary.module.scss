@@ -12,6 +12,7 @@
 }
 
 .nutrient-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: sizing.spacing(1);
