@@ -25,11 +25,11 @@ describe("Summary component", () => {
       renderTest();
        fireEvent.mouseEnter(screen.getByRole("listitem", {name: "Vitamine A"}))
        await waitFor(() => {
-           expect(screen.getByRole("tooltip")).toBeInTheDocument();
+           expect(screen.getByRole("tooltip")).toBeVisible()
        })
        fireEvent.mouseLeave(screen.getByRole("listitem", {name: "Vitamine A"}))
        await waitFor(() => {
-           expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
+           expect(screen.queryByRole("tooltip")).not.toBeVisible();
        })
    })
 })

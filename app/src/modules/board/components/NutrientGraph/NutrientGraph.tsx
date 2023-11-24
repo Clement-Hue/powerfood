@@ -35,7 +35,7 @@ const NutrientGraph: React.FC<Props> = ({ nutrientId, dayName, open: show = fals
 
         const yAxis = d3.scaleLinear()
             .range([chartProps.height, 0])
-            .domain([0, Math.max(...nutrientInfo.foods.map((f) => f.amount))])
+            .domain([0, d3.max(nutrientInfo.foods.map((f) => f.amount)) ?? 0])
 
         container.append("g")
             .attr("transform", `translate(0, ${chartProps.height})`)
@@ -51,15 +51,23 @@ const NutrientGraph: React.FC<Props> = ({ nutrientId, dayName, open: show = fals
             .style("text-anchor", "end")
             .style("font-size", fontSize)
 
-        container.selectAll("bar")
+        const bar = container.selectAll("bar")
             .data(nutrientInfo.foods)
             .enter()
-            .append("rect")
-            .attr("x", (d) => xAxis(d.food.name) ?? "")
+            .append("g")
+
+        bar.append("rect")
+            .attr("x", (d) => xAxis(d.food.name) ?? 0)
             .attr("y", (d) => yAxis(d.amount))
             .attr("width", xAxis.bandwidth())
             .attr("height", (d) => chartProps.height - yAxis(d.amount))
             .attr("fill", "var(--dark-primary)")
+
+        bar.append("text")
+            .text((d) => d.amount.toLocaleString("en-US", {maximumFractionDigits: 2}))
+            .attr("x", (d) => (xAxis(d.food.name) ?? 0)  + xAxis.bandwidth() / 2)
+            .attr("y", (d) => yAxis(d.amount) - 5)
+            .attr("text-anchor", "middle")
     }, [chartProps, nutrientInfo])
 
     useEffect(() => {
