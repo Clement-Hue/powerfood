@@ -9,7 +9,7 @@ const NutrientGraph: React.FC<Props> = ({ nutrientId, dayName, open: show = fals
     const graphContainerRef = useRef(null);
     const chartProps = useMemo(() => ({
         width: 500, height: 300, margin: {
-            top: 30, right: 30, bottom: 130, left:60
+            top: 30, right: 30, bottom: 130, left:100
         }
     }), []);
     const micros = useAppSelector((state) => daySelectors.selectMicros(state, dayName));
