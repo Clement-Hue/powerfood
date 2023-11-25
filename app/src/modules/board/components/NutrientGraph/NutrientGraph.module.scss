@@ -1,4 +1,14 @@
 @use "src/styles/sizing"; 
+@use "sass:map";
+
+$chartProps: (
+  "width": 500px,
+  "height": 300px,
+  "margin-top": 30px,
+  "margin-right": 30px,
+  "margin-bottom": 130px,
+  "margin-left": 100px
+);
 
 .container {
   visibility: hidden;
@@ -16,4 +26,34 @@
 
 .show {
   visibility: visible;
+}
+
+.chart__svg {
+  width: map.get($chartProps, "width") + map.get($chartProps, "margin-left") + map.get($chartProps, "margin-right");
+  height: map.get($chartProps, "height") + map.get($chartProps, "margin-top") + map.get($chartProps, "margin-bottom");
+
+}
+
+.chart__container {
+  transform: translate(#{map.get($chartProps, "margin-left")}, #{map.get($chartProps, "margin-top")});
+}
+
+.chart__x-container {
+  transform: translate(0, #{map.get($chartProps, "height")});
+}
+
+.chart__x-label {
+  transform: translate(-10px,0) rotate(-45deg);
+  text-anchor: end;
+  font-size: var(--font-size-12) ;
+}
+
+.chart__y-label {
+  text-anchor: end;
+  font-size: var(--font-size-12) ;
+}
+
+:export {
+  height: map.get($chartProps, "height");
+  width: map.get($chartProps, "width");
 }
