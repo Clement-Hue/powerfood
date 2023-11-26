@@ -8,6 +8,12 @@ import {v4 as uuid} from "uuid"
 const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
     return (
         <ServicesProvider overrides={{
+            graphService: {
+                BarChart: jest.fn(() => ({
+                    create: jest.fn(),
+                    remove: jest.fn()
+                }))
+            },
             apiService: {
                 async getDays() {
                     return {["Jour par défaut"]: []};
@@ -65,14 +71,14 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                             unit: "mg"
                         }
                     },
-                        {
-                            id: "min_pot",
-                            name: "Potassium" ,
-                            DRI: {
-                                amount: 1500,
-                                unit: "mg"
-                            }
-                        }]
+                    {
+                        id: "min_pot",
+                        name: "Potassium" ,
+                        DRI: {
+                            amount: 1500,
+                            unit: "mg"
+                        }
+                    }]
                 },
                 addMeal: async () => uuid(),
                 deleteMeal: async () => {},

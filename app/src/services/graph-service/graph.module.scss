@@ -1,0 +1,10 @@
+.chart__x-label {
+  transform: translate(-10px,0) rotate(-45deg);
+  text-anchor: end;
+  font-size: var(--font-size-12) ;
+}
+
+.chart__y-label {
+  text-anchor: end;
+  font-size: var(--font-size-12) ;
+}

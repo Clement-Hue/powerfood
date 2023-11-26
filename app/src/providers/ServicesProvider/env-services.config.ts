@@ -1,13 +1,15 @@
-import {apiService, foodApiService} from "@services";
+import {apiService, foodApiService, graphService} from "@services";
 
 
 export default {
     development: {
         apiService,
-        foodApiService
+        foodApiService,
+        graphService
     },
     production: {
         apiService,
-        foodApiService
+        foodApiService,
+        graphService
     }
 }
