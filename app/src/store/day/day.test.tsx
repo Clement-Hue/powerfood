@@ -83,8 +83,8 @@ const defaultState: RootState = {
 					name: "déjeuner",
 					id: "déj_id",
 					foods: [{
-						id: "poulet_id",
-						amount: 80
+							id: "poulet_id",
+							amount: 80
 						},
 						{
 							id: "banana_id",
@@ -146,4 +146,51 @@ describe('Day selectors', () => {
 				}
 		}])
 	})
-})
+
+	test("should get macros nutrients", () => {
+		expect(daySelectors.selectMacros(defaultState, "Lundi")).toEqual([
+		{
+			id: "proteins",
+			foods: [
+				{
+					food: foods["poulet_id"],
+					amount: 0
+				},{
+					food: foods["banana_id"],
+					amount: 0
+				}
+			],
+			amount: 0,
+			percentage: 0
+		},
+		{
+			id: "carbs",
+			foods: [
+				{
+					food: foods["poulet_id"],
+					amount: 0
+				},{
+					food: foods["banana_id"],
+					amount: 0
+				}
+			],
+			amount: 0,
+			percentage: 0
+		},
+		{
+			id: "lipids",
+			foods: [
+				{
+					food: foods["poulet_id"],
+					amount: 0
+				},{
+					food: foods["banana_id"],
+					amount: 0
+				}
+			],
+			amount: 0,
+			percentage: 0
+		}
+	])
+})})
+
