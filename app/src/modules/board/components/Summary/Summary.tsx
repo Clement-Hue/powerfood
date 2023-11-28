@@ -42,8 +42,8 @@ const Summary: React.FC<Props> = ({dayName}) => {
                             key={macro.id} >{macroVisualName[macro.id]} {displayAmount(macro.amount)}{macro.id === "calories" ? "kcal": "g"}</li>
                         <NutrientGraph open={showNutrientGraph?.nutId === macro.id} title={macroVisualName[macro.id]}
                             graphFactory={(el) => new graphService.BarChart({
-                                data: macro.foods.sort((a, b) => d3.descending(a.amount, b.amount)),
                                 el,
+                                data: macro.foods.sort((a, b) => d3.descending(a.amount, b.amount)),
                                 y: (d) => d.amount,
                                 x: (d) => d.food.name,
                                 range: {
@@ -67,8 +67,8 @@ const Summary: React.FC<Props> = ({dayName}) => {
                             <span>DRI: {micro.DRI.amount} {micro.DRI.unit}</span>
                             <NutrientGraph open={showNutrientGraph?.nutId === micro.id} title={micro.name}
                                 graphFactory={(el) => new graphService.BarChart({
-                                    data: micro.foods.sort((a, b) => d3.descending(a.amount, b.amount)),
                                     el,
+                                    data: micro.foods.sort((a, b) => d3.descending(a.amount, b.amount)),
                                     y: (d) => d.amount,
                                     x: (d) => d.food.name,
                                     range: {

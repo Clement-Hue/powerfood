@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 800px;
+  min-width: 1200px;
   min-height: 50px;
   gap: sizing.spacing(2);
   border: var(--border);
@@ -17,10 +17,9 @@
 }
 
 .meals-container {
-  align-self: start;
   display: flex;
   flex-direction: row;
-  gap: sizing.spacing(3);
+  gap: sizing.spacing(4);
 }
 
 .day__add-meal {
