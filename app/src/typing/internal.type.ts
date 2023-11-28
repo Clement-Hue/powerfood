@@ -10,3 +10,8 @@ export type Services = {
    foodApiService: FoodApiService
    graphService: GraphService
 }
+
+export interface Graph {
+   create: () => void
+   remove: () => void
+}

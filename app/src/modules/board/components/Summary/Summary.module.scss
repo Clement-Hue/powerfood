@@ -11,12 +11,17 @@
   padding: sizing.spacing(2);
 }
 
-.nutrient-container {
+.micro-container {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: sizing.spacing(1);
   align-items: center;
+  cursor: default;
+}
+
+.macro-container {
+  position: relative;
   cursor: default;
 }
 
@@ -33,6 +38,8 @@
   justify-content: center;
   gap: sizing.spacing(4);
 }
+
+
 
 .nutrient__name {
   color: black;

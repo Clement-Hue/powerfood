@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import classes from "./graph.module.scss"
+import { Graph } from "@typing/internal.type";
 
 type BarChartProps<D> = {
     el: HTMLElement
@@ -23,7 +24,7 @@ type ChartProps = {
 type Xaxis = d3.ScaleBand<string>
 type Yaxis = d3.ScaleLinear<number, number, never>
 
-export default class BarChart<D> {
+export default class BarChart<D> implements Graph {
     constructor(private props: BarChartProps<D>) 
     {}
 

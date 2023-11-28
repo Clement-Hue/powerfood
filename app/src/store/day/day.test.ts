@@ -10,7 +10,7 @@ const foods: FoodDictionary = {
 		"proteins": 20,
 		"lipids": 0.39,
 		"carbs": 1,
-		"calories": 150,
+		"calories": 87.51,
 		nutrients: [
 			{
 				"id": "vit_b1",
@@ -33,7 +33,7 @@ const foods: FoodDictionary = {
 		"proteins": 1,
 		"lipids": 5.39,
 		"carbs": 10,
-		"calories": 85,
+		"calories": 92.51,
 		nutrients: [
 			{
 				"id": "vit_b1",
@@ -82,7 +82,8 @@ const defaultState: RootState = {
 				{
 					name: "déjeuner",
 					id: "déj_id",
-					foods: [{
+					foods: [
+						{
 							id: "poulet_id",
 							amount: 80
 						},
@@ -131,10 +132,10 @@ describe('Day selectors', () => {
 				foods: [{
 					amount: 560,
 					food: foods["poulet_id"]
-				},
-				{
-					amount: 25,
-					food: foods["banana_id"]
+					},
+					{
+						amount: 25,
+						food: foods["banana_id"]
 				}],
 				value: {
 					unit: "mcg",
@@ -149,48 +150,58 @@ describe('Day selectors', () => {
 
 	test("should get macros nutrients", () => {
 		expect(daySelectors.selectMacros(defaultState, "Lundi")).toEqual([
-		{
-			id: "proteins",
-			foods: [
-				{
-					food: foods["poulet_id"],
-					amount: 0
-				},{
-					food: foods["banana_id"],
-					amount: 0
-				}
-			],
-			amount: 0,
-			percentage: 0
-		},
-		{
-			id: "carbs",
-			foods: [
-				{
-					food: foods["poulet_id"],
-					amount: 0
-				},{
-					food: foods["banana_id"],
-					amount: 0
-				}
-			],
-			amount: 0,
-			percentage: 0
-		},
-		{
-			id: "lipids",
-			foods: [
-				{
-					food: foods["poulet_id"],
-					amount: 0
-				},{
-					food: foods["banana_id"],
-					amount: 0
-				}
-			],
-			amount: 0,
-			percentage: 0
-		}
-	])
-})})
+			{
+				id: "calories",
+				foods: [
+					{
+						food: foods["poulet_id"],
+						amount: 245.02800000000002 
+					},{
+						food: foods["banana_id"],
+						amount: 92.51
+					}
+				],
+				amount: 337.538
+			},
+			{
+				id: "proteins",
+				foods: [
+					{
+						food: foods["poulet_id"],
+						amount: 56
+					},{
+						food: foods["banana_id"],
+						amount:1 
+					}
+				],
+				amount:57
+			},
+			{
+				id: "carbs",
+				foods: [
+					{
+						food: foods["poulet_id"],
+						amount: 2.8 
+					},{
+						food: foods["banana_id"],
+						amount: 10
+					}
+				],
+				amount: 12.8
+			},
+			{
+				id: "lipids",
+				foods: [
+					{
+						food: foods["poulet_id"],
+						amount: 1.092
+					},{
+						food: foods["banana_id"],
+						amount: 5.39
+					}
+				],
+				amount:  6.481999999999999
+			}
+		])
+	})})
 

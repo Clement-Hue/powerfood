@@ -1,6 +1,6 @@
 import {RootState} from "@store";
 import {createSelector} from "@reduxjs/toolkit";
-import {Food, MealFoodDetails} from "@typing/app.type.ts";
+import {Food, MealFoodDetails, MicrosInfo} from "@typing/app.type.ts";
 import {nutrientSelectors} from "@store/nutrient";
 import convert from "convert-units";
 
@@ -24,14 +24,22 @@ const selectMeals = createSelector(
 
 const selectMacros = createSelector(selectMeals,(meals) => {
     return (["calories","proteins", "carbs", "lipids"] as const).map((macroName) => {
-        const res = {name: macroName, amount: 0}
-        meals.forEach((meal) => {
+        const foods = meals.reduce<{food: Food, amount: number}[]>((prev, meal) => {
             meal.foods.forEach((mf) => {
                 const denominator = mf.food.valuesFor === "100g" ? 100 : 1
-                res.amount += (mf.food[macroName] / denominator) * mf.amount
+                const amount = (mf.food[macroName] / denominator) * mf.amount;
+                const existingFood = prev.find((f) => f.food.id === mf.food.id);
+                if (existingFood) {
+                    existingFood.amount += amount;
+                } else {
+                    prev.push({food: mf.food, amount });
+                }
             })
-        })
-        return res;
+            return prev;
+        }, [])
+        return {id: macroName, foods, amount: foods.reduce((prev, food) => (
+            prev + food.amount
+        ), 0) }
     })
 })
 
@@ -45,8 +53,8 @@ const selectMicros = createSelector(selectMeals, nutrientSelectors.selectNutrien
                     return;
                 }
                 const denominator = mf.food.valuesFor === "100g" ? 100 : 1
-                const existingFood = prev.find((f) => f.food.id === mf.food.id);
                 const amount = (convert(foodNutrient.amount).from(foodNutrient.unit).to(unit) / denominator) * mf.amount;
+                const existingFood = prev.find((f) => f.food.id === mf.food.id);
                 if (existingFood) {
                     existingFood.amount += amount;
                 } else {
@@ -56,7 +64,7 @@ const selectMicros = createSelector(selectMeals, nutrientSelectors.selectNutrien
             return prev;
         }, []) ?? [];
         return {...nutrient, foods: nutrientFoods, value: {unit, amount: nutrientFoods.reduce((prev, f) => prev + f.amount
-        , 0)}};
+        , 0)}} as MicrosInfo;
     })
 })
 

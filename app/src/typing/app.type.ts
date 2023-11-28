@@ -62,3 +62,20 @@ export type MealFoodDetails = {
     food: Food
     amount: number
 }
+
+export type MicrosInfo = {
+    foods: {
+        food: Food;
+        amount: number;
+    }[];
+    value: {
+        unit: NutrientUnit;
+        amount: number;
+    };
+    id: string;
+    name: string;
+    DRI: {
+        amount: number;
+        unit: NutrientUnit;
+    };
+}
