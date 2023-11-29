@@ -11,7 +11,6 @@ const NutrientGraph: React.FC<Props> = ({ open = false, graphFactory , title}) =
         if (!graphContainerRef.current){
             return;
         }
-        console.log("call")
         const graph = graphFactory?.(graphContainerRef.current)
         graph?.create()
         return () => {
