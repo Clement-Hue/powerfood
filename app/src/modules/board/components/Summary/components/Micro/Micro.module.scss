@@ -1,0 +1,28 @@
+@use "src/styles/sizing";
+
+.micro-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: sizing.spacing(1);
+  align-items: center;
+  cursor: default;
+}
+
+.value--positive {
+  color: #089a08;
+}
+
+.value--negative {
+  color: #de0101;
+}
+
+.value--limit {
+  color: #c4c400;
+}
+
+.nutrient__name {
+  color: black;
+  align-self: center;
+  text-decoration: underline;
+}

@@ -11,18 +11,19 @@ const NutrientGraph: React.FC<Props> = ({ open = false, graphFactory , title}) =
         if (!graphContainerRef.current){
             return;
         }
+        console.log("call")
         const graph = graphFactory?.(graphContainerRef.current)
         graph?.create()
         return () => {
             graph?.remove()
         }
-    }, [graphContainerRef.current])
+    }, [graphFactory])
 
 
     return (
         <div role="tooltip" aria-labelledby={titleId} className={clsx(classes.container, {
             [classes.show]: open
-        })} >
+        })}>
             <div className='title2-typo' id={titleId}>{title}</div>
             <div ref={graphContainerRef}/>
         </div>

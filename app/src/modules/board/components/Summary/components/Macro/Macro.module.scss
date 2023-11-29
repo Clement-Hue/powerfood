@@ -1,0 +1,10 @@
+.macro-container {
+  position: relative;
+  cursor: default;
+}
+
+.macro__details {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

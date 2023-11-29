@@ -27,6 +27,7 @@
       "@testing": ["src/testing"],
       "@hooks": ["src/hooks"],
       "@providers": ["src/providers"],
+      "@modules/*": ["src/modules/*"],
       "@providers/*": ["src/providers/*"],
       "@typing/*": ["src/typing/*"],
       "@mocks/*": ["src/mocks/*"],

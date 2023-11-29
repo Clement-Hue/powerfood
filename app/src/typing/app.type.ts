@@ -80,6 +80,15 @@ export type MicrosInfo = {
     };
 }
 
+export type MacrosInfo = {
+    id: "proteins" | "lipids" | "carbs" | "calories";
+    foods: {
+        food: Food;
+        amount: number;
+    }[];
+    amount: number;
+}
+
 export type MacrosCalories = {
     proteins: {
         calories: number;

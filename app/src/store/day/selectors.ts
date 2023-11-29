@@ -1,6 +1,6 @@
 import {RootState} from "@store";
 import {createSelector} from "@reduxjs/toolkit";
-import {Food, MealFoodDetails, MicrosInfo} from "@typing/app.type.ts";
+import {Food, MacrosCalories, MacrosInfo, MealFoodDetails, MicrosInfo} from "@typing/app.type.ts";
 import {nutrientSelectors} from "@store/nutrient";
 import convert from "convert-units";
 import { getCarbsCalories, getLipidsCalories } from "@utils";
@@ -40,8 +40,8 @@ const selectMacros = createSelector(selectMeals,(meals) => {
         }, [])
         return {id: macroName, foods, amount: foods.reduce((prev, food) => (
             prev + food.amount
-        ), 0) }
-    })
+        ), 0) } as MacrosInfo
+    }) 
 })
 
 const selectMacrosCalories = createSelector(selectMacros, (macros) => {
@@ -64,7 +64,7 @@ const selectMacrosCalories = createSelector(selectMacros, (macros) => {
         carbs: calcMacroStats("carbs", getCarbsCalories),
         lipids: calcMacroStats("lipids", getLipidsCalories),
         proteins: calcMacroStats("proteins", getCarbsCalories),
-    }
+    } as MacrosCalories
 })
 
 const selectMicros = createSelector(selectMeals, nutrientSelectors.selectNutrient, (meals, nutrients) => {
