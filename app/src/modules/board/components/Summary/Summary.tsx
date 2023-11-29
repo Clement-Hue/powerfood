@@ -10,6 +10,7 @@ import { daySelectors } from '@store/day';
 const Summary: React.FC<Props> = ({dayName}) => {
     const macros = useAppSelector((state) => daySelectors.selectMacros(state, dayName))
     const micros = useAppSelector((state) => daySelectors.selectMicros(state, dayName))
+    const macrosCalories = useAppSelector((state) => daySelectors.selectMacrosCalories(state, dayName));
     const {graphService} = useServices()
 
     const [showNutrientGraph, setShowNutrientGraph] = useState<{nutId: string} | null>(null)
@@ -23,24 +24,41 @@ const Summary: React.FC<Props> = ({dayName}) => {
         return "negative"
     }
 
-    const macroVisualName = {
+    const macroNames = {
         proteins: "Protéines",
         carbs: "Glucides",
         lipids: "Lipides",
         calories: "Calories"
     } as const
-    const displayAmount = (value: number) => value.toLocaleString("en-US", {maximumFractionDigits: 2})
+    const displayAmount = (value?: number) => value?.toLocaleString("en-US", {maximumFractionDigits: 2})
     return (
         <div role="region" aria-label="Résultat" className={classes.container}>
             <ul className={classes["macros-container"]}>
                 {macros?.map((macro) => (
-                    <div className={classes["macro-container"]} 
+                    <div key={macro.id} className={classes["macro-container"]} 
                         onMouseEnter={() => setShowNutrientGraph({ nutId: macro.id })}
                         onMouseLeave={() => setShowNutrientGraph(null)}
                     >
-                        <li
-                            key={macro.id} >{macroVisualName[macro.id]} {displayAmount(macro.amount)}{macro.id === "calories" ? "kcal": "g"}</li>
-                        <NutrientGraph open={showNutrientGraph?.nutId === macro.id} title={macroVisualName[macro.id]}
+                        <li>
+                            {macro.id === 'calories' ? (
+                                <div>
+                                    {macroNames[macro.id]} {displayAmount(macro.amount)} kcal
+                                </div>
+                            ): (
+                                <div className={classes["macro__details"]}>
+                                    <div>
+                                        {macroNames[macro.id]} {displayAmount(macro.amount)} g
+                                    </div>
+                                    <div>
+                                        {Math.ceil(macrosCalories?.[macro.id]?.calories ?? 0)} kcal
+                                    </div>
+                                    <div>
+                                        {displayAmount(macrosCalories?.[macro.id]?.percentage)}%
+                                    </div>
+                                </div>
+                            )}
+                        </li>
+                        <NutrientGraph open={showNutrientGraph?.nutId === macro.id} title={macroNames[macro.id]}
                             graphFactory={(el) => new graphService.BarChart({
                                 el,
                                 data: macro.foods.sort((a, b) => d3.descending(a.amount, b.amount)),

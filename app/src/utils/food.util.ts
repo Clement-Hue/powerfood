@@ -14,8 +14,18 @@ export function getFoodUnitText(valuesFor: ValuesFor): string {
     }as const)[valuesFor]
 }
 
-export function computeCalories(proteins: number, carbs: number, lipids: number) {
-    return Math.ceil(proteins * 4 + carbs * 4 + lipids * 9)
+export function getProteinsCalories(proteins: number) {
+    return proteins * 4;
+}
+export function getLipidsCalories(lipids: number) {
+    return lipids * 9;
+}
+export function getCarbsCalories(carbs: number) {
+    return carbs * 4;
+}
+
+export function getCalories(proteins: number, carbs: number, lipids: number) {
+    return getProteinsCalories(proteins) + getCarbsCalories(carbs) + getLipidsCalories(lipids)
 }
 
 /**

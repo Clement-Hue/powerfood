@@ -3,6 +3,7 @@ import {createSelector} from "@reduxjs/toolkit";
 import {Food, MealFoodDetails, MicrosInfo} from "@typing/app.type.ts";
 import {nutrientSelectors} from "@store/nutrient";
 import convert from "convert-units";
+import { getCarbsCalories, getLipidsCalories } from "@utils";
 
 const selectDaysName = createSelector((state: RootState) => state.day.days,
     (days) => {
@@ -43,6 +44,29 @@ const selectMacros = createSelector(selectMeals,(meals) => {
     })
 })
 
+const selectMacrosCalories = createSelector(selectMacros, (macros) => {
+    const totalCalories = macros.find((m) => m.id === "calories")?.amount;
+    if (!totalCalories) {
+        return;
+    }
+    const calcMacroStats = (macroId: string, convertFn: (v: number) => number) =>  {
+        const macroInfo = macros.find((m) => m.id === macroId);
+        if (!macroInfo) {
+            return;
+        }
+        const calories = convertFn(macroInfo.amount);
+        return {
+            calories,
+            percentage: (calories / totalCalories) * 100
+        }
+    }
+    return {
+        carbs: calcMacroStats("carbs", getCarbsCalories),
+        lipids: calcMacroStats("lipids", getLipidsCalories),
+        proteins: calcMacroStats("proteins", getCarbsCalories),
+    }
+})
+
 const selectMicros = createSelector(selectMeals, nutrientSelectors.selectNutrient, (meals, nutrients) => {
     return nutrients?.map((nutrient) => {
         const unit = nutrient.DRI.unit
@@ -74,4 +98,5 @@ export default {
     selectDaysName,
     selectMeals,
     selectMacros,
+    selectMacrosCalories
 }

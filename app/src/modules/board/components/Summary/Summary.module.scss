@@ -25,6 +25,12 @@
   cursor: default;
 }
 
+.macro__details {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 .micros-container {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));

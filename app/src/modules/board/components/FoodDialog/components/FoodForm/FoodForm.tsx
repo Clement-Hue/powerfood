@@ -4,7 +4,7 @@ import {useForm} from "@hooks";
 import {Input, Select} from "@shares";
 import classes from "./FoodForm.module.scss"
 import SearchFood from "../SearchFood";
-import {computeCalories} from "@utils";
+import {getCalories} from "@utils";
 
 const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) => {
     const {setValues, values, register, handleSubmit, handleChange  } = useForm<FoodFormValues>({
@@ -25,7 +25,7 @@ const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) 
     const handleMacroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleChange(e)
         setValues((prev) => ({
-            ...prev, calories: String(Math.ceil(computeCalories(Number(prev.proteins), Number(prev.carbs), Number(prev.lipids))))
+            ...prev, calories: String(Math.ceil(getCalories(Number(prev.proteins), Number(prev.carbs), Number(prev.lipids))))
         }))
     }
 

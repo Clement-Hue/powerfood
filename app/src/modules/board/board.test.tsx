@@ -494,10 +494,11 @@ describe("Search food", () => {
             expect(within(dialog).getByLabelText(/glucide/i)).toHaveValue(29.6)
             expect(within(dialog).getByLabelText(/vitamine c$/i)).toHaveValue(8.7)
         })
-        fireEvent.change(screen.getByLabelText(/nom de l'aliment/i), {target: {value: "Banane plantin"}})
-        fireEvent.change(screen.getByLabelText(/vitamine c unité/i), {target: {value: "g"}})
-        fireEvent.change(screen.getByLabelText(/protéine/i), {target: {value: "10"}})
-        fireEvent.click(screen.getByRole("button", {name: /valider/i}))
+        const dialog = screen.getByRole("dialog")
+        fireEvent.change(within(dialog).getByLabelText(/nom de l'aliment/i), {target: {value: "Banane plantin"}})
+        fireEvent.change(within(dialog).getByLabelText(/vitamine c unité/i), {target: {value: "g"}})
+        fireEvent.change(within(dialog).getByLabelText(/protéine/i), {target: {value: "10"}})
+        fireEvent.click(within(dialog).getByRole("button", {name: /valider/i}))
         await waitFor(() => {
             expect(updateFood).toHaveBeenCalledWith("2",
                 {

@@ -2,7 +2,7 @@ import React, {useState, useCallback} from 'react';
 import {Autocomplete} from "@shares";
 import {useDebounce, useServices} from "@hooks";
 import classes from "./SearchFood.module.scss"
-import {computeCalories, getFoodUnitText, apiNutrientMapping} from "@utils";
+import {getCalories, getFoodUnitText, apiNutrientMapping} from "@utils";
 import {ValuesFor} from "@typing/app.type.ts";
 import {FoodFormValues} from "../FoodForm";
 
@@ -45,7 +45,7 @@ const SearchFood: React.FC<Props> = ({valuesFor = "100g", onSearch}) => {
                 lipids: String(food.nf_total_fat),
                 carbs: String(food.nf_total_carbohydrate),
                 proteins: String(food.nf_protein),
-                calories: String(computeCalories(food.nf_protein, food.nf_total_carbohydrate, food.nf_total_fat)),
+                calories: String(getCalories(food.nf_protein, food.nf_total_carbohydrate, food.nf_total_fat)),
                 ...food.full_nutrients.reduce((prev, nut) => {
                    const nutInfo = apiNutrientMapping(nut.attr_id)
                     if (!nutInfo) {

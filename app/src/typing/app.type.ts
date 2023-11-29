@@ -79,3 +79,18 @@ export type MicrosInfo = {
         unit: NutrientUnit;
     };
 }
+
+export type MacrosCalories = {
+    proteins: {
+        calories: number;
+        percentage: number;
+    };
+    carbs: {
+        calories: number;
+        percentage: number;
+    };
+    lipids: {
+        calories: number;
+        percentage: number;
+    };
+}

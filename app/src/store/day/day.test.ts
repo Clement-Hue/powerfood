@@ -203,5 +203,23 @@ describe('Day selectors', () => {
 				amount:  6.481999999999999
 			}
 		])
-	})})
+	})
+
+	test("should get macros calories", () => {
+		expect(daySelectors.selectMacrosCalories(defaultState, "Lundi")).toEqual({
+			"proteins": {
+				calories: 228,
+				percentage: 67.54795015672309,
+			},
+			"carbs": {
+				calories: 51.2,
+				percentage:15.16866249133431,
+			},
+			"lipids": {
+				calories: 58.337999999999994,
+				percentage: 17.283387351942594,
+			}
+		})
+	})
+})
 
