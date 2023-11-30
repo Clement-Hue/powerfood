@@ -9,7 +9,7 @@ export type FoodDictionary = {
     [foodId: string]: Food
 }
 
-export type Food = {
+type BaseFood = {
     id: string
     name: string
     valuesFor: ValuesFor
@@ -18,8 +18,15 @@ export type Food = {
     lipids: number
     carbs: number
     calories: number
+}
+
+export type Food = BaseFood & {
     nutrients: FoodNutrient[];
 }
+
+export type FoodDictionaryState = {
+    [foodId: string]: BaseFood & { nutrients: { id: string, unit: NutrientUnit, amount: number }[] }
+} 
 
 export type UnidentifiedFood = Omit<Food, "id">
 

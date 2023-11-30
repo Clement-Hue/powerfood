@@ -5,12 +5,12 @@ import * as d3 from "d3"
 import classes from "./Macro.module.scss"
 import NutrientGraph from "@modules/board/components/NutrientGraph";
 import { daySelectors } from "@store/day";
+import { displayAmount } from "@utils";
 
 const Macro: React.FC<Props> = ({macroInfo, dayName}) => {
 	const [showGraph, setShowGraph] = useState(false);
 	const {graphService} = useServices();
 	const macrosCalories = useAppSelector((state) => daySelectors.selectMacrosCalories(state, dayName));
-	const displayAmount = (value?: number) => value?.toLocaleString("en-US", {maximumFractionDigits: 2})
 
 	const macroNames = {
 		proteins: "Protéines",

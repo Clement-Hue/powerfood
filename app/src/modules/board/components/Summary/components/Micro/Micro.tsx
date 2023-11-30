@@ -5,13 +5,12 @@ import classes from "./Micro.module.scss"
 import { MicrosInfo, MeasurementValue } from "@typing/app.type";
 import { useServices } from "@hooks";
 import NutrientGraph from "@modules/board/components/NutrientGraph";
-
+import { displayAmount } from "@utils";
 
 
 const Micro: React.FC<Props> = ({microInfo}) => {
 	const [showGraph, setShowGraph] = useState(false);
 	const {graphService} = useServices()
-	const displayAmount = (value?: number) => value?.toLocaleString("en-US", {maximumFractionDigits: 2})
 	const valueClass = (DRI: MeasurementValue, value: MeasurementValue = {amount: 0, unit: "mcg"}) => {
 		if (value.amount >= DRI.amount) {
 			return "positive";

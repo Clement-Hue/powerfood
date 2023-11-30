@@ -102,3 +102,6 @@ export function apiNutrientMapping(apiId: number): {id: string, unit: NutrientUn
     }
     return null;
 }
+
+
+export const displayAmount = (value?: number) => value?.toLocaleString("en-US", {maximumFractionDigits: 2})

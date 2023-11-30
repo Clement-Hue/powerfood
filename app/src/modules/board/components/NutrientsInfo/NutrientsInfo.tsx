@@ -2,6 +2,7 @@ import React from 'react';
 import classes from "./NutrientsInfo.module.scss"
 import {Food} from "@typing/app.type.ts";
 import {createPortal} from "react-dom";
+import { displayAmount } from '@utils';
 
 const NutrientsInfo: React.FC<Props> = ({food, position}) => {
     const macros = [
@@ -22,7 +23,7 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
                     {macros.map((macro) => (
                         <div key={macro.name} className={classes["nutrient-container"]}>
                             <span className={classes["nutrient__name"]}>{macro.name}</span>
-                            <span>{macro.amount} {macro.unit}</span>
+                            <span>{displayAmount(macro.amount)} {macro.unit}</span>
                         </div>
                     ))}
                 </div>
@@ -30,7 +31,7 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
                     {food.nutrients.map((nutrient) => (
                         <div key={nutrient.id} className={classes["nutrient-container"]}>
                             <span className={classes["nutrient__name"]}>{nutrient.name}</span>
-                            <span>{nutrient.amount} {nutrient.unit}</span>
+                            <span>{displayAmount(nutrient.amount)} {nutrient.unit}</span>
                         </div>
                     ))}
                 </div>
