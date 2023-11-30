@@ -3,7 +3,7 @@ import {Autocomplete} from "@shares";
 import {useDebounce, useServices} from "@hooks";
 import classes from "./SearchFood.module.scss"
 import {getCalories, getFoodUnitText, apiNutrientMapping} from "@utils";
-import {ValuesFor} from "@typing/app.type.ts";
+import {ValuesFor} from "@typing/unit.type.ts";
 import {FoodFormValues} from "../FoodForm";
 
 const SearchFood: React.FC<Props> = ({valuesFor = "100g", onSearch}) => {

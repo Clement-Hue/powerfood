@@ -1,9 +1,10 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {UnidentifiedFood, NutrientInfo, FoodDictionary, Meal} from "@typing/app.type.ts";
+import {UnidentifiedFood, NutrientInfo, FoodsDictionary} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
+import { MealState } from "@typing/store.type.ts";
 
 const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
     return (
@@ -18,7 +19,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 async getDays() {
                     return {["Jour par défaut"]: []};
                 },
-                async getFoods(): Promise<FoodDictionary> {
+                async getFoods(): Promise<FoodsDictionary> {
                     return {
                        "1": {
                             "id": "1",
@@ -281,7 +282,7 @@ describe("Analyse", () => {
                ["Jour par défaut"]: [
                        {name: "déjeuner", id: "1", foods: [{id: "1", amount: 100}, {id: "2", amount: 50}]},
                        {name: "diner", id: "2", foods: []}
-                   ] as Meal[]
+                   ] as MealState[]
             }
         ));
         render( <TestComponent api={{getDays}}/>)

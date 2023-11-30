@@ -1,8 +1,8 @@
-import { FoodDictionary } from "@typing/app.type"
+import { FoodsDictionary } from "@typing/app.type"
 import { daySelectors } from "."
 import { RootState } from ".."
 
-const foods: FoodDictionary = {
+const foods: FoodsDictionary = {
 	"poulet_id": {
 		"id": "poulet_id",
 		"name": "Poulet",

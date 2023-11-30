@@ -1,4 +1,4 @@
-import {FoodUnit, NutrientUnit, ValuesFor} from "@typing/app.type.ts";
+import {FoodUnit,NutrientUnit, ValuesFor} from "@typing/unit.type.ts";
 
 export function getFoodUnit(valuesFor: ValuesFor): FoodUnit {
     return ({

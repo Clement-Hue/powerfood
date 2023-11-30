@@ -1,6 +1,6 @@
 import request from "./request.ts";
 import {GetFoodInfo, SearchResult} from "@typing/food-api.type.ts";
-import {ValuesFor} from "@typing/app.type.ts";
+import {ValuesFor} from "@typing/unit.type.ts";
 
 function getFoodInfo(food: string, valuesFor: ValuesFor): Promise<GetFoodInfo> {
     return request("natural/nutrients", {

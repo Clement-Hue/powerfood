@@ -5,15 +5,12 @@ import {
     NutrientSchema
 } from "@typing/schema.type.ts";
 import {
-    NutrientInfo,
-    NutrientUnit,
-    FoodDictionary,
     UnidentifiedFood,
-    ValuesFor,
-    DayDictionary
 } from "@typing/app.type.ts";
+import {NutrientUnit, ValuesFor} from "@typing/unit.type.ts";
+import { DaysState, FoodsState, NutrientsState } from "@typing/store.type.ts";
 
-async function getDays(): Promise<DayDictionary> {
+async function getDays(): Promise<DaysState> {
     const res = await getAll<{
         day_name: string, meal_name: string, amount: number, food_id: number, meal_id: number
     }>(`
@@ -22,7 +19,7 @@ async function getDays(): Promise<DayDictionary> {
         LEFT JOIN meal_food mf ON mf.meal_id = m.id
         ORDER BY m.id
     `);
-    return res.reduce<DayDictionary>((prev, data) => {
+    return res.reduce<DaysState>((prev, data) => {
         const oldMeal = prev[data.day_name]?.find((m) => m.id === String(data.meal_id))
         const food = {id: String(data.food_id), amount: data.amount}
         if (oldMeal) {
@@ -34,7 +31,7 @@ async function getDays(): Promise<DayDictionary> {
     }, {})
 }
 
-async function getNutrients(): Promise<NutrientInfo[]> {
+async function getNutrients(): Promise<NutrientsState[]> {
     const res = await getAll<NutrientSchema>("SELECT * FROM nutrient");
     return res.map(({id, name, dri_unit, dri_amount}) => ({
         id, name, DRI: {
@@ -43,13 +40,13 @@ async function getNutrients(): Promise<NutrientInfo[]> {
     }))
 }
 
-async function getFoods(): Promise<FoodDictionary> {
+async function getFoods(): Promise<FoodsState> {
     const foods = await getAll<FoodSchema & FoodNutrientSchema & {nutrient_name: string}>( `
         SELECT f.*, fn.*, n.name as nutrient_name FROM food f
         LEFT JOIN food_nutrient fn ON f.id = fn.food_id
         LEFT JOIN nutrient n ON n.id = fn.nutrient_id
     `);
-    return foods.reduce<FoodDictionary>((prev, food) => {
+    return foods.reduce<FoodsState>((prev, food) => {
         const prevFood = prev[String(food.id)]
         const nutrient = {id: food.nutrient_id, name: food.nutrient_name, unit: food.unit as NutrientUnit, amount: food.amount}
         if (prevFood) {

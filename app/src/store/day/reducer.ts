@@ -1,8 +1,8 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {DayDictionary, Meal} from "@typing/app.type.ts";
+import { DaysState, MealState } from "@typing/store.type";
 
 type DayState = {
-    days: DayDictionary
+    days: DaysState
 }
 
 const initialState: DayState = {
@@ -13,10 +13,10 @@ const daySlice = createSlice({
     name: "food",
     initialState,
     reducers: {
-        daysFetched(state, {payload: {days}}: PayloadAction<{days: DayDictionary}>) {
+        daysFetched(state, {payload: {days}}: PayloadAction<{days: DaysState}>) {
             state.days = days;
         },
-        mealsFetched(state, {payload: {dayName, meals = []}}: PayloadAction<{dayName: string, meals: Meal[]}>) {
+        mealsFetched(state, {payload: {dayName, meals = []}}: PayloadAction<{dayName: string, meals: MealState[]}>) {
             state.days[dayName] = meals;
         },
         mealAdded(state, {payload: {id, mealName, dayName}}: PayloadAction<{id: string, mealName: string, dayName: string}>) {
