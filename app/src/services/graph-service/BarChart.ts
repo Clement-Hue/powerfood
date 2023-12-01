@@ -72,7 +72,7 @@ export default class BarChart<D> implements Graph {
         return container;
     }
 
-    create(chartProps: ChartProps = { width: 500, height: 300, marginTop: 30, marginRight: 30, marginBottom: 130, marginLeft: 100, }) {
+    create(chartProps: ChartProps = { width: 600, height: 300, marginTop: 30, marginRight: 30, marginBottom: 140, marginLeft: 100, }) {
         const xAxis = d3.scaleBand()
         .range([0, chartProps.width])
         .domain(this.props.data.map((d) => this.props.x(d)))
