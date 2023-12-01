@@ -18,7 +18,6 @@ export type FoodState = {
 
 export type FoodNutrientState = {
     id: string;
-    name: string;
     unit: NutrientUnit;
     amount: number;
 }

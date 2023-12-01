@@ -41,14 +41,13 @@ async function getNutrients(): Promise<NutrientsState[]> {
 }
 
 async function getFoods(): Promise<FoodsState> {
-    const foods = await getAll<FoodSchema & FoodNutrientSchema & {nutrient_name: string}>( `
-        SELECT f.*, fn.*, n.name as nutrient_name FROM food f
+    const foods = await getAll<FoodSchema & FoodNutrientSchema >( `
+        SELECT f.*, fn.* FROM food f
         LEFT JOIN food_nutrient fn ON f.id = fn.food_id
-        LEFT JOIN nutrient n ON n.id = fn.nutrient_id
     `);
     return foods.reduce<FoodsState>((prev, food) => {
         const prevFood = prev[String(food.id)]
-        const nutrient = {id: food.nutrient_id, name: food.nutrient_name, unit: food.unit as NutrientUnit, amount: food.amount}
+        const nutrient = {id: food.nutrient_id,  unit: food.unit as NutrientUnit, amount: food.amount}
         if (prevFood) {
            prevFood.nutrients.push(nutrient);
            return prev;

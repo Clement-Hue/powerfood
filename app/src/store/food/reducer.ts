@@ -19,7 +19,7 @@ const foodSlice = createSlice({
         foodsFetched(state, action: PayloadAction<FoodsState>) {
             state.foods = {...state.foods, ...action.payload}
         },
-        foodsUpdated(state, {payload: {foodId, data}}: PayloadAction<{data: UnidentifiedFood, foodId: string}>) {
+        foodsUpdated(state, {payload: {foodId, data}}: PayloadAction<{data: UnidentifiedFood, foodId: string}>){
             state.foods[foodId] = {...data, id: foodId}
         },
         foodDeleted(state, {payload: {foodId}}: PayloadAction<{foodId: string}>) {

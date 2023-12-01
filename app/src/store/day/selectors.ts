@@ -4,6 +4,7 @@ import {Food, MacrosCalories, MacrosInfo, MealFoodDetails, MicrosInfo} from "@ty
 import {nutrientSelectors} from "@store/nutrient";
 import convert from "convert-units";
 import { getCarbsCalories, getLipidsCalories } from "@utils";
+import { foodSelectors } from "@store/food";
 
 const selectDaysName = createSelector((state: RootState) => state.day.days,
     (days) => {
@@ -12,7 +13,7 @@ const selectDaysName = createSelector((state: RootState) => state.day.days,
 
 const selectMeals = createSelector(
     (state: RootState, dayName: string) => state.day.days[dayName],
-    (state: RootState) => state.food.foods,
+    foodSelectors.selectFoods,
     (meals = [], foods) => {
         return meals.map((meal) => {
             return {...meal, foods: meal.foods?.reduce<MealFoodDetails[]>((prev, mf) => {

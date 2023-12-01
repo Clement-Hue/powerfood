@@ -6,8 +6,8 @@ import {UnidentifiedFood} from "@typing/app.type.ts";
 export default (apiService: ApiService) => ({
    foodsFetched() {
        return async function (dispatch: AppDispatch) {
-           const foodDictionary = await apiService.getFoods();
-           dispatch(foodActions.foodsFetched(foodDictionary))
+           const foodsState = await apiService.getFoods();
+           dispatch(foodActions.foodsFetched(foodsState))
        }
    },
     foodUpdated({foodId, data}: {foodId: string, data: UnidentifiedFood}) {
