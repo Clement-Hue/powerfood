@@ -22,9 +22,12 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
             x: (d) => d.name,
             range: {
                 yMin: 0,
-                yMax: 100
-            }
-        })
+            },
+            textFormat: (d) => d.percentage.toLocaleString("en-US", {maximumFractionDigits: 0})
+        }, {
+                width:1000,
+                height: 250
+            })
     })
     return !food ? null : createPortal(
         <div aria-label={`Information sur ${food.name}`} role="tooltip" style={{left: position?.x,top: position?.y }} className={classes.container}>

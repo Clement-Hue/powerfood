@@ -6,7 +6,7 @@
   flex-direction: column;
   gap: sizing.spacing(1);
   padding: sizing.spacing(2);
-  max-width: 600px;
+  max-width: 1400px;
   background-color: var(--light-primary);
   z-index: var(--tooltip-z-index);
   border: 5px solid var(--normal-primary);
@@ -16,7 +16,7 @@
 
 .info-container {
   gap: sizing.spacing(2);
-  max-height: 230px;
+  max-height: 500px;
   display: flex;
   flex-direction: row;
 }
@@ -30,10 +30,7 @@
 }
 
 .micro-container {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
   overflow: auto;
-  gap: sizing.spacing(2);
 }
 
 .nutrient-container {
