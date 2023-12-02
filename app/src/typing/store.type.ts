@@ -16,6 +16,8 @@ export type FoodState = {
     nutrients: FoodNutrientState[] 
 }
 
+export type UnidentifiedFoodState = Omit<FoodState, "id">
+
 export type FoodNutrientState = {
     id: string;
     unit: NutrientUnit;

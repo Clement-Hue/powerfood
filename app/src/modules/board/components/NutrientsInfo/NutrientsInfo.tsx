@@ -1,8 +1,10 @@
 import React from 'react';
 import classes from "./NutrientsInfo.module.scss"
 import {Food} from "@typing/app.type.ts";
+import * as d3 from "d3";
 import {createPortal} from "react-dom";
 import { displayAmount } from '@utils';
+import { useServices, useGraph } from '@hooks';
 
 const NutrientsInfo: React.FC<Props> = ({food, position}) => {
     const macros = [
@@ -11,6 +13,19 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
         {name: "Glucides", amount: food?.carbs, unit: "g"},
         {name: "Lipides", amount: food?.lipids, unit: "g"},
     ]
+    const {graphService} = useServices()
+    const graphContainerRef = useGraph((el) => {
+        return new graphService.BarChart({
+            el,
+            data: food.nutrients.sort((a, b) => d3.descending(a.percentage, b.percentage)),
+            y: (d) => d.percentage,
+            x: (d) => d.name,
+            range: {
+                yMin: 0,
+                yMax: 100
+            }
+        })
+    })
     return !food ? null : createPortal(
         <div aria-label={`Information sur ${food.name}`} role="tooltip" style={{left: position?.x,top: position?.y }} className={classes.container}>
             <div>
@@ -28,12 +43,7 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
                     ))}
                 </div>
                 <div className={classes["micro-container"]}>
-                    {food.nutrients.map((nutrient) => (
-                        <div key={nutrient.id} className={classes["nutrient-container"]}>
-                            <span className={classes["nutrient__name"]}>{nutrient.name}</span>
-                            <span>{displayAmount(nutrient.amount)} {nutrient.unit}</span>
-                        </div>
-                    ))}
+                    <div ref={graphContainerRef}/>
                 </div>
             </div>
         </div>, document.body
@@ -41,7 +51,7 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
 };
 
 type Props = {
-    food?: Food
+    food: Food
     position?: {x: number, y: number}
 }
 

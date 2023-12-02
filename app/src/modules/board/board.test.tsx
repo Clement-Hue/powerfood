@@ -1,10 +1,10 @@
 import {render, screen, fireEvent, waitFor, within} from "@testing";
 import {Board} from "../index.ts";
 import {ServicesProvider} from "@providers";
-import {UnidentifiedFood, NutrientInfo, FoodsDictionary} from "@typing/app.type.ts";
+import {NutrientInfo} from "@typing/app.type.ts";
 import {ServicesOverride} from "@providers/ServicesProvider/ServicesProvider.tsx";
 import {v4 as uuid} from "uuid"
-import { MealState } from "@typing/store.type.ts";
+import { MealState, FoodsState, UnidentifiedFoodState } from "@typing/store.type.ts";
 
 const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
     return (
@@ -19,7 +19,7 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                 async getDays() {
                     return {["Jour par défaut"]: []};
                 },
-                async getFoods(): Promise<FoodsDictionary> {
+                async getFoods(): Promise<FoodsState> {
                     return {
                        "1": {
                             "id": "1",
@@ -32,7 +32,6 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                             nutrients: [
                                 {
                                     "id": "vit_c",
-                                    "name": "Vitamine C",
                                     "unit": "g",
                                     "amount": 0.002
                                 }
@@ -49,13 +48,11 @@ const TestComponent = ({api = {}}: {api?: ServicesOverride["apiService"]}) => {
                             "nutrients": [
                                 {
                                     "id": "vit_c",
-                                    "name": "Vitamine C",
                                     "unit": "mg",
                                     "amount": 8.7
                                 },
                                 {
                                     "id": "min_pot",
-                                    "name": "Potassium",
                                     "unit": "mg",
                                     "amount": 358
                                 }
@@ -395,17 +392,15 @@ describe("Search food", () => {
                     {
                         unit: "mg",
                         id: "vit_c",
-                        name: "Vitamine C",
                         amount: 10
                     },
                     {
                         unit: "mg",
                         id: "min_pot",
-                        name: "Potassium",
                         amount: 0
                     }
                 ]
-            } as UnidentifiedFood)
+            } as UnidentifiedFoodState)
             expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
         })
         await waitFor(() => {
@@ -443,17 +438,15 @@ describe("Search food", () => {
                     {
                         unit: "mg",
                         id: "vit_c",
-                        name: "Vitamine C",
                         amount: 100
                     },
                     {
                         unit: "mg",
                         id: "min_pot",
-                        name: "Potassium",
                         amount: 0
                     }
                 ]
-            } as UnidentifiedFood)
+            } as UnidentifiedFoodState)
         })
         fireEvent.click(await screen.findByText(/boeuf/i));
         await waitFor(() => {
@@ -513,13 +506,11 @@ describe("Search food", () => {
                     "nutrients": [
                         {
                             "id": "vit_c",
-                            "name": "Vitamine C",
                             "unit": "g",
                             "amount": 8.7
                         },
                         {
                             "id": "min_pot",
-                            "name": "Potassium",
                             "unit": "mg",
                             "amount": 358
                         }

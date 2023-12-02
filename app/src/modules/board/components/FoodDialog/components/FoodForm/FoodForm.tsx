@@ -1,11 +1,12 @@
 import React from 'react';
-import {NutrientInfo, UnidentifiedFood} from "@typing/app.type.ts";
+import {NutrientInfo} from "@typing/app.type.ts";
 import {useForm} from "@hooks";
 import {Input, Select} from "@shares";
 import classes from "./FoodForm.module.scss"
 import SearchFood from "../SearchFood";
 import {getCalories} from "@utils";
 import {NutrientUnit, ValuesFor} from "@typing/unit.type"
+import { UnidentifiedFoodState } from '@typing/store.type';
 
 const FoodForm: React.FC<Props> = ({nutrients, onValidate, initValues, formId}) => {
     const {setValues, values, register, handleSubmit, handleChange  } = useForm<FoodFormValues>({
@@ -74,7 +75,7 @@ export type FoodFormValues = {
 }
 
 type Props = {
-    initValues?: UnidentifiedFood | null
+    initValues?: UnidentifiedFoodState | null
     nutrients: NutrientInfo[]
     onValidate: (data: FoodFormValues) => Promise<void>
     formId?: string

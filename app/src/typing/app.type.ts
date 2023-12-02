@@ -17,8 +17,6 @@ export type Food =  {
 }
 
 
-export type UnidentifiedFood = Omit<Food, "id">
-
 export type FoodNutrient = {
     id: string;
     /**
@@ -27,6 +25,7 @@ export type FoodNutrient = {
     name: string;
     unit: NutrientUnit;
     amount: number;
+    percentage: number;
 }
 
 export type NutrientInfo = {

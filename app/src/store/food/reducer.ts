@@ -1,6 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import { UnidentifiedFood} from "@typing/app.type.ts";
-import { FoodsState } from "@typing/store.type";
+import { FoodsState, UnidentifiedFoodState } from "@typing/store.type";
 
 type FoodState = {
     foods: FoodsState
@@ -19,7 +18,7 @@ const foodSlice = createSlice({
         foodsFetched(state, action: PayloadAction<FoodsState>) {
             state.foods = {...state.foods, ...action.payload}
         },
-        foodsUpdated(state, {payload: {foodId, data}}: PayloadAction<{data: UnidentifiedFood, foodId: string}>){
+        foodsUpdated(state, {payload: {foodId, data}}: PayloadAction<{data: UnidentifiedFoodState, foodId: string}>){
             state.foods[foodId] = {...data, id: foodId}
         },
         foodDeleted(state, {payload: {foodId}}: PayloadAction<{foodId: string}>) {

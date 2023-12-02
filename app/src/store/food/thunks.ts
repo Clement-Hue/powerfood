@@ -1,7 +1,7 @@
 import {ApiService} from "@typing/internal.type.ts";
 import {AppDispatch} from "@store";
 import {foodActions} from "./reducer.ts"
-import {UnidentifiedFood} from "@typing/app.type.ts";
+import { UnidentifiedFoodState } from "@typing/store.type.ts";
 
 export default (apiService: ApiService) => ({
    foodsFetched() {
@@ -10,13 +10,13 @@ export default (apiService: ApiService) => ({
            dispatch(foodActions.foodsFetched(foodsState))
        }
    },
-    foodUpdated({foodId, data}: {foodId: string, data: UnidentifiedFood}) {
+    foodUpdated({foodId, data}: {foodId: string, data: UnidentifiedFoodState}) {
        return async function (dispatch: AppDispatch) {
            await apiService.updateFood(foodId, data);
            dispatch(foodActions.foodsUpdated({data, foodId}));
        }
     },
-    foodAdded({data}: {data: UnidentifiedFood}) {
+    foodAdded({data}: {data: UnidentifiedFoodState}) {
        return async function (dispatch: AppDispatch) {
            const foodId = await apiService.addFood(data);
            dispatch(foodActions.foodsUpdated({data, foodId}));

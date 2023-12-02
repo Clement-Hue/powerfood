@@ -1,17 +1,18 @@
 import React, {useState} from 'react';
 import classes from "./FoodList.module.scss"
 import NutrientsInfo from "../NutrientsInfo/NutrientsInfo.tsx";
-import {Food, UnidentifiedFood} from "@typing/app.type.ts";
+import {Food} from "@typing/app.type.ts";
 import {IconButton, Icons} from "@shares";
 import FoodDialog from "../FoodDialog";
 import {useAppDispatch, useThunks} from "@hooks";
+import { UnidentifiedFoodState } from '@typing/store.type.ts';
 
 const FoodList: React.FC<Props> = ({selected, onDeleteFood, foods = [], onSelect} ) => {
     const [showNutrients, setShowNutrients] = useState<{foodId: string, pos: {x:number, y:number}} | null>(null);
     const [editFood, setEditFood] = useState<Food | null>(null);
     const {food: {foodUpdated}} = useThunks()
     const dispatch = useAppDispatch()
-    const handleValidateFoodDialog = async (data: UnidentifiedFood) => {
+    const handleValidateFoodDialog = async (data: UnidentifiedFoodState) => {
         if (!editFood) {
             return
         }

@@ -1,24 +1,13 @@
-import React, { useEffect, useId, useRef } from 'react';
+import React, { useId } from 'react';
 import classes from "./NutrientGraph.module.scss"
 import clsx from 'clsx';
 import { Graph } from '@typing/internal.type';
+import useGraph from 'src/hooks/useGraph';
 
 const NutrientGraph: React.FC<Props> = ({ open = false, graphFactory , title}) => {
-    const graphContainerRef = useRef(null);
+    const graphContainerRef = useGraph(graphFactory)
     const titleId = useId();
-
-    useEffect(() => {
-        if (!graphContainerRef.current){
-            return;
-        }
-        const graph = graphFactory?.(graphContainerRef.current)
-        graph?.create()
-        return () => {
-            graph?.remove()
-        }
-    }, [graphFactory])
-
-
+    
     return (
         <div role="tooltip" aria-labelledby={titleId} className={clsx(classes.container, {
             [classes.show]: open

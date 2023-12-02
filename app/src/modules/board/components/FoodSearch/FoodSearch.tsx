@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import classes from "./FoodSearch.module.scss"
 import {Button, Input} from "@shares";
 import FoodList from "../FoodList";
-import {UnidentifiedFood} from "@typing/app.type.ts";
 import FoodDialog from "../FoodDialog";
 import {useAppDispatch, useAppSelector, useThunks} from "@hooks";
 import {foodSelectors, foodActions} from "@store/food";
+import { UnidentifiedFoodState } from '@typing/store.type';
 
 const FoodSearch: React.FC<Props> = ( ) => {
     const [searchValue, setSearchValue] = useState("")
@@ -21,7 +21,7 @@ const FoodSearch: React.FC<Props> = ( ) => {
         dispatch(foodDeleted({foodId}))
     }
 
-    const handleValidateFoodDialog = async (food: UnidentifiedFood) => {
+    const handleValidateFoodDialog = async (food: UnidentifiedFoodState) => {
         await dispatch(foodAdded({data: food}))
         setOpen(false)
     }

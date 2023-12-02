@@ -14,7 +14,7 @@ const selectFoods = createSelector((state: RootState) => state.food.foods, nutri
         }
         const amount = convert(foodNutrient.amount).from(foodNutrient.unit).to(nutrient.DRI.unit);
         const percentage = (amount / nutrient.DRI.amount) * 100;
-        return {...foodNutrient, name: nutrient.name, percentage};
+        return {...foodNutrient, name: nutrient.name, percentage} as FoodNutrient;
     };
     return Object.fromEntries(Object.entries(foods).map(([id, food]) => {
         return [id, {...food, nutrients: food.nutrients.map<FoodNutrient>((foodNutrient) => {

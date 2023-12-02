@@ -4,11 +4,8 @@ import {
     FoodSchema,
     NutrientSchema
 } from "@typing/schema.type.ts";
-import {
-    UnidentifiedFood,
-} from "@typing/app.type.ts";
 import {NutrientUnit, ValuesFor} from "@typing/unit.type.ts";
-import { DaysState, FoodsState, NutrientsState } from "@typing/store.type.ts";
+import { DaysState, FoodsState, NutrientsState, UnidentifiedFoodState } from "@typing/store.type.ts";
 
 async function getDays(): Promise<DaysState> {
     const res = await getAll<{
@@ -59,7 +56,7 @@ async function getFoods(): Promise<FoodsState> {
     }, {})
 }
 
-async function addFood(food: UnidentifiedFood) {
+async function addFood(food: UnidentifiedFoodState) {
     return transaction(async () => {
         const id = await run(`
             INSERT INTO food (name, description, proteins, lipids, carbs, calories, values_for)
@@ -83,7 +80,7 @@ async function deleteMeal(mealId: string) {
     await run("DELETE FROM meal WHERE id = ?", [mealId])
 }
 
-async function updateFood(foodId: string, food: UnidentifiedFood) {
+async function updateFood(foodId: string, food: UnidentifiedFoodState) {
     await transaction( () => {
         return Promise.all(
         [run(`

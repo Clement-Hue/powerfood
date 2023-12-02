@@ -10,13 +10,11 @@
     "nutrients": [
       {
         "id": "vit_c",
-        "name": "Vitamine C",
         "unit": "mg",
         "amount": 8.7
       },
       {
         "id": "min_pot",
-        "name": "Potassium",
         "unit": "mg",
         "amount": 358
       }

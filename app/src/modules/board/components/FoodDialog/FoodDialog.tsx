@@ -1,10 +1,10 @@
 import React from 'react';
 import {Button, Dialog} from "@shares";
-import {UnidentifiedFood} from "@typing/app.type.ts";
 import {FoodFormValues} from "./components/FoodForm";
 import {FoodForm} from "./components";
 import {useAppSelector} from "@hooks";
 import {nutrientSelectors} from "@store/nutrient";
+import { UnidentifiedFoodState } from '@typing/store.type';
 
 const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
                                          title = "Ajouter un aliment", initValues} ) => {
@@ -21,7 +21,6 @@ const FoodDialog: React.FC<Props> = ({open,onValidate, onClose,
             calories: Number(data["calories"]),
             nutrients: nutrients?.map((nutrient) => ({
                 id: nutrient.id,
-                name: nutrient.name,
                 amount: Number(data[`value-${nutrient.id}`]),
                 unit: data[`unit-${nutrient.id}`]
                 })) ?? []
@@ -48,8 +47,8 @@ type Props = {
    open?: boolean
    title?: string
    onClose?: () => void
-   onValidate?: (food: UnidentifiedFood) => void
-   initValues?: UnidentifiedFood | null
+   onValidate?: (food: UnidentifiedFoodState) => void
+   initValues?: UnidentifiedFoodState | null
 }
 
 export default FoodDialog;
