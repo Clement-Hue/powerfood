@@ -26,7 +26,7 @@ type Yaxis = d3.ScaleLinear<number, number, never>
 
 export default class BarChart<D> implements Graph {
     constructor(private props: BarChartProps<D>) 
-    {}
+{}
 
 
     private createBar(container: d3.Selection<SVGGElement, unknown, null, undefined>, xAxis: Xaxis, yAxis: Yaxis, chartProps: ChartProps) {
@@ -73,6 +73,10 @@ export default class BarChart<D> implements Graph {
     }
 
     create(chartProps: ChartProps = { width: 600, height: 300, marginTop: 30, marginRight: 30, marginBottom: 140, marginLeft: 100, }) {
+        const {
+            yMin = d3.min(this.props.data.map((d) => this.props.y(d) )) ?? 0,
+            yMax = d3.max(this.props.data.map((d) => this.props.y(d) )) ?? 0
+        } = this.props.range ?? {};
         const xAxis = d3.scaleBand()
         .range([0, chartProps.width])
         .domain(this.props.data.map((d) => this.props.x(d)))
@@ -80,8 +84,7 @@ export default class BarChart<D> implements Graph {
 
         const yAxis = d3.scaleLinear()
         .range([chartProps.height, 0])
-        .domain([this.props.range?.yMin ?? d3.min(this.props.data.map((d) => this.props.y(d) )) ?? 0
-            , this.props.range?.yMax ?? d3.max(this.props.data.map((d) => this.props.y(d) )) ?? 0])
+        .domain([yMin, yMax])
 
         const container = this.createContainer(xAxis, yAxis, chartProps);
 
