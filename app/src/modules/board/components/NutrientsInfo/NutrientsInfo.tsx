@@ -23,10 +23,13 @@ const NutrientsInfo: React.FC<Props> = ({food, position}) => {
             range: {
                 yMin: 0,
             },
-            textFormat: (d) => d.percentage.toLocaleString("en-US", {maximumFractionDigits: 0})
+            label: (d, {x,y}) => `
+<tspan x=${x} y=${y - 12}>${d.percentage.toLocaleString("en-US", {maximumFractionDigits: 0})}</tspan>
+<tspan style="font-size:0.6rem" x=${x} dy="0.8rem">${d.amount.toLocaleString("en-US", {maximumFractionDigits: 2})} ${d.unit}</tspan>
+`
         }, {
-                width:1000,
-                height: 250
+                width:1100,
+                height: 300
             })
     })
     return !food ? null : createPortal(

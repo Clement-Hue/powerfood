@@ -10,7 +10,7 @@ type BarChartProps<D> = {
     range?: {
         yMin?: number, yMax?: number
     }
-    textFormat?: (value: D) => string
+    label?: (value: D, position: {x: number, y: number}) => string
 }
 
 type ChartProps = {
@@ -34,7 +34,7 @@ export default class BarChart<D> implements Graph {
 
 
     private createBar(container: d3.Selection<SVGGElement, unknown, null, undefined>, xAxis: Xaxis, yAxis: Yaxis ) {
-        const {textFormat = (v) => this.props.y(v).toLocaleString("en-US", {maximumFractionDigits: 2}) } = this.props;
+        const {label = (v) => this.props.y(v).toLocaleString("en-US", {maximumFractionDigits: 2}) } = this.props;
         const bar = container.selectAll("bar")
         .data(this.props.data)
         .enter()
@@ -47,10 +47,14 @@ export default class BarChart<D> implements Graph {
             .attr("height", (d) => this.chartProps.height - yAxis(this.props.y(d)))
             .attr("fill", "var(--dark-primary)")
 
+        const labelPosition = {
+         x: (d: D) => (xAxis(this.props.x(d)) ?? 0)  + xAxis.bandwidth() / 2,
+         y: (d: D) => yAxis(this.props.y(d)) - 5
+        }
         bar.append("text")
-            .html((d) => textFormat(d))
-            .attr("x", (d) => (xAxis(this.props.x(d)) ?? 0)  + xAxis.bandwidth() / 2)
-            .attr("y", (d) => yAxis(this.props.y(d)) - 5)
+            .html((d) => label(d, {x: labelPosition.x(d), y: labelPosition.y(d)}))
+            .attr("x", labelPosition.x)
+            .attr("y", labelPosition.y)
             .attr("text-anchor", "middle")
         return bar;
     }
